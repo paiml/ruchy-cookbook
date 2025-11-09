@@ -21,6 +21,8 @@
   - [Recipe 1.11: Pattern Matching](./ch01-foundations.md#recipe-111-pattern-matching)
 
 - [Chapter 2: String & Text Processing](./ch02-text-processing.md)
+  - [Recipe 2.1: String Formatting](./ch02-text-processing.md#recipe-21-string-formatting)
+
 - [Chapter 3: Collections & Data Structures](./ch03-collections.md)
 - [Chapter 4: Error Handling Patterns](./ch04-error-handling.md)
 - [Chapter 5: JSON & Serialization](./ch05-json.md)

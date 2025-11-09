@@ -1,0 +1,221 @@
+// Recipe 2.1: String Formatting
+// Implementation written AFTER tests following EXTREME TDD
+//
+// This recipe demonstrates comprehensive string formatting capabilities in Ruchy:
+// - Basic interpolation with format!() macro
+// - Multiple placeholder formatting
+// - Number formatting (integers and floats)
+// - Boolean formatting
+// - String concatenation patterns
+// - Building complex strings from components
+
+/// Format a greeting for a single name
+///
+/// # Arguments
+/// * `name` - The name to greet
+///
+/// # Returns
+/// A formatted greeting string
+///
+/// # Examples
+/// ```
+/// let result = format_greeting("Alice");
+/// assert_eq!(result, "Hello, Alice!");
+/// ```
+pub fun format_greeting(name: &str) -> String {
+    format!("Hello, {}!", name)
+}
+
+/// Format a full name from first and last names
+///
+/// # Arguments
+/// * `first` - First name
+/// * `last` - Last name
+///
+/// # Returns
+/// Full name as "First Last"
+pub fun format_full_name(first: &str, last: &str) -> String {
+    format!("{} {}", first, last)
+}
+
+/// Format a full greeting with first and last names
+///
+/// # Arguments
+/// * `first` - First name
+/// * `last` - Last name
+///
+/// # Returns
+/// Greeting with full name
+pub fun format_full_greeting(first: &str, last: &str) -> String {
+    format!("Hello, {} {}!", first, last)
+}
+
+/// Format three values with hyphens
+///
+/// # Arguments
+/// * `a` - First value
+/// * `b` - Second value
+/// * `c` - Third value
+///
+/// # Returns
+/// Hyphen-separated values "a-b-c"
+pub fun format_three_values(a: &str, b: &str, c: &str) -> String {
+    format!("{}-{}-{}", a, b, c)
+}
+
+/// Format an integer in a sentence
+///
+/// # Arguments
+/// * `n` - The number to format
+///
+/// # Returns
+/// Formatted sentence with the number
+pub fun format_number(n: i32) -> String {
+    format!("The number is {}", n)
+}
+
+/// Format a decimal number in a sentence
+///
+/// # Arguments
+/// * `n` - The decimal number
+///
+/// # Returns
+/// Formatted sentence about Pi
+pub fun format_decimal(n: f64) -> String {
+    format!("Pi is approximately {}", n)
+}
+
+/// Format a message with name and age
+///
+/// # Arguments
+/// * `name` - Person's name
+/// * `age` - Person's age
+///
+/// # Returns
+/// Formatted message about age
+pub fun format_message(name: &str, age: i32) -> String {
+    format!("{} is {} years old", name, age)
+}
+
+/// Format a boolean status
+///
+/// # Arguments
+/// * `active` - Boolean status
+///
+/// # Returns
+/// Formatted status string
+pub fun format_status(active: bool) -> String {
+    format!("Status: {}", active)
+}
+
+/// Concatenate two strings directly
+///
+/// # Arguments
+/// * `a` - First string
+/// * `b` - Second string
+///
+/// # Returns
+/// Concatenated string "ab"
+pub fun concat_strings(a: &str, b: &str) -> String {
+    format!("{}{}", a, b)
+}
+
+/// Concatenate two strings with a separator
+///
+/// # Arguments
+/// * `a` - First string
+/// * `b` - Second string
+/// * `sep` - Separator string
+///
+/// # Returns
+/// Concatenated string "a{sep}b"
+pub fun concat_with_separator(a: &str, b: &str, sep: &str) -> String {
+    format!("{}{}{}", a, sep, b)
+}
+
+/// Build a CSV line from a vector of values
+///
+/// # Arguments
+/// * `values` - Vector of string values
+///
+/// # Returns
+/// Comma-separated values
+///
+/// # Examples
+/// ```
+/// let result = build_csv(vec!["Alice", "30", "Engineer"]);
+/// assert_eq!(result, "Alice,30,Engineer");
+/// ```
+pub fun build_csv(values: Vec<&str>) -> String {
+    if values.is_empty() {
+        return String::new();
+    }
+
+    values.join(",")
+}
+
+/// Format a template with name and value
+///
+/// # Arguments
+/// * `name` - Name to include
+/// * `value` - Integer value to include
+///
+/// # Returns
+/// Formatted template string
+pub fun format_template(name: &str, value: i32) -> String {
+    format!("Name: {}, Value: {}", name, value)
+}
+
+/// Main entry point demonstrating string formatting
+fun main() {
+    println!("String Formatting Examples");
+    println!("=========================\n");
+
+    // Basic greeting
+    println!("Basic greeting:");
+    println!("  {}", format_greeting("Alice"));
+    println!("  {}", format_greeting("Bob"));
+    println!();
+
+    // Full name formatting
+    println!("Full name formatting:");
+    println!("  {}", format_full_name("Alice", "Smith"));
+    println!("  {}", format_full_greeting("Bob", "Jones"));
+    println!();
+
+    // Number formatting
+    println!("Number formatting:");
+    println!("  {}", format_number(42));
+    println!("  {}", format_number(-10));
+    println!("  {}", format_decimal(3.14));
+    println!();
+
+    // Mixed types
+    println!("Mixed type formatting:");
+    println!("  {}", format_message("Alice", 30));
+    println!("  {}", format_status(true));
+    println!("  {}", format_status(false));
+    println!();
+
+    // String concatenation
+    println!("String concatenation:");
+    println!("  {}", concat_strings("Hello", "World"));
+    println!("  {}", concat_with_separator("Hello", "World", " "));
+    println!();
+
+    // CSV building
+    println!("CSV building:");
+    let data = vec!["Alice", "30", "Engineer"];
+    println!("  {}", build_csv(data));
+
+    let single = vec!["Value"];
+    println!("  {}", build_csv(single));
+
+    let empty: Vec<&str> = vec![];
+    println!("  Empty: '{}'", build_csv(empty));
+    println!();
+
+    // Template
+    println!("Template formatting:");
+    println!("  {}", format_template("Alice", 42));
+}
