@@ -1,171 +1,87 @@
 // Integration tests for Recipe 1.7: Structs, Classes, and Methods
-// Testing real-world OO usage patterns
+// Testing real-world OO usage patterns that demonstrate struct vs class
 
 use std::testing::*;
 
+// ============================================================================
+// STRUCT INTEGRATION TESTS (Value Semantics in Practice)
+// ============================================================================
+
 #[test]
-fun test_geometry_workflow() {
-    // Test a complete geometry calculation workflow
-    let rect = Rectangle { width: 30, height: 40 };
+fun test_geometry_calculator_workflow() {
+    // Workflow: Calculate properties of geometric shapes (struct-based)
+    let rect1 = Rectangle { width: 30, height: 40 };
+    let rect2 = Rectangle { width: 20, height: 30 };
 
-    // Calculate area and perimeter
-    let area = rect.area();
-    let perimeter = rect.perimeter();
+    // Calculate areas
+    let total_area = rect1.area() + rect2.area();
+    assert_eq!(total_area, 1200 + 600);
 
-    assert_eq!(area, 1200);
-    assert_eq!(perimeter, 140);
+    // Test containment
+    let small = Rectangle { width: 10, height: 15 };
+    assert!(rect1.can_hold(&small));
+    assert!(rect2.can_hold(&small));
 
-    // Test relationship with other rectangles
-    let small_rect = Rectangle { width: 10, height: 15 };
-    assert!(rect.can_hold(&small_rect));
+    // Create squares
+    let square = Rectangle::square(25);
+    assert!(square.is_square());
+    assert_eq!(square.area(), 625);
 }
 
 #[test]
 fun test_point_geometry_system() {
-    // Test a coordinate system with multiple points
+    // Workflow: Coordinate system calculations (struct-based)
     let origin = Point::zero();
     let p1 = Point::new(3, 4);
     let p2 = Point::new(6, 8);
 
-    // Verify distances form expected pattern
+    // Verify Euclidean distances
     assert_eq!(origin.distance(&p1), 5.0);
     assert_eq!(origin.distance(&p2), 10.0);
-    assert_eq!(p1.distance(&p2), 5.0);
 
-    // Points should be collinear (on same line)
-    // Distance from origin to p2 == distance from origin to p1 + distance from p1 to p2
-    let total_distance = origin.distance(&p1) + p1.distance(&p2);
-    assert!((origin.distance(&p2) - total_distance).abs() < 0.0001);
+    // Test triangle: origin, p1, p2 are collinear
+    let d_op1 = origin.distance(&p1);
+    let d_p1p2 = p1.distance(&p2);
+    let d_op2 = origin.distance(&p2);
+
+    assert!((d_op2 - (d_op1 + d_p1p2)).abs() < 0.0001);
 }
 
 #[test]
-fun test_builder_pattern_workflow() {
-    // Test building complex objects with builder pattern
-    let person1 = PersonBuilder::new()
-        .name("Alice Smith")
-        .age(30)
-        .email("alice@example.com")
-        .build();
+fun test_struct_copy_in_collection() {
+    // Workflow: Storing structs in collections (value semantics)
+    let mut points = vec![
+        Point::new(0, 0),
+        Point::new(1, 1),
+        Point::new(2, 2),
+    ];
 
-    let person2 = PersonBuilder::new()
-        .name("Bob Jones")
-        .age(25)
-        .build();
+    // Modify a copy - original in vec unchanged
+    let mut point_copy = points[1];
+    point_copy.set_x(10);
 
-    // Verify both persons were built correctly
-    assert_eq!(person1.name(), "Alice Smith");
-    assert_eq!(person1.age(), 30);
-    assert_eq!(person2.name(), "Bob Jones");
-    assert_eq!(person2.age(), 25);
+    assert_eq!(points[1].x(), 1);  // Original unchanged
+    assert_eq!(point_copy.x(), 10);  // Copy modified
 }
 
 #[test]
-fun test_method_chaining_workflow() {
-    // Test fluent interface with method chaining
-    let mut rect = Rectangle { width: 10, height: 20 };
+fun test_rectangle_transformation_pipeline() {
+    // Workflow: Transform shapes through pipeline (struct method chaining)
+    let mut rect = Rectangle { width: 5, height: 10 };
 
-    // Chain multiple operations
-    rect.set_width(20)
-        .set_height(30)
+    // Apply transformations
+    rect.set_width(10)
+        .set_height(20)
         .scale(2);
 
-    assert_eq!(rect.width, 40);
-    assert_eq!(rect.height, 60);
-
-    // Verify area after chaining
-    assert_eq!(rect.area(), 2400);
+    assert_eq!(rect.width, 20);
+    assert_eq!(rect.height, 40);
+    assert_eq!(rect.area(), 800);
 }
 
 #[test]
-fun test_counter_state_machine() {
-    // Test stateful object managing internal state
-    let mut counter = Counter::new();
-
-    // Simulate a series of operations
-    counter.increment();
-    counter.increment();
-    counter.increment();
-    assert_eq!(counter.value(), 3);
-
-    counter.decrement();
-    assert_eq!(counter.value(), 2);
-
-    counter.reset();
-    assert_eq!(counter.value(), 0);
-}
-
-#[test]
-fun test_rectangle_factory_methods() {
-    // Test various factory methods for creating rectangles
-    let square = Rectangle::square(20);
-    let rect = Rectangle::from_dimensions(30, 40);
-
-    assert!(square.is_square());
-    assert!(!rect.is_square());
-
-    assert_eq!(square.area(), 400);
-    assert_eq!(rect.area(), 1200);
-}
-
-#[test]
-fun test_encapsulation_workflow() {
-    // Test that encapsulation protects internal state
-    let mut point = Point::new(10, 20);
-
-    // Can only modify through setters
-    point.set_x(30);
-    point.set_y(40);
-
-    assert_eq!(point.x(), 30);
-    assert_eq!(point.y(), 40);
-
-    // Verify distance calculation works with modified state
-    let origin = Point::zero();
-    assert_eq!(origin.distance(&point), 50.0);
-}
-
-#[test]
-fun test_struct_composition() {
-    // Test composing structs to build complex objects
-    let top_left = Point::new(10, 10);
-    let bottom_right = Point::new(40, 30);
-
-    // Calculate rectangle dimensions from points
-    let width = (bottom_right.x() - top_left.x()).abs();
-    let height = (bottom_right.y() - top_left.y()).abs();
-
-    let rect = Rectangle { width, height };
-
-    assert_eq!(rect.area(), 600);
-    assert_eq!(rect.perimeter(), 100);
-}
-
-#[test]
-fun test_object_lifecycle() {
-    // Test complete lifecycle of an object
-    // Create
-    let mut counter = Counter::new();
-    assert_eq!(counter.value(), 0);
-
-    // Use
-    for _ in 0..5 {
-        counter.increment();
-    }
-    assert_eq!(counter.value(), 5);
-
-    // Modify
-    counter.decrement();
-    counter.decrement();
-    assert_eq!(counter.value(), 3);
-
-    // Reset
-    counter.reset();
-    assert_eq!(counter.value(), 0);
-}
-
-#[test]
-fun test_multiple_instances_independence() {
-    // Test that multiple instances maintain independent state
+fun test_independent_struct_counters() {
+    // Workflow: Multiple independent counters (value semantics)
     let mut counter1 = Counter::new();
     let mut counter2 = Counter::new();
 
@@ -173,12 +89,196 @@ fun test_multiple_instances_independence() {
     counter1.increment();
 
     counter2.increment();
+    counter2.increment();
+    counter2.increment();
 
+    // Each counter maintains independent state
     assert_eq!(counter1.value(), 2);
-    assert_eq!(counter2.value(), 1);
+    assert_eq!(counter2.value(), 3);
+}
 
-    // Modifying one doesn't affect the other
-    counter1.reset();
-    assert_eq!(counter1.value(), 0);
-    assert_eq!(counter2.value(), 1);
+// ============================================================================
+// CLASS INTEGRATION TESTS (Reference Semantics in Practice)
+// ============================================================================
+
+#[test]
+fun test_bank_account_transactions() {
+    // Workflow: Bank account with multiple transaction references (class)
+    let account = BankAccount("Alice", 1000.0);
+    let account_ref1 = account;  // Share reference
+    let account_ref2 = account;  // Share reference
+
+    // Transaction through different references
+    account_ref1.deposit(100.0);
+    account_ref2.deposit(200.0);
+    account.withdraw(50.0);
+
+    // All references see the same final balance
+    assert_eq!(account.balance(), 1250.0);
+    assert_eq!(account_ref1.balance(), 1250.0);
+    assert_eq!(account_ref2.balance(), 1250.0);
+
+    // All are the same instance
+    assert!(account === account_ref1);
+    assert!(account_ref1 === account_ref2);
+}
+
+#[test]
+fun test_person_lifecycle_workflow() {
+    // Workflow: Person object lifecycle with aging (class)
+    let person = Person("Bob", 25);
+    let person_ref = person;  // Share reference
+
+    // Simulate 5 years passing
+    for _ in 0..5 {
+        person.have_birthday();
+    }
+
+    // All references see updated age
+    assert_eq!(person.age(), 30);
+    assert_eq!(person_ref.age(), 30);
+
+    // Update name through one reference
+    person.set_name("Robert");
+
+    // All references see updated name
+    assert_eq!(person.name(), "Robert");
+    assert_eq!(person_ref.name(), "Robert");
+}
+
+#[test]
+fun test_shared_counter_workflow() {
+    // Workflow: Shared counter accessed by multiple references (class)
+    let counter = SharedCounter(0);
+    let ref1 = counter;
+    let ref2 = counter;
+    let ref3 = counter;
+
+    // Increment through different references
+    ref1.increment();
+    ref2.increment();
+    ref3.increment();
+    counter.increment();
+
+    // All see the accumulated value
+    assert_eq!(counter.value(), 4);
+    assert_eq!(ref1.value(), 4);
+    assert_eq!(ref2.value(), 4);
+    assert_eq!(ref3.value(), 4);
+}
+
+#[test]
+fun test_class_in_data_structure() {
+    // Workflow: Classes in collections share references
+    let person1 = Person("Carol", 35);
+    let person2 = Person("Dave", 40);
+
+    let people = vec![person1, person2];
+
+    // Modify through vector
+    people[0].have_birthday();
+
+    // Original reference sees the change (shared instance)
+    assert_eq!(person1.age(), 36);
+    assert_eq!(people[0].age(), 36);
+
+    // Still the same instance
+    assert!(person1 === people[0]);
+}
+
+#[test]
+fun test_bank_account_factory_methods() {
+    // Workflow: Creating accounts with factory methods (class)
+    let savings = BankAccount::savings_account("Eve");
+    let checking = BankAccount::checking_account("Frank", 500.0);
+
+    savings.deposit(1000.0);
+    checking.withdraw(100.0);
+
+    assert_eq!(savings.balance(), 1000.0);
+    assert_eq!(checking.balance(), 400.0);
+}
+
+// ============================================================================
+// MIXED WORKFLOWS (Struct vs Class Comparison)
+// ============================================================================
+
+#[test]
+fun test_struct_vs_class_copy_behavior() {
+    // Compare: Struct copy vs Class reference sharing
+
+    // Struct: Copies on assignment
+    let rect1 = Rectangle { width: 10, height: 20 };
+    let mut rect2 = rect1;  // COPY
+    rect2.width = 30;
+
+    assert_eq!(rect1.width, 10);  // Original unchanged
+    assert_eq!(rect2.width, 30);  // Copy modified
+
+    // Class: Shares reference on assignment
+    let person1 = Person("Grace", 28);
+    let person2 = person1;  // SHARE
+    person2.set_age(29);
+
+    assert_eq!(person1.age(), 29);  // Original changed!
+    assert_eq!(person2.age(), 29);  // Both see same change
+    assert!(person1 === person2);  // Same instance
+}
+
+#[test]
+fun test_builder_pattern_for_config() {
+    // Workflow: Building configuration with builder pattern (struct-based)
+    let config1 = ConfigBuilder::new()
+        .host("localhost")
+        .port(8080)
+        .timeout(30)
+        .build();
+
+    let config2 = ConfigBuilder::new()
+        .host("example.com")
+        .port(443)
+        .build();  // Uses default timeout
+
+    assert_eq!(config1.host(), "localhost");
+    assert_eq!(config1.port(), 8080);
+    assert_eq!(config1.timeout(), 30);
+
+    assert_eq!(config2.host(), "example.com");
+    assert_eq!(config2.port(), 443);
+    assert_eq!(config2.timeout(), 60);  // Default
+}
+
+#[test]
+fun test_encapsulation_workflow() {
+    // Workflow: Private fields enforce encapsulation (struct)
+    let mut point = Point::new(5, 10);
+
+    // Cannot access private fields
+    // let x = point.x;  // ERROR: field is private
+
+    // Must use public interface
+    assert_eq!(point.x(), 5);
+    point.set_x(15);
+    assert_eq!(point.x(), 15);
+
+    // Calculate distance using public method
+    let other = Point::new(18, 14);
+    assert_eq!(point.distance(&other), 5.0);
+}
+
+#[test]
+fun test_static_methods_workflow() {
+    // Workflow: Using static/associated functions
+
+    // Struct static methods
+    let origin = Point::origin();
+    let zero = Point::zero();
+    assert!(origin.equals(&zero));
+
+    // Class static methods
+    let account1 = BankAccount::savings_account("Helen");
+    let account2 = BankAccount::checking_account("Ian", 250.0);
+
+    assert_eq!(account1.balance(), 0.0);
+    assert_eq!(account2.balance(), 250.0);
 }

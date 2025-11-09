@@ -173,3 +173,89 @@ fun test_rectangle_can_hold_reflexive(width: u32, height: u32) {
     let rect = Rectangle { width: width as i32, height: height as i32 };
     assert!(rect.can_hold(&rect));
 }
+
+// ============================================================================
+// CLASS PROPERTY TESTS (Reference Semantics)
+// ============================================================================
+
+#[proptest]
+fun test_class_reference_identity_preserved(name: String, age: u8) {
+    // Property: Multiple references to same class share identity
+    assume!(!name.is_empty() && age < 120);
+
+    let person1 = Person(name.clone(), age as i32);
+    let person2 = person1;  // Share reference
+
+    // Identity preserved
+    assert!(person1 === person2);
+
+    // Value equality also holds
+    assert_eq!(person1, person2);
+}
+
+#[proptest]
+fun test_class_mutation_visible_to_all_refs(initial_balance: u16, deposit: u16) {
+    // Property: Mutating through one reference affects all references
+    assume!(initial_balance <= 10000 && deposit <= 10000);
+    assume!(initial_balance as u32 + deposit as u32 <= 20000);
+
+    let account = BankAccount("Test", initial_balance as f64);
+    let account_ref = account;  // Share reference
+
+    account.deposit(deposit as f64);
+
+    // Both references see the mutation
+    assert_eq!(account.balance(), (initial_balance + deposit) as f64);
+    assert_eq!(account_ref.balance(), (initial_balance + deposit) as f64);
+}
+
+#[proptest]
+fun test_class_age_increment_shared(initial_age: u8) {
+    // Property: Birthday increments age for all references
+    assume!(initial_age < 119);
+
+    let person = Person("Test", initial_age as i32);
+    let person_ref = person;  // Share reference
+
+    person.have_birthday();
+
+    // Both see incremented age
+    assert_eq!(person.age(), (initial_age + 1) as i32);
+    assert_eq!(person_ref.age(), (initial_age + 1) as i32);
+
+    // Still same identity
+    assert!(person === person_ref);
+}
+
+#[proptest]
+fun test_struct_copy_independence(x: i32, y: i32, new_x: i32) {
+    // Property: Struct copies are independent (value semantics)
+    assume!(x.abs() <= 1000 && y.abs() <= 1000 && new_x.abs() <= 1000);
+
+    let point1 = Point::new(x, y);
+    let mut point2 = point1;  // Copy
+
+    point2.set_x(new_x);
+
+    // Original unchanged (because point2 is a copy)
+    assert_eq!(point1.x(), x);
+    assert_eq!(point2.x(), new_x);
+}
+
+#[proptest]
+fun test_shared_counter_increments_accumulate(count: u8) {
+    // Property: Shared counter increments accumulate across references
+    assume!(count > 0 && count <= 100);
+
+    let counter = SharedCounter(0);
+    let counter_ref = counter;  // Share reference
+
+    for _ in 0..count {
+        counter.increment();
+    }
+
+    // All references see same accumulated value
+    assert_eq!(counter.value(), count as i32);
+    assert_eq!(counter_ref.value(), count as i32);
+    assert!(counter === counter_ref);
+}

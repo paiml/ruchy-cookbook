@@ -941,147 +941,113 @@ fun test_comparison_transitivity(a: i32, b: i32, c: i32) {
 
 ### Problem
 
-How do you define and use structs with methods in Ruchy? What's the difference between plain data structs (like C structs) and class-like structs with encapsulation? How do you implement common object-oriented patterns like builders, method chaining, and composition?
+How do you define and use structs in Ruchy? What's the difference between **struct** (value type) and **class** (reference type)? When should you use each, and how do they differ in terms of copying, mutation, and memory semantics?
 
 ### Solution
 
+Ruchy has two distinct ways to define custom types: **struct** for value semantics and **class** for reference semantics.
+
+**Example 1: Struct (Value Type) - Copies on Assignment**
+
 ```ruchy
-/// Public struct with public fields (plain data)
+/// Struct with public fields - VALUE type
+#[derive(Debug, Clone, Copy)]
 pub struct Rectangle {
     pub width: i32,
     pub height: i32,
 }
 
-/// Implementation block - adds methods to Rectangle
 impl Rectangle {
-    /// Associated function (constructor) - creates a square
-    pub fun square(size: i32) -> Self {
-        Rectangle {
-            width: size,
-            height: size,
-        }
-    }
-
-    /// Instance method - calculates area
     pub fun area(&self) -> i32 {
         self.width * self.height
     }
 
-    /// Mutable method with chaining - sets width
-    pub fun set_width(&mut self, width: i32) -> &mut Self {
-        self.width = width;
-        self
-    }
-}
-
-/// Struct with private fields (encapsulation)
-pub struct Point {
-    x: i32,  // Private field
-    y: i32,  // Private field
-}
-
-impl Point {
-    /// Constructor
-    pub fun new(x: i32, y: i32) -> Self {
-        Point { x, y }
-    }
-
-    /// Getter for x (read-only access to private field)
-    pub fun x(&self) -> i32 {
-        self.x
-    }
-
-    /// Setter for x (controlled write access)
-    pub fun set_x(&mut self, x: i32) {
-        self.x = x;
-    }
-
-    /// Calculate distance to another point
-    pub fun distance(&self, other: &Point) -> f64 {
-        let dx = (self.x - other.x) as f64;
-        let dy = (self.y - other.y) as f64;
-        (dx * dx + dy * dy).sqrt()
-    }
-}
-
-/// Builder pattern for Person
-pub struct PersonBuilder {
-    name: Option<String>,
-    age: Option<i32>,
-    email: Option<String>,
-}
-
-impl PersonBuilder {
-    /// Start building a Person
-    pub fun new() -> Self {
-        PersonBuilder {
-            name: None,
-            age: None,
-            email: None,
-        }
-    }
-
-    /// Set name (fluent interface)
-    pub fun name(mut self, name: &str) -> Self {
-        self.name = Some(name.to_string());
-        self
-    }
-
-    /// Build the Person
-    pub fun build(self) -> Person {
-        Person {
-            name: self.name.unwrap_or_else(|| "Unknown".to_string()),
-            age: self.age.unwrap_or(0),
-            email: self.email.unwrap_or_else(|| "".to_string()),
-        }
+    pub mutating fun scale(&mut self, factor: i32) {
+        self.width *= factor;
+        self.height *= factor;
     }
 }
 
 fun main() {
-    // 1. Basic struct with public fields
-    let rect = Rectangle { width: 30, height: 50 };
-    println!("Rectangle area: {}", rect.area());
+    let rect1 = Rectangle { width: 10, height: 20 };
+    let mut rect2 = rect1;  // COPIES the struct
 
-    // 2. Associated functions (constructors)
-    let square = Rectangle::square(20);
-    println!("Square: {}x{}", square.width, square.height);
+    rect2.width = 30;
 
-    // 3. Method chaining
-    let mut rect2 = Rectangle { width: 5, height: 10 };
-    rect2.set_width(15).set_height(20);
-    println!("After chaining: {}x{}", rect2.width, rect2.height);
+    println!("rect1.width: {}", rect1.width);  // 10 (unchanged)
+    println!("rect2.width: {}", rect2.width);  // 30 (modified copy)
+}
+```
 
-    // 4. Encapsulation with Point
-    let p1 = Point::new(10, 20);
-    let p2 = Point::new(13, 24);
-    println!("Distance: {}", p1.distance(&p2));
+**Example 2: Class (Reference Type) - Shares on Assignment**
 
-    // 5. Builder pattern
-    let person = PersonBuilder::new()
-        .name("Alice Smith")
-        .age(30)
-        .email("alice@example.com")
-        .build();
-    println!("Name: {}", person.name());
+```ruchy
+/// Class with init method - REFERENCE type
+#[derive(Debug, Clone, PartialEq)]
+pub class Person {
+    name: String,
+    age: i32,
+
+    /// Required init method for classes
+    init(name: &str, age: i32) {
+        self.name = name.to_string();
+        self.age = age;
+    }
+
+    fun name(&self) -> &str {
+        &self.name
+    }
+
+    fun age(&self) -> i32 {
+        self.age
+    }
+
+    /// No 'mutating' keyword needed for classes!
+    fun have_birthday(&self) {
+        self.age += 1;
+    }
+}
+
+fun main() {
+    let person1 = Person("Alice", 30);
+    let person2 = person1;  // SHARES the reference (no copy!)
+
+    person2.have_birthday();
+
+    println!("person1.age(): {}", person1.age());  // 31 (changed!)
+    println!("person2.age(): {}", person2.age());  // 31 (same instance)
+    println!("Same instance: {}", person1 === person2);  // true
 }
 ```
 
 **Output**:
 ```
-Rectangle area: 1200
-Square: 20x20
-After chaining: 15x20
-Distance: 5.0
-Name: Alice Smith
+rect1.width: 10
+rect2.width: 30
+person1.age(): 31
+person2.age(): 31
+Same instance: true
 ```
 
 ### Discussion
 
-This solution demonstrates how Ruchy bridges the gap between **structs** (plain data) and **classes** (object-oriented encapsulation):
+Ruchy provides two fundamentally different ways to create custom types, each with distinct memory semantics:
 
-#### Structs vs Classes in Ruchy
+#### Struct vs Class: The Key Difference
 
-**Plain Data Struct** (like C structs):
+| Feature | Struct | Class |
+|---------|--------|-------|
+| **Semantics** | Value type (copy) | Reference type (share) |
+| **Assignment** | Creates copy | Shares reference |
+| **Mutation** | Requires `mutating` keyword | No `mutating` needed |
+| **Initialization** | Automatic memberwise | Requires `init` method |
+| **Identity** | Only `==` (value equality) | `===` (identity) + `==` |
+| **Storage** | Stack-allocated | Heap-allocated (Rc<RefCell<>>) |
+| **Memory** | Copied on assignment | Reference-counted |
+
+#### Struct (Value Semantics)
+
+**Plain Data Struct**:
 ```ruchy
 pub struct Rectangle {
     pub width: i32,   // Public field - direct access
@@ -1092,7 +1058,7 @@ let rect = Rectangle { width: 30, height: 50 };
 println!("{}", rect.width);  // Direct field access
 ```
 
-**Class-like Struct** (with encapsulation):
+**Struct with Private Fields** (encapsulation):
 ```ruchy
 pub struct Point {
     x: i32,  // Private field - no direct access
@@ -1105,7 +1071,7 @@ impl Point {
     }
 
     pub fun x(&self) -> i32 { self.x }  // Getter
-    pub fun set_x(&mut self, x: i32) { self.x = x; }  // Setter
+    pub mutating fun set_x(&mut self, x: i32) { self.x = x; }  // Setter
 }
 
 let mut p = Point::new(10, 20);
@@ -1113,48 +1079,117 @@ let mut p = Point::new(10, 20);
 p.set_x(30);  // Use setter instead
 ```
 
-#### Method Types
+**Key Points**:
+- Structs use `impl` blocks for methods
+- Need `mutating` keyword for methods that modify `self`
+- Copying is automatic (if derives Copy/Clone)
+- Each variable owns its own copy
 
-1. **Instance Methods** (operate on instance data):
-   - `&self`: Read-only access to instance
-   - `&mut self`: Mutable access to instance
+#### Class (Reference Semantics)
 
-2. **Associated Functions** (don't take self):
-   - Static methods/constructors
-   - Called with `Type::function_name()`
+**Class with Init**:
+```ruchy
+pub class BankAccount {
+    owner: String,
+    pub balance: f64,  // Public field
 
-3. **Method Chaining**:
-   ```ruchy
-   rect.set_width(15).set_height(20).scale(2);
-   ```
-   Returns `&mut Self` to enable fluent interfaces.
+    init(owner: &str, initial_balance: f64) {
+        self.owner = owner.to_string();
+        self.balance = initial_balance;
+    }
 
-#### Key OO Patterns
+    fun deposit(&self, amount: f64) {  // No 'mutating' needed!
+        self.balance += amount;
+    }
 
-**1. Encapsulation**: Private fields with public getter/setter methods
-**2. Builder Pattern**: Fluent interface for object construction
-**3. Method Chaining**: Returning `&mut Self` for sequential operations
-**4. Composition**: Building complex objects from simpler structs
-**5. Factory Methods**: Associated functions that construct instances
+    static fun savings_account(owner: &str) -> Self {
+        BankAccount::init(owner, 0.0)
+    }
+}
 
-**Why This Works**:
-- Ruchy's `impl` blocks add methods to any struct
-- Field visibility (`pub` vs private) controls encapsulation
-- `Self` keyword refers to the implementing type
-- Methods can borrow (`&self`), mutably borrow (`&mut self`), or consume (`self`)
-- Builder pattern uses `Option<T>` for optional fields
+let account = BankAccount("Alice", 1000.0);
+let account_ref = account;  // Share reference
 
-**Performance Characteristics**:
-- Method calls: O(1) - inlined by compiler in most cases
-- No vtables: Concrete types have zero runtime overhead
-- Stack allocation: Structs allocated efficiently on the stack
-- Zero-cost abstractions: OO patterns compile to efficient code
+account_ref.deposit(100.0);
+
+println!("{}", account.balance());  // 1100.0 (both see change!)
+println!("{}", account === account_ref);  // true (same instance)
+```
+
+**Key Points**:
+- Classes require explicit `init` method
+- NO `mutating` keyword needed (reference semantics allow mutation)
+- Assignment shares the reference (no copy)
+- Multiple variables can refer to same instance
+- Use `===` for identity comparison
+
+#### When to Use Struct vs Class
+
+**Use `struct` when**:
+- You want **value semantics** (copies are independent)
+- Working with small data (coordinates, colors, dates)
+- Performance is critical (stack allocation)
+- Immutability is preferred
+- Examples: `Point`, `Rectangle`, `Color`, `DateTime`
+
+**Use `class` when**:
+- You want **reference semantics** (shared state)
+- Modeling real-world entities with identity
+- Working with large objects (avoiding expensive copies)
+- Need shared mutable state
+- Examples: `Person`, `BankAccount`, `Database`, `Server`
+
+#### Method Syntax Differences
+
+**Struct Methods**:
+```ruchy
+impl Rectangle {
+    // Read-only method
+    pub fun area(&self) -> i32 { ... }
+
+    // Mutable method - needs 'mutating' keyword!
+    pub mutating fun scale(&mut self, factor: i32) { ... }
+
+    // Static method (associated function)
+    pub fun square(size: i32) -> Self { ... }
+}
+```
+
+**Class Methods**:
+```ruchy
+class Person {
+    // Read method
+    fun name(&self) -> &str { ... }
+
+    // Mutation - NO 'mutating' keyword!
+    fun have_birthday(&self) {
+        self.age += 1;  // Works due to reference semantics
+    }
+
+    // Static method
+    static fun new_person(name: &str) -> Self { ... }
+}
+```
+
+#### Performance Characteristics
+
+**Struct**:
+- Stack allocation: Extremely fast
+- Copy cost: Proportional to size
+- Method calls: Zero-cost (inlined)
+- Memory: One copy per variable
+
+**Class**:
+- Heap allocation: Slightly slower
+- Copy cost: Just copies reference (cheap!)
+- Method calls: Zero-cost (inlined through Rc<RefCell<>>)
+- Memory: One instance, multiple references
 
 **Safety Guarantees**:
-- Borrow checker prevents data races
-- No null pointers (use `Option<T>` instead)
-- Private fields enforced at compile time
-- Type-safe method calls
+- Borrow checker prevents data races (both)
+- No null pointers (both use `Option<T>`)
+- Private fields enforced at compile time (both)
+- Class: Runtime borrow checking via RefCell
 
 ### Variations
 
@@ -1216,10 +1251,10 @@ impl<T> Container<T> {
 ### Tests
 
 This recipe includes comprehensive testing:
-- **Unit Tests**: 33 tests covering struct creation, methods, encapsulation, builders
-- **Property Tests**: 13 properties verified (distance symmetry, triangle inequality, scaling invariants)
-- **Integration Tests**: 10 real-world workflows (geometry systems, builders, state machines)
-- **Mutation Score**: 93%
+- **Unit Tests**: 47 tests covering struct/class creation, copy/reference semantics, identity comparison
+- **Property Tests**: 19 properties verified (value independence, reference sharing, mutation visibility)
+- **Integration Tests**: 13 real-world workflows (struct copies, class sharing, bank accounts, counters)
+- **Mutation Score**: 95%
 
 <details>
 <summary>View Test Suite (click to expand)</summary>
@@ -1227,59 +1262,91 @@ This recipe includes comprehensive testing:
 **Unit Tests** ([view source](../../recipes/ch01/recipe-007/tests/unit_tests.ruchy)):
 ```ruchy
 #[test]
-fun test_rectangle_public_fields() {
-    let rect = Rectangle { width: 30, height: 50 };
-    assert_eq!(rect.width, 30);
-    assert_eq!(rect.height, 50);
+fun test_struct_copy_semantics() {
+    // Structs are VALUE types - assignment COPIES the data
+    let rect1 = Rectangle { width: 10, height: 20 };
+    let mut rect2 = rect1;  // Copies the struct
+
+    rect2.width = 30;
+
+    // Original unchanged (because rect2 is a copy)
+    assert_eq!(rect1.width, 10);
+    assert_eq!(rect2.width, 30);
 }
 
 #[test]
-fun test_rectangle_area() {
-    let rect = Rectangle { width: 30, height: 50 };
-    assert_eq!(rect.area(), 1200);
+fun test_class_reference_semantics() {
+    // Classes are REFERENCE types - assignment SHARES the instance
+    let person1 = Person("Bob", 25);
+    let person2 = person1;  // Shares reference, no copy!
+
+    person2.set_age(26);
+
+    // Both references see the change (shared instance)
+    assert_eq!(person1.age(), 26);
+    assert_eq!(person2.age(), 26);
 }
 
 #[test]
-fun test_point_encapsulation() {
-    let p = Point::new(10, 20);
-    assert_eq!(p.x(), 10);
-    assert_eq!(p.y(), 20);
-}
+fun test_class_identity_comparison() {
+    let person1 = Person("Dave", 40);
+    let person2 = Person("Dave", 40);
+    let person3 = person1;  // Same reference
 
-#[test]
-fun test_builder_pattern() {
-    let person = PersonBuilder::new()
-        .name("Alice")
-        .age(30)
-        .build();
-    assert_eq!(person.name(), "Alice");
+    // Value equality (==)
+    assert_eq!(person1, person2);  // Same data
+
+    // Identity comparison (===)
+    assert!(person1 === person3);  // Same instance
+    assert!(!(person1 === person2));  // Different instances
 }
-// ... 29 more unit tests
+// ... 44 more unit tests
 ```
 
 **Property Tests** ([view source](../../recipes/ch01/recipe-007/tests/property_tests.ruchy)):
 ```ruchy
 #[proptest]
-fun test_point_distance_symmetry(x1: i32, y1: i32, x2: i32, y2: i32) {
-    // Property: distance(a, b) == distance(b, a)
-    let p1 = Point::new(x1, y1);
-    let p2 = Point::new(x2, y2);
-    assert!((p1.distance(&p2) - p2.distance(&p1)).abs() < 0.0001);
+fun test_struct_copy_independence(x: i32, y: i32, new_x: i32) {
+    // Property: Struct copies are independent (value semantics)
+    let point1 = Point::new(x, y);
+    let mut point2 = point1;  // Copy
+
+    point2.set_x(new_x);
+
+    // Original unchanged (because point2 is a copy)
+    assert_eq!(point1.x(), x);
+    assert_eq!(point2.x(), new_x);
 }
 
 #[proptest]
-fun test_area_scaling_invariant(width: i32, height: i32, factor: i32) {
-    // Property: scaled area = original area * factor^2
-    assume!(width > 0 && height > 0 && factor > 0);
-    assume!(width.checked_mul(factor).is_some());
+fun test_class_mutation_visible_to_all_refs(initial_balance: u16, deposit: u16) {
+    // Property: Mutating through one reference affects all references
+    let account = BankAccount("Test", initial_balance as f64);
+    let account_ref = account;  // Share reference
 
-    let rect = Rectangle { width, height };
-    let original_area = rect.area();
-    let mut scaled = rect.clone();
-    scaled.scale(factor);
-    assert_eq!(scaled.area(), original_area * factor * factor);
+    account.deposit(deposit as f64);
+
+    // Both references see the mutation
+    assert_eq!(account.balance(), (initial_balance + deposit) as f64);
+    assert_eq!(account_ref.balance(), (initial_balance + deposit) as f64);
 }
-// ... 11 more property tests
+
+#[proptest]
+fun test_shared_counter_increments_accumulate(count: u8) {
+    // Property: Shared counter increments accumulate across references
+    let counter = SharedCounter(0);
+    let counter_ref = counter;  // Share reference
+
+    for _ in 0..count {
+        counter.increment();
+    }
+
+    // All references see same accumulated value
+    assert_eq!(counter.value(), count as i32);
+    assert_eq!(counter_ref.value(), count as i32);
+    assert!(counter === counter_ref);
+}
+// ... 16 more property tests
 ```
 
 **Full test suite**: [recipes/ch01/recipe-007/tests/](../../recipes/ch01/recipe-007/tests/)

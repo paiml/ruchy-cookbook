@@ -1,208 +1,252 @@
 // Unit tests for Recipe 1.7: Structs, Classes, and Methods
-// Write tests FIRST following EXTREME TDD
+// Written FIRST following EXTREME TDD methodology
+// Tests demonstrate the difference between struct (value type) and class (reference type)
 
 use std::testing::*;
 
-// Test basic struct creation
-#[test]
-fun test_create_struct() {
-    let point = Point::new(10, 20);
-    assert_eq!(point.x(), 10);
-    assert_eq!(point.y(), 20);
-}
+// ============================================================================
+// STRUCT TESTS (Value Semantics)
+// ============================================================================
 
 #[test]
-fun test_struct_fields() {
-    let rect = Rectangle { width: 100, height: 50 };
-    assert_eq!(rect.width, 100);
+fun test_struct_creation() {
+    let rect = Rectangle { width: 30, height: 50 };
+    assert_eq!(rect.width, 30);
     assert_eq!(rect.height, 50);
 }
 
-// Test methods
 #[test]
-fun test_method_area() {
-    let rect = Rectangle { width: 30, height: 50 };
-    assert_eq!(rect.area(), 1500);
+fun test_struct_copy_semantics() {
+    // Structs are VALUE types - assignment COPIES the data
+    let rect1 = Rectangle { width: 10, height: 20 };
+    let mut rect2 = rect1;  // Copies the struct
+
+    rect2.width = 30;
+
+    // Original unchanged (because rect2 is a copy)
+    assert_eq!(rect1.width, 10);
+    assert_eq!(rect2.width, 30);
 }
 
 #[test]
-fun test_method_perimeter() {
+fun test_struct_methods() {
     let rect = Rectangle { width: 30, height: 50 };
+    assert_eq!(rect.area(), 1500);
     assert_eq!(rect.perimeter(), 160);
 }
 
 #[test]
-fun test_method_is_square() {
-    let square = Rectangle { width: 10, height: 10 };
-    let rect = Rectangle { width: 10, height: 20 };
-    assert!(square.is_square());
-    assert!(!rect.is_square());
-}
-
-// Test associated functions (constructors)
-#[test]
-fun test_constructor_square() {
-    let square = Rectangle::square(15);
-    assert_eq!(square.width, 15);
-    assert_eq!(square.height, 15);
-}
-
-#[test]
-fun test_constructor_from_dimensions() {
-    let rect = Rectangle::from_dimensions(40, 60);
-    assert_eq!(rect.width, 40);
-    assert_eq!(rect.height, 60);
-}
-
-// Test mutable methods
-#[test]
-fun test_mutable_method_scale() {
+fun test_struct_mutating_methods() {
+    // Structs need 'mutating' keyword to modify self
     let mut rect = Rectangle { width: 10, height: 20 };
     rect.scale(2);
+
     assert_eq!(rect.width, 20);
     assert_eq!(rect.height, 40);
 }
 
 #[test]
-fun test_mutable_method_set_width() {
-    let mut rect = Rectangle { width: 10, height: 20 };
-    rect.set_width(30);
-    assert_eq!(rect.width, 30);
+fun test_struct_associated_functions() {
+    let square = Rectangle::square(15);
+    assert_eq!(square.width, 15);
+    assert_eq!(square.height, 15);
+    assert!(square.is_square());
 }
 
 #[test]
-fun test_mutable_method_set_height() {
-    let mut rect = Rectangle { width: 10, height: 20 };
-    rect.set_height(40);
-    assert_eq!(rect.height, 40);
+fun test_struct_equality() {
+    let rect1 = Rectangle { width: 10, height: 20 };
+    let rect2 = Rectangle { width: 10, height: 20 };
+    let rect3 = Rectangle { width: 20, height: 10 };
+
+    // Structs use value equality
+    assert_eq!(rect1, rect2);
+    assert_ne!(rect1, rect3);
 }
 
-// Test method chaining
-#[test]
-fun test_method_chaining() {
-    let mut rect = Rectangle { width: 10, height: 20 };
-    rect.set_width(15).set_height(25).scale(2);
-    assert_eq!(rect.width, 30);
-    assert_eq!(rect.height, 50);
-}
+// ============================================================================
+// CLASS TESTS (Reference Semantics)
+// ============================================================================
 
-// Test encapsulation with private fields
 #[test]
-fun test_encapsulation_point() {
-    let point = Point::new(5, 10);
-    // Cannot access private fields directly, must use methods
-    assert_eq!(point.x(), 5);
-    assert_eq!(point.y(), 10);
+fun test_class_creation() {
+    let person = Person("Alice", 30);  // Uses init method
+    assert_eq!(person.name(), "Alice");
+    assert_eq!(person.age(), 30);
 }
 
 #[test]
-fun test_encapsulation_setter() {
+fun test_class_reference_semantics() {
+    // Classes are REFERENCE types - assignment SHARES the instance
+    let person1 = Person("Bob", 25);
+    let person2 = person1;  // Shares reference, no copy!
+
+    person2.set_age(26);
+
+    // Both references see the change (shared instance)
+    assert_eq!(person1.age(), 26);
+    assert_eq!(person2.age(), 26);
+}
+
+#[test]
+fun test_class_methods_no_mutating() {
+    // Classes DON'T need 'mutating' keyword - reference semantics allow direct mutation
+    let person = Person("Carol", 35);
+    person.have_birthday();  // Modifies age without 'mut' or 'mutating'
+
+    assert_eq!(person.age(), 36);
+}
+
+#[test]
+fun test_class_identity_comparison() {
+    let person1 = Person("Dave", 40);
+    let person2 = Person("Dave", 40);
+    let person3 = person1;  // Same reference
+
+    // Value equality (==)
+    assert_eq!(person1, person2);  // Same data
+
+    // Identity comparison (===)
+    assert!(person1 === person3);  // Same instance
+    assert!(!(person1 === person2));  // Different instances
+}
+
+#[test]
+fun test_class_multiple_references() {
+    let account = BankAccount("Alice", 1000.0);
+    let account_ref1 = account;
+    let account_ref2 = account;
+
+    account_ref1.deposit(100.0);
+    account_ref2.deposit(50.0);
+
+    // All references see total balance
+    assert_eq!(account.balance(), 1150.0);
+    assert_eq!(account_ref1.balance(), 1150.0);
+    assert_eq!(account_ref2.balance(), 1150.0);
+}
+
+#[test]
+fun test_class_init_method() {
+    // Classes require explicit init method
+    let account = BankAccount("Bob", 500.0);
+
+    assert_eq!(account.owner(), "Bob");
+    assert_eq!(account.balance(), 500.0);
+}
+
+#[test]
+fun test_class_methods() {
+    let account = BankAccount("Charlie", 1000.0);
+
+    account.deposit(250.0);
+    assert_eq!(account.balance(), 1250.0);
+
+    account.withdraw(150.0);
+    assert_eq!(account.balance(), 1100.0);
+}
+
+// ============================================================================
+// STRUCT WITH ENCAPSULATION (Private Fields)
+// ============================================================================
+
+#[test]
+fun test_struct_encapsulation() {
+    let point = Point::new(10, 20);
+
+    // Can't access private fields directly
+    // point.x = 15;  // ERROR: field is private
+
+    // Must use getters
+    assert_eq!(point.x(), 10);
+    assert_eq!(point.y(), 20);
+}
+
+#[test]
+fun test_struct_encapsulation_setters() {
     let mut point = Point::new(5, 10);
+
     point.set_x(15);
     point.set_y(25);
+
     assert_eq!(point.x(), 15);
     assert_eq!(point.y(), 25);
 }
 
-// Test distance calculation
+#[test]
+fun test_struct_copy_with_encapsulation() {
+    // Even with private fields, structs still have value semantics
+    let point1 = Point::new(10, 20);
+    let mut point2 = point1;  // Copies
+
+    point2.set_x(30);
+
+    assert_eq!(point1.x(), 10);  // Original unchanged
+    assert_eq!(point2.x(), 30);
+}
+
 #[test]
 fun test_point_distance() {
     let p1 = Point::new(0, 0);
     let p2 = Point::new(3, 4);
+
     assert_eq!(p1.distance(&p2), 5.0);
 }
 
-#[test]
-fun test_point_distance_same() {
-    let p1 = Point::new(5, 5);
-    let p2 = Point::new(5, 5);
-    assert_eq!(p1.distance(&p2), 0.0);
-}
+// ============================================================================
+// METHOD CHAINING
+// ============================================================================
 
-// Test builder pattern
 #[test]
-fun test_builder_pattern() {
-    let person = PersonBuilder::new()
-        .name("Alice")
-        .age(30)
-        .email("alice@example.com")
-        .build();
+fun test_struct_method_chaining() {
+    let mut rect = Rectangle { width: 5, height: 10 };
+    rect.set_width(15).set_height(20).scale(2);
 
-    assert_eq!(person.name(), "Alice");
-    assert_eq!(person.age(), 30);
-    assert_eq!(person.email(), "alice@example.com");
+    assert_eq!(rect.width, 30);
+    assert_eq!(rect.height, 40);
 }
 
 #[test]
-fun test_builder_partial() {
-    let person = PersonBuilder::new()
-        .name("Bob")
-        .age(25)
-        .build();
+fun test_class_method_chaining() {
+    let person = Person("Eve", 25);
+    person.set_name("Evelyn").set_age(26);
 
-    assert_eq!(person.name(), "Bob");
-    assert_eq!(person.age(), 25);
+    assert_eq!(person.name(), "Evelyn");
+    assert_eq!(person.age(), 26);
 }
 
-// Test struct with methods vs plain struct
-#[test]
-fun test_plain_struct() {
-    let data = PlainData { value: 42 };
-    assert_eq!(data.value, 42);
-}
+// ============================================================================
+// STATIC METHODS / ASSOCIATED FUNCTIONS
+// ============================================================================
 
 #[test]
-fun test_struct_with_methods() {
-    let counter = Counter::new();
-    assert_eq!(counter.value(), 0);
-}
+fun test_struct_static_methods() {
+    let zero = Point::zero();
+    assert_eq!(zero.x(), 0);
+    assert_eq!(zero.y(), 0);
 
-#[test]
-fun test_counter_increment() {
-    let mut counter = Counter::new();
-    counter.increment();
-    assert_eq!(counter.value(), 1);
+    let origin = Point::origin();
+    assert_eq!(origin.x(), 0);
+    assert_eq!(origin.y(), 0);
 }
 
 #[test]
-fun test_counter_increment_multiple() {
-    let mut counter = Counter::new();
-    counter.increment();
-    counter.increment();
-    counter.increment();
-    assert_eq!(counter.value(), 3);
+fun test_class_static_methods() {
+    let savings = BankAccount::savings_account("Frank");
+    assert_eq!(savings.owner(), "Frank");
+    assert_eq!(savings.balance(), 0.0);
+
+    let checking = BankAccount::checking_account("Grace", 100.0);
+    assert_eq!(checking.owner(), "Grace");
+    assert_eq!(checking.balance(), 100.0);
 }
 
-#[test]
-fun test_counter_decrement() {
-    let mut counter = Counter::new();
-    counter.increment();
-    counter.increment();
-    counter.decrement();
-    assert_eq!(counter.value(), 1);
-}
+// ============================================================================
+// COMPARISON METHODS
+// ============================================================================
 
 #[test]
-fun test_counter_reset() {
-    let mut counter = Counter::new();
-    counter.increment();
-    counter.increment();
-    counter.reset();
-    assert_eq!(counter.value(), 0);
-}
-
-// Test self reference
-#[test]
-fun test_self_reference() {
-    let rect = Rectangle { width: 10, height: 20 };
-    let doubled = rect.doubled();
-    assert_eq!(doubled.width, 20);
-    assert_eq!(doubled.height, 40);
-}
-
-// Test comparison methods
-#[test]
-fun test_rectangle_can_hold() {
+fun test_rectangle_comparison() {
     let rect1 = Rectangle { width: 30, height: 50 };
     let rect2 = Rectangle { width: 10, height: 40 };
     let rect3 = Rectangle { width: 60, height: 45 };
@@ -211,28 +255,93 @@ fun test_rectangle_can_hold() {
     assert!(!rect1.can_hold(&rect3));
 }
 
-// Test static methods
 #[test]
-fun test_static_method_zero() {
-    let point = Point::zero();
-    assert_eq!(point.x(), 0);
-    assert_eq!(point.y(), 0);
+fun test_person_comparison() {
+    let person1 = Person("Helen", 30);
+    let person2 = Person("Ian", 30);
+    let person3 = Person("Helen", 25);
+
+    assert!(person1.same_age(&person2));
+    assert!(!person1.same_age(&person3));
+}
+
+// ============================================================================
+// BUILDER PATTERN (Struct-based)
+// ============================================================================
+
+#[test]
+fun test_builder_pattern() {
+    let config = ConfigBuilder::new()
+        .host("localhost")
+        .port(8080)
+        .timeout(30)
+        .build();
+
+    assert_eq!(config.host(), "localhost");
+    assert_eq!(config.port(), 8080);
+    assert_eq!(config.timeout(), 30);
 }
 
 #[test]
-fun test_static_method_origin() {
-    let point = Point::origin();
-    assert_eq!(point.x(), 0);
-    assert_eq!(point.y(), 0);
+fun test_builder_partial() {
+    let config = ConfigBuilder::new()
+        .host("example.com")
+        .build();
+
+    assert_eq!(config.host(), "example.com");
+    assert_eq!(config.port(), 80);  // Default
+    assert_eq!(config.timeout(), 60);  // Default
 }
 
-// Test struct equality
-#[test]
-fun test_point_equality() {
-    let p1 = Point::new(5, 10);
-    let p2 = Point::new(5, 10);
-    let p3 = Point::new(10, 5);
+// ============================================================================
+// COUNTER EXAMPLE (Stateful Struct)
+// ============================================================================
 
-    assert!(p1.equals(&p2));
-    assert!(!p1.equals(&p3));
+#[test]
+fun test_counter_struct() {
+    let mut counter = Counter::new();
+    assert_eq!(counter.value(), 0);
+
+    counter.increment();
+    counter.increment();
+    assert_eq!(counter.value(), 2);
+
+    counter.decrement();
+    assert_eq!(counter.value(), 1);
+
+    counter.reset();
+    assert_eq!(counter.value(), 0);
+}
+
+#[test]
+fun test_counter_independence() {
+    // Struct counters are independent (value semantics)
+    let mut counter1 = Counter::new();
+    let mut counter2 = counter1;  // Copy
+
+    counter1.increment();
+    counter2.increment();
+    counter2.increment();
+
+    assert_eq!(counter1.value(), 1);
+    assert_eq!(counter2.value(), 2);
+}
+
+// ============================================================================
+// SHARED COUNTER (Class-based)
+// ============================================================================
+
+#[test]
+fun test_shared_counter_class() {
+    // Class counters are shared (reference semantics)
+    let counter = SharedCounter(0);
+    let counter_ref = counter;  // Share reference
+
+    counter.increment();
+    counter_ref.increment();
+    counter.increment();
+
+    // All references see same value (shared instance)
+    assert_eq!(counter.value(), 3);
+    assert_eq!(counter_ref.value(), 3);
 }
