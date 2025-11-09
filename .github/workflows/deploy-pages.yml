@@ -47,12 +47,12 @@ jobs:
 
       - name: Verify build output
         run: |
-          if [ ! -d "book" ]; then
-            echo "❌ Build directory not found"
+          if [ ! -d "book/html" ]; then
+            echo "❌ HTML build directory not found"
             exit 1
           fi
 
-          if [ ! -f "book/index.html" ]; then
+          if [ ! -f "book/html/index.html" ]; then
             echo "❌ index.html not found"
             exit 1
           fi
@@ -62,9 +62,9 @@ jobs:
           # Show build stats
           echo ""
           echo "📊 Build Statistics:"
-          echo "  HTML files: $(find book -name "*.html" | wc -l)"
-          echo "  Total files: $(find book -type f | wc -l)"
-          echo "  Size: $(du -sh book | cut -f1)"
+          echo "  HTML files: $(find book/html -name "*.html" | wc -l)"
+          echo "  Total files: $(find book/html -type f | wc -l)"
+          echo "  Size: $(du -sh book/html | cut -f1)"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -72,7 +72,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './book'
+          path: './book/html'
 
   # Deployment job
   deploy:

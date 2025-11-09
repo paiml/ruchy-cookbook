@@ -31,32 +31,22 @@ jobs:
       - name: Build book
         run: |
           echo "📚 Building Ruchy Cookbook..."
-          mdbook build 2>&1 || true
-          echo "✅ Build command completed"
+          mdbook build
+          echo "✅ Build complete"
 
       - name: Verify build output
         run: |
           echo "🔍 Checking build output..."
 
-          if [ ! -d "book" ]; then
-            echo "❌ Build directory not found"
-            echo "Debug: Listing current directory:"
-            ls -la
+          if [ ! -d "book/html" ]; then
+            echo "❌ HTML build directory not found"
+            ls -la book/ || true
             exit 1
           fi
 
-          echo "✅ Build directory exists"
-          echo "Debug: Listing book directory:"
-          ls -la book/ || echo "Failed to list book/"
-
-          echo ""
-          echo "Debug: All HTML files in book/:"
-          find book -name "*.html" || echo "No HTML files found"
-
-          if [ ! -f "book/index.html" ]; then
+          if [ ! -f "book/html/index.html" ]; then
             echo "❌ index.html not found"
-            echo "Debug: Files that DO exist in book/:"
-            ls -la book/*.html 2>/dev/null || echo "No .html files in book/"
+            ls -la book/html/ || true
             exit 1
           fi
 
@@ -65,9 +55,9 @@ jobs:
           # Show build stats
           echo ""
           echo "📊 Build Statistics:"
-          echo "  HTML files: $(find book -name "*.html" | wc -l)"
-          echo "  Total files: $(find book -type f | wc -l)"
-          echo "  Size: $(du -sh book | cut -f1)"
+          echo "  HTML files: $(find book/html -name "*.html" | wc -l)"
+          echo "  Total files: $(find book/html -type f | wc -l)"
+          echo "  Size: $(du -sh book/html | cut -f1)"
 
       - name: Check for broken links
         run: |
