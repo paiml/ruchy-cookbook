@@ -1,0 +1,395 @@
+// Recipe 1.12: String Operations and Manipulation - Unit Tests
+// EXTREME TDD: Write tests FIRST, then implementation
+
+// ============================================
+// FUNCTION IMPLEMENTATIONS (TO BE TESTED)
+// ============================================
+
+// String creation
+fun create_string(text: String) -> String {
+    text
+}
+
+// String concatenation
+fun concat_strings(a: String, b: String) -> String {
+    a + b
+}
+
+// String length
+fun get_length(s: String) -> i32 {
+    s.len()
+}
+
+// String contains
+fun contains_substring(s: String, substr: String) -> bool {
+    s.contains(substr)
+}
+
+// String starts with
+fun starts_with_prefix(s: String, prefix: String) -> bool {
+    s.starts_with(prefix)
+}
+
+// String ends with
+fun ends_with_suffix(s: String, suffix: String) -> bool {
+    s.ends_with(suffix)
+}
+
+// String to uppercase
+fun to_upper(s: String) -> String {
+    s.to_uppercase()
+}
+
+// String to lowercase
+fun to_lower(s: String) -> String {
+    s.to_lowercase()
+}
+
+// String trim
+fun trim_string(s: String) -> String {
+    s.trim()
+}
+
+// String replace
+// Note: 'from' is a reserved keyword in Ruchy - use 'old_text' instead
+fun replace_text(s: String, old_text: String, new_text: String) -> String {
+    s.replace(old_text, new_text)
+}
+
+// String split
+fun split_string(s: String, delimiter: String) -> [String] {
+    s.split(delimiter)
+}
+
+// String repeat
+fun repeat_string(s: String, count: i32) -> String {
+    s.repeat(count)
+}
+
+// Check if string is empty
+fun is_empty_string(s: String) -> bool {
+    s.is_empty()
+}
+
+// Note: Ruchy does not have substring/slice methods in current version
+// Substring operations are not supported
+
+// ============================================
+// BASIC STRING TESTS
+// ============================================
+
+fun test_create_string() -> bool {
+    let s = create_string("hello")
+    s == "hello"
+}
+
+fun test_string_concatenation() -> bool {
+    let result = concat_strings("hello", " world")
+    result == "hello world"
+}
+
+fun test_string_length() -> bool {
+    let len = get_length("hello")
+    len == 5
+}
+
+fun test_empty_string_length() -> bool {
+    let len = get_length("")
+    len == 0
+}
+
+// ============================================
+// STRING SEARCH TESTS
+// ============================================
+
+fun test_contains_substring_found() -> bool {
+    let result = contains_substring("hello world", "world")
+    result == true
+}
+
+fun test_contains_substring_not_found() -> bool {
+    let result = contains_substring("hello world", "xyz")
+    result == false
+}
+
+fun test_starts_with_true() -> bool {
+    let result = starts_with_prefix("hello world", "hello")
+    result == true
+}
+
+fun test_starts_with_false() -> bool {
+    let result = starts_with_prefix("hello world", "world")
+    result == false
+}
+
+fun test_ends_with_true() -> bool {
+    let result = ends_with_suffix("hello world", "world")
+    result == true
+}
+
+fun test_ends_with_false() -> bool {
+    let result = ends_with_suffix("hello world", "hello")
+    result == false
+}
+
+// ============================================
+// STRING TRANSFORMATION TESTS
+// ============================================
+
+fun test_to_uppercase() -> bool {
+    let result = to_upper("hello")
+    result == "HELLO"
+}
+
+fun test_to_lowercase() -> bool {
+    let result = to_lower("HELLO")
+    result == "hello"
+}
+
+fun test_trim_whitespace() -> bool {
+    let result = trim_string("  hello  ")
+    result == "hello"
+}
+
+fun test_replace_text() -> bool {
+    let result = replace_text("hello world", "world", "Ruchy")
+    result == "hello Ruchy"
+}
+
+// ============================================
+// STRING SPLIT TESTS
+// ============================================
+
+fun test_split_string() -> bool {
+    let parts = split_string("a,b,c", ",")
+    parts.len() == 3 && parts[0] == "a" && parts[1] == "b" && parts[2] == "c"
+}
+
+fun test_split_no_delimiter() -> bool {
+    let parts = split_string("hello", ",")
+    parts.len() == 1 && parts[0] == "hello"
+}
+
+// ============================================
+// STRING REPEAT TESTS
+// ============================================
+
+fun test_repeat_string() -> bool {
+    let result = repeat_string("ha", 3)
+    result == "hahaha"
+}
+
+fun test_repeat_zero() -> bool {
+    let result = repeat_string("ha", 0)
+    result == ""
+}
+
+// ============================================
+// STRING EMPTY TESTS
+// ============================================
+
+fun test_is_empty_true() -> bool {
+    let result = is_empty_string("")
+    result == true
+}
+
+fun test_is_empty_false() -> bool {
+    let result = is_empty_string("hello")
+    result == false
+}
+
+// ============================================
+// TEST RUNNER
+// ============================================
+
+fun main() {
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Recipe 1.12: String Operations - Tests         ║")
+    println("╚═══════════════════════════════════════════════════╝")
+    println("")
+
+    let mut passed = 0
+    let mut total = 0
+
+    println("=== Basic String Tests ===")
+    total = total + 1
+    if test_create_string() {
+        println("✅ Test 1: Create string")
+        passed = passed + 1
+    } else {
+        println("❌ Test 1: FAILED")
+    }
+
+    total = total + 1
+    if test_string_concatenation() {
+        println("✅ Test 2: String concatenation")
+        passed = passed + 1
+    } else {
+        println("❌ Test 2: FAILED")
+    }
+
+    total = total + 1
+    if test_string_length() {
+        println("✅ Test 3: String length")
+        passed = passed + 1
+    } else {
+        println("❌ Test 3: FAILED")
+    }
+
+    total = total + 1
+    if test_empty_string_length() {
+        println("✅ Test 4: Empty string length")
+        passed = passed + 1
+    } else {
+        println("❌ Test 4: FAILED")
+    }
+
+    println("")
+    println("=== String Search Tests ===")
+    total = total + 1
+    if test_contains_substring_found() {
+        println("✅ Test 5: Contains substring (found)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 5: FAILED")
+    }
+
+    total = total + 1
+    if test_contains_substring_not_found() {
+        println("✅ Test 6: Contains substring (not found)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 6: FAILED")
+    }
+
+    total = total + 1
+    if test_starts_with_true() {
+        println("✅ Test 7: Starts with (true)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 7: FAILED")
+    }
+
+    total = total + 1
+    if test_starts_with_false() {
+        println("✅ Test 8: Starts with (false)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 8: FAILED")
+    }
+
+    total = total + 1
+    if test_ends_with_true() {
+        println("✅ Test 9: Ends with (true)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 9: FAILED")
+    }
+
+    total = total + 1
+    if test_ends_with_false() {
+        println("✅ Test 10: Ends with (false)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 10: FAILED")
+    }
+
+    println("")
+    println("=== String Transformation Tests ===")
+    total = total + 1
+    if test_to_uppercase() {
+        println("✅ Test 11: To uppercase")
+        passed = passed + 1
+    } else {
+        println("❌ Test 11: FAILED")
+    }
+
+    total = total + 1
+    if test_to_lowercase() {
+        println("✅ Test 12: To lowercase")
+        passed = passed + 1
+    } else {
+        println("❌ Test 12: FAILED")
+    }
+
+    total = total + 1
+    if test_trim_whitespace() {
+        println("✅ Test 13: Trim whitespace")
+        passed = passed + 1
+    } else {
+        println("❌ Test 13: FAILED")
+    }
+
+    total = total + 1
+    if test_replace_text() {
+        println("✅ Test 14: Replace text")
+        passed = passed + 1
+    } else {
+        println("❌ Test 14: FAILED")
+    }
+
+    println("")
+    println("=== String Split Tests ===")
+    total = total + 1
+    if test_split_string() {
+        println("✅ Test 15: Split string")
+        passed = passed + 1
+    } else {
+        println("❌ Test 15: FAILED")
+    }
+
+    total = total + 1
+    if test_split_no_delimiter() {
+        println("✅ Test 16: Split (no delimiter)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 16: FAILED")
+    }
+
+    println("")
+    println("=== String Repeat Tests ===")
+    total = total + 1
+    if test_repeat_string() {
+        println("✅ Test 17: Repeat string")
+        passed = passed + 1
+    } else {
+        println("❌ Test 17: FAILED")
+    }
+
+    total = total + 1
+    if test_repeat_zero() {
+        println("✅ Test 18: Repeat zero times")
+        passed = passed + 1
+    } else {
+        println("❌ Test 18: FAILED")
+    }
+
+    println("")
+    println("=== String Empty Tests ===")
+    total = total + 1
+    if test_is_empty_true() {
+        println("✅ Test 19: Is empty (true)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 19: FAILED")
+    }
+
+    total = total + 1
+    if test_is_empty_false() {
+        println("✅ Test 20: Is empty (false)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 20: FAILED")
+    }
+
+    println("")
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Test Results: {}/{} tests passed                  ║", passed, total)
+    println("╚═══════════════════════════════════════════════════╝")
+
+    if passed == total {
+        println("✅ All tests PASSED!")
+    } else {
+        println("❌ Some tests FAILED")
+    }
+}

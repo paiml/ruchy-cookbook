@@ -1,0 +1,284 @@
+// Recipe 1.12: String Operations and Manipulation
+// Demonstrates common string operations in Ruchy
+
+// ============================================
+// BASIC STRING OPERATIONS
+// ============================================
+
+fun example_basic_operations() {
+    println("=== Basic String Operations ===")
+
+    // String concatenation
+    let greeting = "Hello" + " " + "World"
+    println("Concatenation: {}", greeting)
+
+    // String length
+    let len = greeting.len()
+    println("Length: {}", len)
+
+    // Create strings
+    let name = "Ruchy"
+    println("Language: {}", name)
+}
+
+// ============================================
+// STRING SEARCHING
+// ============================================
+
+fun example_string_searching() {
+    println("\n=== String Searching ===")
+
+    let text = "The quick brown fox jumps over the lazy dog"
+
+    // Contains
+    if text.contains("fox") {
+        println("✓ Text contains 'fox'")
+    }
+
+    if !text.contains("cat") {
+        println("✗ Text does not contain 'cat'")
+    }
+
+    // Starts with
+    if text.starts_with("The") {
+        println("✓ Text starts with 'The'")
+    }
+
+    // Ends with
+    if text.ends_with("dog") {
+        println("✓ Text ends with 'dog'")
+    }
+}
+
+// ============================================
+// STRING TRANSFORMATION
+// ============================================
+
+fun example_string_transformation() {
+    println("\n=== String Transformation ===")
+
+    let text = "Hello World"
+
+    // Uppercase
+    let upper = text.to_uppercase()
+    println("Uppercase: {}", upper)
+
+    // Lowercase
+    let lower = text.to_lowercase()
+    println("Lowercase: {}", lower)
+
+    // Trim whitespace
+    let messy = "   hello   "
+    let clean = messy.trim()
+    println("Trimmed: '{}'", clean)
+
+    // Replace text
+    let original = "Hello World"
+    let replaced = original.replace("World", "Ruchy")
+    println("Replaced: {}", replaced)
+}
+
+// ============================================
+// STRING SPLITTING
+// ============================================
+
+fun example_string_splitting() {
+    println("\n=== String Splitting ===")
+
+    // Split by comma
+    let csv = "apple,banana,cherry"
+    let fruits = csv.split(",")
+    println("CSV has {} items:", fruits.len())
+
+    let mut i = 0
+    while i < fruits.len() {
+        println("  - {}", fruits[i])
+        i = i + 1
+    }
+
+    // Split by space
+    let sentence = "The quick brown fox"
+    let words = sentence.split(" ")
+    println("\nSentence has {} words:", words.len())
+
+    i = 0
+    while i < words.len() {
+        println("  {}: {}", i + 1, words[i])
+        i = i + 1
+    }
+}
+
+// ============================================
+// STRING REPETITION
+// ============================================
+
+fun example_string_repetition() {
+    println("\n=== String Repetition ===")
+
+    // Repeat for patterns
+    let star = "*".repeat(20)
+    println("{}", star)
+
+    // Repeat for padding
+    let dash = "-".repeat(10)
+    println("{}Title{}", dash, dash)
+
+    // Laugh out loud
+    let laugh = "ha".repeat(5)
+    println("{}", laugh)
+}
+
+// ============================================
+// STRING VALIDATION
+// ============================================
+
+fun example_string_validation() {
+    println("\n=== String Validation ===")
+
+    let empty = ""
+    let nonempty = "hello"
+
+    if empty.is_empty() {
+        println("✓ Empty string is empty")
+    }
+
+    if !nonempty.is_empty() {
+        println("✓ Non-empty string is not empty")
+    }
+
+    // Check string properties
+    if nonempty.len() > 0 {
+        println("✓ String has length {}", nonempty.len())
+    }
+}
+
+// ============================================
+// PRACTICAL EXAMPLES
+// ============================================
+
+// Email validation (simple)
+fun is_valid_email(email: String) -> bool {
+    email.contains("@") && email.contains(".")
+}
+
+// URL validation (simple)
+fun is_http_url(url: String) -> bool {
+    url.starts_with("http://") || url.starts_with("https://")
+}
+
+// File extension checker
+fun has_extension(filename: String, ext: String) -> bool {
+    filename.ends_with(ext)
+}
+
+// Sanitize input (basic)
+fun sanitize_input(input: String) -> String {
+    input.trim()
+}
+
+// Create title from words
+fun create_title(words: [String]) -> String {
+    let mut title = ""
+    let mut i = 0
+
+    while i < words.len() {
+        title = title + words[i]
+        if i < words.len() - 1 {
+            title = title + " "
+        }
+        i = i + 1
+    }
+
+    title
+}
+
+fun example_practical_uses() {
+    println("\n=== Practical Examples ===")
+
+    // Email validation
+    let email1 = "user@example.com"
+    let email2 = "invalid-email"
+
+    println("Email validation:")
+    println("  {} -> {}", email1, is_valid_email(email1))
+    println("  {} -> {}", email2, is_valid_email(email2))
+
+    // URL validation
+    let url1 = "https://example.com"
+    let url2 = "ftp://example.com"
+
+    println("\nURL validation:")
+    println("  {} -> {}", url1, is_http_url(url1))
+    println("  {} -> {}", url2, is_http_url(url2))
+
+    // File extension
+    let file1 = "document.pdf"
+    let file2 = "image.png"
+
+    println("\nFile extension check:")
+    println("  {} ends with .pdf -> {}", file1, has_extension(file1, ".pdf"))
+    println("  {} ends with .pdf -> {}", file2, has_extension(file2, ".pdf"))
+
+    // Input sanitization
+    let messy_input = "  hello world  "
+    let clean_input = sanitize_input(messy_input)
+    println("\nInput sanitization:")
+    println("  Before: '{}'", messy_input)
+    println("  After:  '{}'", clean_input)
+
+    // Create title
+    let words = ["Ruchy", "Programming", "Language"]
+    let title = create_title(words)
+    println("\nTitle creation:")
+    println("  Words: {:?}", words)
+    println("  Title: {}", title)
+}
+
+// ============================================
+// STRING FORMATTING
+// ============================================
+
+fun example_string_formatting() {
+    println("\n=== String Formatting ===")
+
+    let name = "Alice"
+    let age = 30
+    let score = 95.5
+
+    // Format with placeholders
+    println("Name: {}", name)
+    println("Age: {}", age)
+    println("Score: {}", score)
+
+    // Multiple values
+    println("{} is {} years old with a score of {}", name, age, score)
+
+    // Build formatted strings
+    let info = "Name: " + name + ", Age: " + age.to_string()
+    println("Info: {}", info)
+}
+
+// ============================================
+// MAIN
+// ============================================
+
+fun main() {
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║   Recipe 1.12: String Operations                ║")
+    println("╚═══════════════════════════════════════════════════╝")
+    println("")
+
+    example_basic_operations()
+    example_string_searching()
+    example_string_transformation()
+    example_string_splitting()
+    example_string_repetition()
+    example_string_validation()
+    example_practical_uses()
+    example_string_formatting()
+
+    println("")
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  All examples completed successfully!           ║")
+    println("╚═══════════════════════════════════════════════════╝")
+}
