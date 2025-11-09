@@ -14,6 +14,7 @@ This chapter covers the fundamental building blocks of Ruchy programming. Whethe
 - Recipe 1.6: Control Flow and Conditionals - Making decisions
 - Recipe 1.7: Structs, Classes, and Methods - Object-oriented programming
 - Recipe 1.8: Data Structures - Object literals, arrays, and closures
+- Recipe 1.9: Loops and Iteration - while, for, break, continue
 
 ## Prerequisites
 
@@ -1975,6 +1976,355 @@ Test Results: 19/19 tests passed
 **How to run**:
 ```bash
 cd recipes/ch01/recipe-008
+ruchy tests/unit_tests.ruchy
+```
+
+</details>
+
+---
+
+## Recipe 1.9: Loops and Iteration
+
+**Difficulty**: Beginner
+**Time**: 20-25 minutes
+**Test Coverage**: 17/17 tests passing (100%)
+**Status**: ✅ WORKING (verified with EXTREME TDD)
+
+### Problem
+
+You need to repeat operations multiple times: process arrays, count from 1 to 10, search for values, or accumulate results. What loop constructs does Ruchy support? How do you control loop execution with break and continue?
+
+### Solution
+
+```ruchy
+// While loops
+let mut count = 1
+while count <= 5 {
+    println("{}", count)
+    count = count + 1
+}
+
+// For loops with ranges
+for i in 0..5 {          // Exclusive: 0,1,2,3,4
+    println("{}", i)
+}
+
+for i in 0..=5 {         // Inclusive: 0,1,2,3,4,5
+    println("{}", i)
+}
+
+// For loops with arrays
+let numbers = [10, 20, 30, 40, 50]
+for num in numbers {
+    println("{}", num)
+}
+
+// Break statement
+while true {
+    if condition {
+        break  // Exit loop
+    }
+}
+
+// Continue statement
+for i in 1..=10 {
+    if i % 2 == 0 {
+        continue  // Skip even numbers
+    }
+    println("{}", i)  // Only prints odd numbers
+}
+
+// Nested loops
+for i in 1..=3 {
+    for j in 1..=3 {
+        println("{} x {} = {}", i, j, i * j)
+    }
+}
+```
+
+### Discussion
+
+Ruchy provides powerful and flexible loop constructs for all common iteration patterns:
+
+**While Loops** - Basic iteration:
+```ruchy
+let mut i = 0
+while i < 10 {
+    println("i = {}", i)
+    i = i + 1
+}
+```
+
+While loops repeat as long as the condition is true. Perfect for countdown, searching, or when the number of iterations isn't known in advance.
+
+**For Loops with Ranges**:
+```ruchy
+// Exclusive range (0..5 = 0,1,2,3,4)
+for i in 0..5 {
+    println("{}", i)
+}
+
+// Inclusive range (0..=5 = 0,1,2,3,4,5)
+for i in 0..=5 {
+    println("{}", i)
+}
+```
+
+Range syntax: `start..end` (exclusive) or `start..=end` (inclusive).
+
+**For Loops with Arrays**:
+```ruchy
+let colors = ["red", "green", "blue"]
+for color in colors {
+    println("{}", color)
+}
+```
+
+Iterate directly over array elements without manual indexing.
+
+**Break Statement** - Exit loops early:
+```ruchy
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+let mut i = 0
+
+while i < 10 {
+    if numbers[i] > 5 {
+        println("Found: {}", numbers[i])
+        break  // Exit immediately
+    }
+    i = i + 1
+}
+```
+
+**Continue Statement** - Skip to next iteration:
+```ruchy
+// Print only odd numbers
+for i in 1..=10 {
+    if i % 2 == 0 {
+        continue  // Skip even numbers
+    }
+    println("{}", i)
+}
+```
+
+**Nested Loops**:
+```ruchy
+// Multiplication table
+for row in 1..=3 {
+    for col in 1..=3 {
+        println("{} x {} = {}", row, col, row * col)
+    }
+}
+```
+
+**Common Loop Patterns**:
+
+1. **Sum Accumulation**:
+```ruchy
+let numbers = [10, 20, 30, 40, 50]
+let mut sum = 0
+for num in numbers {
+    sum = sum + num
+}
+println("Sum: {}", sum)  // 150
+```
+
+2. **Factorial**:
+```ruchy
+let mut factorial = 1
+for i in 1..=5 {
+    factorial = factorial * i
+}
+println("5! = {}", factorial)  // 120
+```
+
+3. **Count Matching Elements**:
+```ruchy
+let values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+let mut count = 0
+for val in values {
+    if val > 5 {
+        count = count + 1
+    }
+}
+println("Count > 5: {}", count)  // 5
+```
+
+4. **Find Maximum**:
+```ruchy
+let data = [45, 23, 67, 12, 89, 34]
+let mut max = data[0]
+for val in data {
+    if val > max {
+        max = val
+    }
+}
+println("Maximum: {}", max)  // 89
+```
+
+**Performance Characteristics**:
+- While loops: O(n) where n is number of iterations
+- For loops: O(n) where n is range size or array length
+- Break/continue: O(1) - constant time operation
+- Nested loops: O(n*m) where n and m are loop sizes
+- Array indexing: O(1) - direct access
+
+**Safety Guarantees**:
+- Bounds checking: Array access is bounds-checked
+- No infinite loops by accident: Ranges are well-defined
+- Type-safe iteration: Loop variables have correct types
+- No iterator invalidation: Arrays can't be modified during iteration
+
+### Variations
+
+**Variation 1: Fibonacci Sequence**
+
+```ruchy
+println("Fibonacci (first 10):")
+let mut a = 0
+let mut b = 1
+let mut count = 0
+
+while count < 10 {
+    println("{}", a)
+    let temp = a
+    a = b
+    b = temp + b
+    count = count + 1
+}
+```
+
+**Variation 2: FizzBuzz**
+
+```ruchy
+for i in 1..=15 {
+    if i % 15 == 0 {
+        println("FizzBuzz")
+    } else {
+        if i % 3 == 0 {
+            println("Fizz")
+        } else {
+            if i % 5 == 0 {
+                println("Buzz")
+            } else {
+                println("{}", i)
+            }
+        }
+    }
+}
+```
+
+**Variation 3: Prime Number Check**
+
+```ruchy
+let number = 17
+let mut is_prime = true
+let mut i = 2
+
+while i * i <= number {
+    if number % i == 0 {
+        is_prime = false
+        break
+    }
+    i = i + 1
+}
+
+println("{} is prime? {}", number, is_prime)
+```
+
+### See Also
+
+- Recipe 1.3: Variables and Mutability
+- Recipe 1.4: Basic Data Types
+- Recipe 1.6: Control Flow and Conditionals
+- Recipe 1.8: Data Structures
+- Chapter 2: String & Text Processing
+
+### Tests
+
+All 17 tests pass ✅:
+
+<details>
+<summary>Unit Tests (click to expand)</summary>
+
+**Full implementation**: [recipes/ch01/recipe-009/src/main.ruchy](../../recipes/ch01/recipe-009/src/main.ruchy)
+
+**Test suite**: [recipes/ch01/recipe-009/tests/unit_tests.ruchy](../../recipes/ch01/recipe-009/tests/unit_tests.ruchy)
+
+**Test Results**:
+```
+Test Results: 17/17 tests passed
+- While loops: 3/3 tests ✅
+- For loops: 3/3 tests ✅
+- Break: 2/2 tests ✅
+- Continue: 2/2 tests ✅
+- Nested loops: 2/2 tests ✅
+- Accumulation: 3/3 tests ✅
+- Control flow: 2/2 tests ✅
+```
+
+**Key Tests**:
+```ruchy
+// While loop
+fun test_while_loop_basic() -> bool {
+    let mut sum = 0
+    let mut i = 1
+
+    while i <= 5 {
+        sum = sum + i
+        i = i + 1
+    }
+
+    sum == 15  // 1+2+3+4+5
+}
+
+// For loop with range
+fun test_for_loop_range() -> bool {
+    let mut sum = 0
+
+    for i in 0..5 {
+        sum = sum + i
+    }
+
+    sum == 10  // 0+1+2+3+4
+}
+
+// Break statement
+fun test_while_with_break() -> bool {
+    let mut i = 0
+    let mut sum = 0
+
+    while true {
+        if i >= 5 {
+            break
+        }
+        sum = sum + i
+        i = i + 1
+    }
+
+    sum == 10 && i == 5
+}
+
+// Continue statement
+fun test_while_with_continue() -> bool {
+    let mut i = 0
+    let mut sum = 0
+
+    while i < 10 {
+        i = i + 1
+        if i % 2 == 0 {
+            continue  // Skip even numbers
+        }
+        sum = sum + i
+    }
+
+    sum == 25  // 1+3+5+7+9
+}
+```
+
+**How to run**:
+```bash
+cd recipes/ch01/recipe-009
 ruchy tests/unit_tests.ruchy
 ```
 
