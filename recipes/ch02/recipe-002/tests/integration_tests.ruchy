@@ -1,0 +1,8 @@
+// Integration tests for Recipe ch02.002: String Slicing and Concatenation
+
+use std::testing::*;
+
+#[test]
+fun test_integration() {
+    // TODO: Test real-world usage scenarios
+}

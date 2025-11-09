@@ -22,6 +22,7 @@
 
 - [Chapter 2: String & Text Processing](./ch02-text-processing.md)
   - [Recipe 2.1: String Formatting](./ch02-text-processing.md#recipe-21-string-formatting)
+  - [Recipe 2.2: String Slicing and Concatenation](./ch02-text-processing.md#recipe-22-string-slicing-and-concatenation)
 
 - [Chapter 3: Collections & Data Structures](./ch03-collections.md)
 - [Chapter 4: Error Handling Patterns](./ch04-error-handling.md)

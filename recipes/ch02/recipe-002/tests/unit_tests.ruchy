@@ -1,0 +1,198 @@
+// Unit tests for Recipe 2.2: String Slicing and Concatenation
+// Write tests FIRST following EXTREME TDD
+//
+// Test coverage areas:
+// 1. String slicing with ranges
+// 2. Getting substrings
+// 3. String concatenation with + operator
+// 4. String concatenation with format!()
+// 5. Character extraction
+// 6. Prefix and suffix operations
+// 7. String length and indexing
+
+use std::testing::*;
+
+// String slicing tests
+
+#[test]
+fun test_get_first_chars() {
+    let result = get_first_n_chars("Hello, World!", 5);
+    assert_eq!(result, "Hello");
+}
+
+#[test]
+fun test_get_first_chars_exact_length() {
+    let result = get_first_n_chars("Hello", 5);
+    assert_eq!(result, "Hello");
+}
+
+#[test]
+fun test_get_first_chars_longer_than_string() {
+    let result = get_first_n_chars("Hi", 10);
+    assert_eq!(result, "Hi");
+}
+
+#[test]
+fun test_get_last_chars() {
+    let result = get_last_n_chars("Hello, World!", 6);
+    assert_eq!(result, "World!");
+}
+
+#[test]
+fun test_skip_first_chars() {
+    let result = skip_first_n_chars("Hello, World!", 7);
+    assert_eq!(result, "World!");
+}
+
+#[test]
+fun test_get_substring_range() {
+    let result = get_substring("Hello, World!", 0, 5);
+    assert_eq!(result, "Hello");
+}
+
+#[test]
+fun test_get_substring_middle() {
+    let result = get_substring("Hello, World!", 7, 12);
+    assert_eq!(result, "World");
+}
+
+// Concatenation tests
+
+#[test]
+fun test_concat_two_strings() {
+    let result = concat_two("Hello", "World");
+    assert_eq!(result, "HelloWorld");
+}
+
+#[test]
+fun test_concat_with_space() {
+    let result = concat_with_space("Hello", "World");
+    assert_eq!(result, "Hello World");
+}
+
+#[test]
+fun test_concat_multiple() {
+    let parts = vec!["Hello", " ", "beautiful", " ", "World"];
+    let result = concat_all(parts);
+    assert_eq!(result, "Hello beautiful World");
+}
+
+#[test]
+fun test_concat_empty_strings() {
+    let result = concat_two("", "");
+    assert_eq!(result, "");
+}
+
+// Character extraction tests
+
+#[test]
+fun test_get_char_at() {
+    let result = get_char_at("Hello", 1);
+    assert_eq!(result, Some('e'));
+}
+
+#[test]
+fun test_get_char_at_first() {
+    let result = get_char_at("Hello", 0);
+    assert_eq!(result, Some('H'));
+}
+
+#[test]
+fun test_get_char_at_last() {
+    let result = get_char_at("Hello", 4);
+    assert_eq!(result, Some('o'));
+}
+
+#[test]
+fun test_get_char_at_out_of_bounds() {
+    let result = get_char_at("Hello", 10);
+    assert_eq!(result, None);
+}
+
+// Prefix/Suffix tests
+
+#[test]
+fun test_starts_with() {
+    assert!(check_starts_with("Hello, World!", "Hello"));
+}
+
+#[test]
+fun test_starts_with_false() {
+    assert!(!check_starts_with("Hello, World!", "World"));
+}
+
+#[test]
+fun test_ends_with() {
+    assert!(check_ends_with("Hello, World!", "World!"));
+}
+
+#[test]
+fun test_ends_with_false() {
+    assert!(!check_ends_with("Hello, World!", "Hello"));
+}
+
+// String building tests
+
+#[test]
+fun test_repeat_string() {
+    let result = repeat_string("Ha", 3);
+    assert_eq!(result, "HaHaHa");
+}
+
+#[test]
+fun test_repeat_string_once() {
+    let result = repeat_string("Hello", 1);
+    assert_eq!(result, "Hello");
+}
+
+#[test]
+fun test_repeat_string_zero() {
+    let result = repeat_string("Hello", 0);
+    assert_eq!(result, "");
+}
+
+// Functions to implement (following TDD - tests written first)
+
+pub fun get_first_n_chars(s: &str, n: usize) -> String {
+    panic!("TODO: Implement get_first_n_chars")
+}
+
+pub fun get_last_n_chars(s: &str, n: usize) -> String {
+    panic!("TODO: Implement get_last_n_chars")
+}
+
+pub fun skip_first_n_chars(s: &str, n: usize) -> String {
+    panic!("TODO: Implement skip_first_n_chars")
+}
+
+pub fun get_substring(s: &str, start: usize, end: usize) -> String {
+    panic!("TODO: Implement get_substring")
+}
+
+pub fun concat_two(a: &str, b: &str) -> String {
+    panic!("TODO: Implement concat_two")
+}
+
+pub fun concat_with_space(a: &str, b: &str) -> String {
+    panic!("TODO: Implement concat_with_space")
+}
+
+pub fun concat_all(parts: Vec<&str>) -> String {
+    panic!("TODO: Implement concat_all")
+}
+
+pub fun get_char_at(s: &str, index: usize) -> Option<char> {
+    panic!("TODO: Implement get_char_at")
+}
+
+pub fun check_starts_with(s: &str, prefix: &str) -> bool {
+    panic!("TODO: Implement check_starts_with")
+}
+
+pub fun check_ends_with(s: &str, suffix: &str) -> bool {
+    panic!("TODO: Implement check_ends_with")
+}
+
+pub fun repeat_string(s: &str, count: usize) -> String {
+    panic!("TODO: Implement repeat_string")
+}
