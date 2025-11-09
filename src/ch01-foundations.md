@@ -13,6 +13,7 @@ This chapter covers the fundamental building blocks of Ruchy programming. Whethe
 - Recipe 1.5: Functions and Return Values - Writing reusable code
 - Recipe 1.6: Control Flow and Conditionals - Making decisions
 - Recipe 1.7: Structs, Classes, and Methods - Object-oriented programming
+- Recipe 1.8: Data Structures - Object literals, arrays, and closures
 
 ## Prerequisites
 
