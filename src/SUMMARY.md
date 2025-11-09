@@ -17,6 +17,7 @@
   - [Recipe 1.7: Structs, Classes, and Methods](./ch01-foundations.md#recipe-17-structs-classes-and-methods)
   - [Recipe 1.8: Data Structures](./ch01-foundations.md#recipe-18-data-structures)
   - [Recipe 1.9: Loops and Iteration](./ch01-foundations.md#recipe-19-loops-and-iteration)
+  - [Recipe 1.10: Error Handling Basics](./ch01-foundations.md#recipe-110-error-handling-basics)
 
 - [Chapter 2: String & Text Processing](./ch02-text-processing.md)
 - [Chapter 3: Collections & Data Structures](./ch03-collections.md)

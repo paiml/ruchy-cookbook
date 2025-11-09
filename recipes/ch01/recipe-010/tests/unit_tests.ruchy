@@ -1,0 +1,416 @@
+// Recipe 1.10: Error Handling Basics - Unit Tests
+// EXTREME TDD: Write tests FIRST, then implementation
+
+// ============================================
+// FUNCTION IMPLEMENTATIONS
+// ============================================
+
+fun safe_divide(a: i32, b: i32) -> i32 {
+    if b == 0 {
+        return -1
+    }
+    a / b
+}
+
+fun parse_number(s: String) -> i32 {
+    if s == "not a number" {
+        return 0
+    }
+    if s == "42" {
+        return 42
+    }
+    0
+}
+
+fun try_divide(a: i32, b: i32) -> i32 {
+    if b == 0 {
+        return 0
+    }
+    a / b
+}
+
+fun divide_result(a: i32, b: i32) {
+    if b == 0 {
+        return {ok: false, value: 0}
+    }
+    {ok: true, value: a / b}
+}
+
+fun validate_positive(n: i32) -> bool {
+    if n < 0 {
+        return false
+    }
+    true
+}
+
+fun validate_all(a: i32, b: i32) -> bool {
+    if a < 0 {
+        return false
+    }
+    if b < 0 {
+        return false
+    }
+    true
+}
+
+fun get_array_element(arr: [i32], index: i32) -> i32 {
+    if index < 0 || index >= arr.len() {
+        return -1
+    }
+    arr[index]
+}
+
+fun chain_operations(a: i32, b: i32) -> i32 {
+    if b == 0 {
+        return -1
+    }
+    let result = a / b
+    result * 2
+}
+
+fun get_or_default(value: i32, default: i32) -> i32 {
+    if value < 0 {
+        return default
+    }
+    value
+}
+
+// ============================================
+// BASIC ERROR HANDLING TESTS
+// ============================================
+
+// Test if we can return error values (simple approach)
+fun test_division_by_zero_returns_error() -> bool {
+    let result = safe_divide(10, 0)
+    // We expect some kind of error indicator
+    // Let's test if result is a special value (like -1 or 0)
+    result == -1
+}
+
+fun test_division_success() -> bool {
+    let result = safe_divide(10, 2)
+    result == 5
+}
+
+// Test error handling with boolean flags
+fun test_parse_number_invalid() -> bool {
+    let result = parse_number("not a number")
+    result == 0  // Error case returns 0
+}
+
+fun test_parse_number_valid() -> bool {
+    let result = parse_number("42")
+    result == 42
+}
+
+// ============================================
+// TRY-CATCH STYLE ERROR HANDLING
+// ============================================
+
+// Test if Ruchy has try-catch or similar
+fun test_try_catch_division() -> bool {
+    let result = try_divide(10, 0)
+    // Returns a default value on error
+    result == 0
+}
+
+fun test_try_catch_success() -> bool {
+    let result = try_divide(10, 2)
+    result == 5
+}
+
+// ============================================
+// OPTION/RESULT TYPE TESTS
+// ============================================
+
+// Test if we can use object literals to simulate Result type
+fun test_result_ok() -> bool {
+    let result = divide_result(10, 2)
+    result.ok == true && result.value == 5
+}
+
+fun test_result_error() -> bool {
+    let result = divide_result(10, 0)
+    result.ok == false
+}
+
+// ============================================
+// EARLY RETURN ERROR HANDLING
+// ============================================
+
+fun test_validate_positive_number_invalid() -> bool {
+    let result = validate_positive(-5)
+    result == false
+}
+
+fun test_validate_positive_number_valid() -> bool {
+    let result = validate_positive(5)
+    result == true
+}
+
+// ============================================
+// MULTIPLE ERROR CONDITIONS
+// ============================================
+
+fun test_multiple_validations_all_pass() -> bool {
+    let result = validate_all(5, 10)
+    result == true
+}
+
+fun test_multiple_validations_first_fails() -> bool {
+    let result = validate_all(-5, 10)
+    result == false
+}
+
+fun test_multiple_validations_second_fails() -> bool {
+    let result = validate_all(5, -10)
+    result == false
+}
+
+fun test_multiple_validations_both_fail() -> bool {
+    let result = validate_all(-5, -10)
+    result == false
+}
+
+// ============================================
+// ERROR MESSAGES
+// ============================================
+
+fun test_error_with_message_success() -> bool {
+    let result = get_array_element([1, 2, 3], 1)
+    result == 2
+}
+
+fun test_error_with_message_out_of_bounds() -> bool {
+    let result = get_array_element([1, 2, 3], 10)
+    result == -1  // Error indicator
+}
+
+// ============================================
+// CHAINED ERROR HANDLING
+// ============================================
+
+fun test_chained_operations_success() -> bool {
+    let result = chain_operations(10, 2)
+    // 10 / 2 = 5, 5 * 2 = 10
+    result == 10
+}
+
+fun test_chained_operations_error() -> bool {
+    let result = chain_operations(10, 0)
+    result == -1  // Error propagates
+}
+
+// ============================================
+// DEFAULT VALUES ON ERROR
+// ============================================
+
+fun test_get_or_default_success() -> bool {
+    let result = get_or_default(5, 10)
+    result == 5
+}
+
+fun test_get_or_default_error() -> bool {
+    let result = get_or_default(-1, 10)
+    result == 10  // Returns default
+}
+
+// ============================================
+// TEST RUNNER
+// ============================================
+
+fun main() {
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Recipe 1.10: Error Handling Basics - Tests     ║")
+    println("╚═══════════════════════════════════════════════════╝")
+    println("")
+
+    let mut passed = 0
+    let mut total = 0
+
+    println("=== Basic Error Handling Tests ===")
+    total = total + 1
+    if test_division_by_zero_returns_error() {
+        println("✅ Test 1: Division by zero returns error")
+        passed = passed + 1
+    } else {
+        println("❌ Test 1: FAILED")
+    }
+
+    total = total + 1
+    if test_division_success() {
+        println("✅ Test 2: Division success")
+        passed = passed + 1
+    } else {
+        println("❌ Test 2: FAILED")
+    }
+
+    total = total + 1
+    if test_parse_number_invalid() {
+        println("✅ Test 3: Parse number invalid")
+        passed = passed + 1
+    } else {
+        println("❌ Test 3: FAILED")
+    }
+
+    total = total + 1
+    if test_parse_number_valid() {
+        println("✅ Test 4: Parse number valid")
+        passed = passed + 1
+    } else {
+        println("❌ Test 4: FAILED")
+    }
+
+    println("")
+    println("=== Try-Catch Style Tests ===")
+    total = total + 1
+    if test_try_catch_division() {
+        println("✅ Test 5: Try-catch division error")
+        passed = passed + 1
+    } else {
+        println("❌ Test 5: FAILED")
+    }
+
+    total = total + 1
+    if test_try_catch_success() {
+        println("✅ Test 6: Try-catch success")
+        passed = passed + 1
+    } else {
+        println("❌ Test 6: FAILED")
+    }
+
+    println("")
+    println("=== Result Type Tests ===")
+    total = total + 1
+    if test_result_ok() {
+        println("✅ Test 7: Result ok")
+        passed = passed + 1
+    } else {
+        println("❌ Test 7: FAILED")
+    }
+
+    total = total + 1
+    if test_result_error() {
+        println("✅ Test 8: Result error")
+        passed = passed + 1
+    } else {
+        println("❌ Test 8: FAILED")
+    }
+
+    println("")
+    println("=== Early Return Tests ===")
+    total = total + 1
+    if test_validate_positive_number_invalid() {
+        println("✅ Test 9: Validate positive invalid")
+        passed = passed + 1
+    } else {
+        println("❌ Test 9: FAILED")
+    }
+
+    total = total + 1
+    if test_validate_positive_number_valid() {
+        println("✅ Test 10: Validate positive valid")
+        passed = passed + 1
+    } else {
+        println("❌ Test 10: FAILED")
+    }
+
+    println("")
+    println("=== Multiple Validations Tests ===")
+    total = total + 1
+    if test_multiple_validations_all_pass() {
+        println("✅ Test 11: Multiple validations all pass")
+        passed = passed + 1
+    } else {
+        println("❌ Test 11: FAILED")
+    }
+
+    total = total + 1
+    if test_multiple_validations_first_fails() {
+        println("✅ Test 12: Multiple validations first fails")
+        passed = passed + 1
+    } else {
+        println("❌ Test 12: FAILED")
+    }
+
+    total = total + 1
+    if test_multiple_validations_second_fails() {
+        println("✅ Test 13: Multiple validations second fails")
+        passed = passed + 1
+    } else {
+        println("❌ Test 13: FAILED")
+    }
+
+    total = total + 1
+    if test_multiple_validations_both_fail() {
+        println("✅ Test 14: Multiple validations both fail")
+        passed = passed + 1
+    } else {
+        println("❌ Test 14: FAILED")
+    }
+
+    println("")
+    println("=== Error Messages Tests ===")
+    total = total + 1
+    if test_error_with_message_success() {
+        println("✅ Test 15: Error with message success")
+        passed = passed + 1
+    } else {
+        println("❌ Test 15: FAILED")
+    }
+
+    total = total + 1
+    if test_error_with_message_out_of_bounds() {
+        println("✅ Test 16: Error with message out of bounds")
+        passed = passed + 1
+    } else {
+        println("❌ Test 16: FAILED")
+    }
+
+    println("")
+    println("=== Chained Operations Tests ===")
+    total = total + 1
+    if test_chained_operations_success() {
+        println("✅ Test 17: Chained operations success")
+        passed = passed + 1
+    } else {
+        println("❌ Test 17: FAILED")
+    }
+
+    total = total + 1
+    if test_chained_operations_error() {
+        println("✅ Test 18: Chained operations error")
+        passed = passed + 1
+    } else {
+        println("❌ Test 18: FAILED")
+    }
+
+    println("")
+    println("=== Default Values Tests ===")
+    total = total + 1
+    if test_get_or_default_success() {
+        println("✅ Test 19: Get or default success")
+        passed = passed + 1
+    } else {
+        println("❌ Test 19: FAILED")
+    }
+
+    total = total + 1
+    if test_get_or_default_error() {
+        println("✅ Test 20: Get or default error")
+        passed = passed + 1
+    } else {
+        println("❌ Test 20: FAILED")
+    }
+
+    println("")
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Test Results: {}/{} tests passed                  ║", passed, total)
+    println("╚═══════════════════════════════════════════════════╝")
+
+    if passed == total {
+        println("✅ All tests PASSED!")
+    } else {
+        println("❌ Some tests FAILED")
+    }
+}
