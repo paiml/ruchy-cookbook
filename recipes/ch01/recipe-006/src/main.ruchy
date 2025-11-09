@@ -1,0 +1,366 @@
+// Recipe 1.6: Control Flow and Conditionals
+// Implementation written AFTER tests following EXTREME TDD
+
+/// Check if a number is positive, negative, or zero
+pub fun check_sign(n: i32) -> &'static str {
+    if n > 0 {
+        "positive"
+    } else if n < 0 {
+        "negative"
+    } else {
+        "zero"
+    }
+}
+
+/// Check if first number is greater than second
+pub fun is_greater(a: i32, b: i32) -> bool {
+    a > b
+}
+
+/// Check if two numbers are equal
+pub fun is_equal(a: i32, b: i32) -> bool {
+    a == b
+}
+
+/// Check if value is in range (inclusive)
+pub fun is_in_range(value: i32, min: i32, max: i32) -> bool {
+    value >= min && value <= max
+}
+
+/// Logical AND operator
+pub fun logical_and(a: bool, b: bool) -> bool {
+    a && b
+}
+
+/// Logical OR operator
+pub fun logical_or(a: bool, b: bool) -> bool {
+    a || b
+}
+
+/// Logical NOT operator
+pub fun logical_not(a: bool) -> bool {
+    !a
+}
+
+/// Match specific numbers
+pub fun match_number(n: i32) -> &'static str {
+    match n {
+        1 => "one",
+        2 => "two",
+        3 => "three",
+        _ => "other",
+    }
+}
+
+/// Match number ranges
+pub fun match_range(n: i32) -> &'static str {
+    match n {
+        0..=10 => "small",
+        11..=100 => "medium",
+        _ => "large",
+    }
+}
+
+/// Classify number by sign and parity
+pub fun classify_number(n: i32) -> &'static str {
+    if n == 0 {
+        "zero"
+    } else if n > 0 {
+        if n % 2 == 0 {
+            "positive even"
+        } else {
+            "positive odd"
+        }
+    } else {
+        if n % 2 == 0 {
+            "negative even"
+        } else {
+            "negative odd"
+        }
+    }
+}
+
+/// Process age with guard clauses
+pub fun process_age(age: i32) -> &'static str {
+    if age <= 0 {
+        return "Invalid age";
+    }
+
+    if age < 13 {
+        return "Child";
+    }
+
+    if age < 18 {
+        return "Teen";
+    }
+
+    if age < 65 {
+        return "Adult";
+    }
+
+    "Senior"
+}
+
+/// Validate input with early returns
+pub fun validate_input(input: &str) -> &'static str {
+    if input.is_empty() {
+        return "empty";
+    }
+
+    if input.len() < 3 {
+        return "too short";
+    }
+
+    "valid"
+}
+
+/// Check if all conditions are true
+pub fun check_all_conditions(a: bool, b: bool, c: bool) -> bool {
+    a && b && c
+}
+
+/// Check if any condition is true
+pub fun check_any_condition(a: bool, b: bool, c: bool) -> bool {
+    a || b || c
+}
+
+/// Find maximum of three numbers
+pub fun max_of_three(a: i32, b: i32, c: i32) -> i32 {
+    if a >= b && a >= c {
+        a
+    } else if b >= c {
+        b
+    } else {
+        c
+    }
+}
+
+/// Calculate absolute value
+pub fun abs_value(n: i32) -> i32 {
+    if n < 0 {
+        -n
+    } else {
+        n
+    }
+}
+
+/// Unwrap Option or return default
+pub fun unwrap_or_default(opt: Option<i32>) -> i32 {
+    if let Some(value) = opt {
+        value
+    } else {
+        0
+    }
+}
+
+/// Calculate letter grade from numeric score
+pub fun calculate_letter_grade(score: i32) -> char {
+    match score {
+        90..=100 => 'A',
+        80..=89 => 'B',
+        70..=79 => 'C',
+        60..=69 => 'D',
+        _ => 'F',
+    }
+}
+
+/// Check if user can access system
+pub fun can_access(age: i32, authenticated: bool, role: &str) -> bool {
+    if !authenticated {
+        return false;
+    }
+
+    if age < 18 {
+        return false;
+    }
+
+    if role == "admin" || role == "user" {
+        true
+    } else {
+        false
+    }
+}
+
+/// Calculate shipping cost based on weight
+pub fun calculate_shipping(weight: f64) -> f64 {
+    match weight {
+        w if w <= 1.0 => 5.0,
+        w if w <= 5.0 => 10.0,
+        w if w <= 10.0 => 20.0,
+        _ => 50.0,
+    }
+}
+
+/// Calculate discount based on multiple factors
+pub fun calculate_discount(amount: f64, is_member: bool, loyalty_years: i32) -> f64 {
+    let mut discount = 0.0;
+
+    if is_member {
+        discount += amount * 0.05;  // 5% member discount
+    }
+
+    if loyalty_years >= 5 {
+        discount += amount * 0.10;  // 10% loyalty discount
+    } else if loyalty_years >= 2 {
+        discount += amount * 0.05;  // 5% loyalty discount
+    }
+
+    discount
+}
+
+/// FizzBuzz pattern
+pub fun fizzbuzz(n: i32) -> String {
+    match (n % 3 == 0, n % 5 == 0) {
+        (true, true) => "FizzBuzz".to_string(),
+        (true, false) => "Fizz".to_string(),
+        (false, true) => "Buzz".to_string(),
+        _ => n.to_string(),
+    }
+}
+
+/// Check password strength
+pub fun password_strength(password: &str) -> &'static str {
+    let has_digit = password.chars().any(|c| c.is_digit(10));
+    let has_special = password.chars().any(|c| !c.is_alphanumeric());
+
+    if password.len() >= 8 && has_digit && has_special {
+        "Strong"
+    } else if password.len() >= 6 && has_digit {
+        "Medium"
+    } else {
+        "Weak"
+    }
+}
+
+/// Traffic light state machine
+pub fun next_traffic_light(current: &str) -> &'static str {
+    match current {
+        "red" => "green",
+        "green" => "yellow",
+        "yellow" => "red",
+        _ => "red",
+    }
+}
+
+/// BMI category calculator
+pub fun bmi_category(weight: f64, height: f64) -> &'static str {
+    let bmi = weight / (height * height);
+
+    match bmi {
+        b if b < 18.5 => "Underweight",
+        b if b < 25.0 => "Normal",
+        b if b < 30.0 => "Overweight",
+        _ => "Obese",
+    }
+}
+
+/// Tax bracket calculator
+pub fun tax_bracket(income: i32) -> &'static str {
+    match income {
+        0..=30000 => "10%",
+        30001..=75000 => "15%",
+        75001..=150000 => "25%",
+        _ => "35%",
+    }
+}
+
+/// Validate user input with multiple checks
+pub fun validate_user_input(username: &str, password: &str, age: i32) -> bool {
+    if username.is_empty() {
+        return false;
+    }
+
+    if password.len() < 6 {
+        return false;
+    }
+
+    if age < 18 {
+        return false;
+    }
+
+    true
+}
+
+/// Main entry point demonstrating control flow and conditionals
+fun main() {
+    println!("Control Flow and Conditionals Demo");
+    println!("==================================");
+    println!();
+
+    // Simple if/else
+    println!("1. Simple if/else:");
+    println!("   check_sign(5) = {}", check_sign(5));
+    println!("   check_sign(-3) = {}", check_sign(-3));
+    println!("   check_sign(0) = {}", check_sign(0));
+    println!();
+
+    // Comparison operators
+    println!("2. Comparison Operators:");
+    println!("   is_greater(10, 5) = {}", is_greater(10, 5));
+    println!("   is_equal(5, 5) = {}", is_equal(5, 5));
+    println!("   is_in_range(7, 1, 10) = {}", is_in_range(7, 1, 10));
+    println!();
+
+    // Logical operators
+    println!("3. Logical Operators:");
+    println!("   logical_and(true, true) = {}", logical_and(true, true));
+    println!("   logical_or(false, true) = {}", logical_or(false, true));
+    println!("   logical_not(false) = {}", logical_not(false));
+    println!();
+
+    // Match expressions
+    println!("4. Match Expressions:");
+    println!("   match_number(1) = {}", match_number(1));
+    println!("   match_number(99) = {}", match_number(99));
+    println!("   match_range(5) = {}", match_range(5));
+    println!("   match_range(50) = {}", match_range(50));
+    println!();
+
+    // Nested conditionals
+    println!("5. Nested Conditionals:");
+    println!("   classify_number(10) = {}", classify_number(10));
+    println!("   classify_number(-5) = {}", classify_number(-5));
+    println!("   classify_number(0) = {}", classify_number(0));
+    println!();
+
+    // Guard clauses
+    println!("6. Guard Clauses:");
+    println!("   process_age(10) = {}", process_age(10));
+    println!("   process_age(15) = {}", process_age(15));
+    println!("   process_age(25) = {}", process_age(25));
+    println!("   process_age(70) = {}", process_age(70));
+    println!();
+
+    // Early returns
+    println!("7. Early Returns:");
+    println!("   validate_input(\"\") = {}", validate_input(""));
+    println!("   validate_input(\"ab\") = {}", validate_input("ab"));
+    println!("   validate_input(\"hello\") = {}", validate_input("hello"));
+    println!();
+
+    // Multiple conditions
+    println!("8. Multiple Conditions:");
+    println!("   check_all_conditions(true, true, true) = {}",
+             check_all_conditions(true, true, true));
+    println!("   check_any_condition(false, false, true) = {}",
+             check_any_condition(false, false, true));
+    println!();
+
+    // Real-world examples
+    println!("9. Real-World Examples:");
+    println!("   Grade Calculator:");
+    println!("     95 points = {}", calculate_letter_grade(95));
+    println!("     75 points = {}", calculate_letter_grade(75));
+    println!();
+
+    println!("   FizzBuzz:");
+    println!("     fizzbuzz(15) = {}", fizzbuzz(15));
+    println!("     fizzbuzz(9) = {}", fizzbuzz(9));
+    println!("     fizzbuzz(10) = {}", fizzbuzz(10));
+    println!();
+
+    println!("   Traffic Light:");
+    println!("     After red: {}", next_traffic_light("red"));
+    println!("     After green: {}", next_traffic_light("green"));
+    println!("     After yellow: {}", next_traffic_light("yellow"));
+}

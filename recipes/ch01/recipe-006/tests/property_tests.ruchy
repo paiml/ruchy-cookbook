@@ -1,0 +1,104 @@
+// Property-based tests for Recipe 1.6: Control Flow and Conditionals
+// Testing invariant properties
+
+use std::testing::proptest::*;
+
+#[proptest]
+fun test_de_morgans_law_and(a: bool, b: bool) {
+    // Property: !(a && b) == (!a || !b)  (De Morgan's Law)
+    let left = logical_not(logical_and(a, b));
+    let right = logical_or(logical_not(a), logical_not(b));
+    assert_eq!(left, right);
+}
+
+#[proptest]
+fun test_de_morgans_law_or(a: bool, b: bool) {
+    // Property: !(a || b) == (!a && !b)  (De Morgan's Law)
+    let left = logical_not(logical_or(a, b));
+    let right = logical_and(logical_not(a), logical_not(b));
+    assert_eq!(left, right);
+}
+
+#[proptest]
+fun test_double_negation(value: bool) {
+    // Property: !!a == a
+    let negated = logical_not(value);
+    let double_neg = logical_not(negated);
+    assert_eq!(double_neg, value);
+}
+
+#[proptest]
+fun test_comparison_transitivity(a: i32, b: i32, c: i32) {
+    // Property: if a > b and b > c, then a > c
+    if is_greater(a, b) && is_greater(b, c) {
+        assert!(is_greater(a, c));
+    }
+}
+
+#[proptest]
+fun test_abs_value_always_non_negative(value: i32) {
+    // Property: abs(x) >= 0 for all x
+    assume!(value != i32::MIN);  // Avoid overflow
+    let result = abs_value(value);
+    assert!(result >= 0);
+}
+
+#[proptest]
+fun test_abs_value_idempotent(value: i32) {
+    // Property: abs(abs(x)) == abs(x)
+    assume!(value != i32::MIN);
+    let once = abs_value(value);
+    let twice = abs_value(once);
+    assert_eq!(once, twice);
+}
+
+#[proptest]
+fun test_max_of_three_bounds(a: i32, b: i32, c: i32) {
+    // Property: max(a, b, c) >= a, b, c
+    let result = max_of_three(a, b, c);
+    assert!(result >= a);
+    assert!(result >= b);
+    assert!(result >= c);
+}
+
+#[proptest]
+fun test_max_of_three_is_one_of_inputs(a: i32, b: i32, c: i32) {
+    // Property: max(a, b, c) must be one of a, b, or c
+    let result = max_of_three(a, b, c);
+    assert!(result == a || result == b || result == c);
+}
+
+#[proptest]
+fun test_is_in_range_bounds(value: i32, min: i32, max: i32) {
+    // Property: if is_in_range(v, min, max) then min <= v <= max
+    assume!(min <= max);  // Valid range
+    if is_in_range(value, min, max) {
+        assert!(value >= min);
+        assert!(value <= max);
+    }
+}
+
+#[proptest]
+fun test_check_sign_consistency(value: i32) {
+    // Property: sign classification is consistent
+    let sign = check_sign(value);
+    if value > 0 {
+        assert_eq!(sign, "positive");
+    } else if value < 0 {
+        assert_eq!(sign, "negative");
+    } else {
+        assert_eq!(sign, "zero");
+    }
+}
+
+#[proptest]
+fun test_logical_and_commutative(a: bool, b: bool) {
+    // Property: a && b == b && a
+    assert_eq!(logical_and(a, b), logical_and(b, a));
+}
+
+#[proptest]
+fun test_logical_or_commutative(a: bool, b: bool) {
+    // Property: a || b == b || a
+    assert_eq!(logical_or(a, b), logical_or(b, a));
+}
