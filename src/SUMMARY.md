@@ -13,6 +13,7 @@
   - [Recipe 1.3: Variables and Mutability](./ch01-foundations.md#recipe-13-variables-and-mutability)
   - [Recipe 1.4: Basic Data Types](./ch01-foundations.md#recipe-14-basic-data-types)
   - [Recipe 1.5: Functions and Return Values](./ch01-foundations.md#recipe-15-functions-and-return-values)
+  - [Recipe 1.6: Control Flow and Conditionals](./ch01-foundations.md#recipe-16-control-flow-and-conditionals)
 
 - [Chapter 2: String & Text Processing](./ch02-text-processing.md)
 - [Chapter 3: Collections & Data Structures](./ch03-collections.md)
