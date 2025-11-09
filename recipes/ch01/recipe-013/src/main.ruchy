@@ -1,0 +1,242 @@
+// Recipe 1.13: Type Conversion and Casting
+// Demonstrates type conversion and casting in Ruchy
+
+// ============================================
+// NUMERIC CONVERSIONS
+// ============================================
+
+fun example_numeric_conversions() {
+    println("=== Numeric Conversions ===")
+
+    // Integer to float
+    let int_val = 42
+    let float_val = int_val as f64
+    println("Integer {} to float: {}", int_val, float_val)
+
+    // Float to integer (truncation)
+    let pi = 3.14159
+    let truncated = pi as i32
+    println("Float {} to integer: {} (truncated)", pi, truncated)
+
+    // Negative conversions
+    let neg_int = -10
+    let neg_float = neg_int as f64
+    println("Negative {} to float: {}", neg_int, neg_float)
+
+    let neg_pi = -2.71828
+    let neg_trunc = neg_pi as i32
+    println("Negative float {} to int: {}", neg_pi, neg_trunc)
+}
+
+// ============================================
+// STRING CONVERSIONS
+// ============================================
+
+fun example_string_conversions() {
+    println("\n=== String Conversions ===")
+
+    // Numbers to strings
+    let num = 42
+    let num_str = num.to_string()
+    println("Integer {} to string: '{}'", num, num_str)
+
+    let pi = 3.14
+    let pi_str = pi.to_string()
+    println("Float {} to string: '{}'", pi, pi_str)
+
+    // Strings to numbers
+    let str_num = "123"
+    let parsed_int = str_num.parse()
+    println("String '{}' to integer: {}", str_num, parsed_int)
+
+    let negative_str = "-456"
+    let parsed_neg = negative_str.parse()
+    println("String '{}' to integer: {}", negative_str, parsed_neg)
+}
+
+// ============================================
+// BOOLEAN CONVERSIONS
+// ============================================
+
+fun bool_to_int(b: bool) -> i32 {
+    if b { 1 } else { 0 }
+}
+
+fun int_to_bool(n: i32) -> bool {
+    n != 0
+}
+
+fun bool_to_string(b: bool) -> String {
+    if b { "true" } else { "false" }
+}
+
+fun string_to_bool(s: String) -> bool {
+    s == "true"
+}
+
+fun example_boolean_conversions() {
+    println("\n=== Boolean Conversions ===")
+
+    // Boolean to integer
+    let b_true = true
+    let b_false = false
+
+    println("Boolean {} to int: {}", b_true, bool_to_int(b_true))
+    println("Boolean {} to int: {}", b_false, bool_to_int(b_false))
+
+    // Integer to boolean
+    println("Integer 1 to bool: {}", int_to_bool(1))
+    println("Integer 0 to bool: {}", int_to_bool(0))
+    println("Integer 42 to bool: {}", int_to_bool(42))
+    println("Integer -5 to bool: {}", int_to_bool(-5))
+
+    // Boolean to string
+    println("Boolean {} to string: '{}'", true, bool_to_string(true))
+    println("Boolean {} to string: '{}'", false, bool_to_string(false))
+
+    // String to boolean
+    println("String 'true' to bool: {}", string_to_bool("true"))
+    println("String 'false' to bool: {}", string_to_bool("false"))
+}
+
+// ============================================
+// PRACTICAL EXAMPLES
+// ============================================
+
+// Calculate percentage
+fun calculate_percentage(part: i32, total: i32) -> f64 {
+    let part_f = part as f64
+    let total_f = total as f64
+    part_f / total_f * 100.0
+}
+
+// Parse user input
+fun parse_age(input: String) -> i32 {
+    input.parse()
+}
+
+// Format currency
+fun format_currency(cents: i32) -> String {
+    let dollars = cents / 100
+    let remaining_cents = cents % 100
+    dollars.to_string() + "." + remaining_cents.to_string()
+}
+
+// Temperature conversion
+fun celsius_to_fahrenheit(celsius: i32) -> f64 {
+    let c = celsius as f64
+    c * 9.0 / 5.0 + 32.0
+}
+
+// Safe division with conversion
+fun safe_divide(a: i32, b: i32) -> f64 {
+    if b == 0 {
+        return 0.0
+    }
+    let a_f = a as f64
+    let b_f = b as f64
+    a_f / b_f
+}
+
+fun example_practical_conversions() {
+    println("\n=== Practical Examples ===")
+
+    // Percentage calculation
+    let score = 85
+    let total = 100
+    let percentage = calculate_percentage(score, total)
+    println("Score: {}/{} = {}%", score, total, percentage)
+
+    // Parse user input
+    let age_input = "25"
+    let age = parse_age(age_input)
+    println("Parsed age from '{}': {}", age_input, age)
+
+    // Format currency
+    let price_cents = 1299
+    let formatted = format_currency(price_cents)
+    println("Price: {} cents = ${}", price_cents, formatted)
+
+    // Temperature conversion
+    let temp_c = 20
+    let temp_f = celsius_to_fahrenheit(temp_c)
+    println("{}°C = {}°F", temp_c, temp_f)
+
+    // Safe division
+    let result1 = safe_divide(10, 3)
+    let result2 = safe_divide(10, 0)
+    println("10 / 3 = {}", result1)
+    println("10 / 0 = {} (safe)", result2)
+}
+
+// ============================================
+// TYPE CASTING BEST PRACTICES
+// ============================================
+
+fun example_casting_best_practices() {
+    println("\n=== Casting Best Practices ===")
+
+    // Always check for truncation
+    let large_float = 999.99
+    let truncated = large_float as i32
+    println("⚠️  Truncation: {} -> {}", large_float, truncated)
+
+    // Be careful with negative numbers
+    let neg_float = -3.7
+    let neg_int = neg_float as i32
+    println("⚠️  Negative truncation: {} -> {}", neg_float, neg_int)
+
+    // Parse with error handling awareness
+    let valid_str = "123"
+    let invalid_str = "abc"
+
+    let parsed_valid = valid_str.parse()
+    println("✓ Parsed '{}': {}", valid_str, parsed_valid)
+
+    // Note: Invalid parse will crash - need error handling
+    println("⚠️  Invalid parse '{}' will crash", invalid_str)
+}
+
+// ============================================
+// CONVERSION CHAINING
+// ============================================
+
+fun example_conversion_chaining() {
+    println("\n=== Conversion Chaining ===")
+
+    // Chain multiple conversions
+    let num = 42
+    let float_num = num as f64
+    let str_num = float_num.to_string()
+    println("Integer {} -> float -> string: '{}'", num, str_num)
+
+    // Parse and convert
+    let str_input = "99"
+    let parsed = str_input.parse()
+    let as_float = parsed as f64
+    let doubled = as_float * 2.0
+    println("String '{}' -> int -> float -> doubled: {}", str_input, doubled)
+}
+
+// ============================================
+// MAIN
+// ============================================
+
+fun main() {
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║   Recipe 1.13: Type Conversion and Casting      ║")
+    println("╚═══════════════════════════════════════════════════╝")
+    println("")
+
+    example_numeric_conversions()
+    example_string_conversions()
+    example_boolean_conversions()
+    example_practical_conversions()
+    example_casting_best_practices()
+    example_conversion_chaining()
+
+    println("")
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  All examples completed successfully!           ║")
+    println("╚═══════════════════════════════════════════════════╝")
+}

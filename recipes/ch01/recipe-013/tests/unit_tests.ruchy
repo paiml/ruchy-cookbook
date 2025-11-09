@@ -1,0 +1,410 @@
+// Recipe 1.13: Type Conversion and Casting - Unit Tests
+// EXTREME TDD: Write tests FIRST, then implementation
+
+// ============================================
+// FUNCTION IMPLEMENTATIONS (TO BE TESTED)
+// ============================================
+
+// Integer to float
+fun int_to_float(n: i32) -> f64 {
+    n as f64
+}
+
+// Float to integer (truncation)
+fun float_to_int(f: f64) -> i32 {
+    f as i32
+}
+
+// Integer to string
+fun int_to_string(n: i32) -> String {
+    n.to_string()
+}
+
+// Float to string
+fun float_to_string(f: f64) -> String {
+    f.to_string()
+}
+
+// String to integer (simple parse)
+fun string_to_int(s: String) -> i32 {
+    s.parse()
+}
+
+// Note: Ruchy does not support parsing strings to floats
+// The .parse() method only works for integers
+// String to float parsing is not available in current version
+
+// Boolean to integer
+fun bool_to_int(b: bool) -> i32 {
+    if b { 1 } else { 0 }
+}
+
+// Integer to boolean
+fun int_to_bool(n: i32) -> bool {
+    n != 0
+}
+
+// Boolean to string
+fun bool_to_string(b: bool) -> String {
+    if b { "true" } else { "false" }
+}
+
+// String to boolean
+fun string_to_bool(s: String) -> bool {
+    s == "true"
+}
+
+// Note: Ruchy might not support char type or char conversion
+// Character conversion may not be available in current version
+
+// ============================================
+// INTEGER TO FLOAT TESTS
+// ============================================
+
+fun test_int_to_float_positive() -> bool {
+    let result = int_to_float(42)
+    result == 42.0
+}
+
+fun test_int_to_float_negative() -> bool {
+    let result = int_to_float(-10)
+    result == -10.0
+}
+
+fun test_int_to_float_zero() -> bool {
+    let result = int_to_float(0)
+    result == 0.0
+}
+
+// ============================================
+// FLOAT TO INTEGER TESTS
+// ============================================
+
+fun test_float_to_int_positive() -> bool {
+    let result = float_to_int(42.7)
+    result == 42
+}
+
+fun test_float_to_int_negative() -> bool {
+    let result = float_to_int(-10.9)
+    result == -10
+}
+
+fun test_float_to_int_truncation() -> bool {
+    let result = float_to_int(3.14159)
+    result == 3
+}
+
+// ============================================
+// INTEGER TO STRING TESTS
+// ============================================
+
+fun test_int_to_string_positive() -> bool {
+    let result = int_to_string(42)
+    result == "42"
+}
+
+fun test_int_to_string_negative() -> bool {
+    let result = int_to_string(-10)
+    result == "-10"
+}
+
+fun test_int_to_string_zero() -> bool {
+    let result = int_to_string(0)
+    result == "0"
+}
+
+// ============================================
+// FLOAT TO STRING TESTS
+// ============================================
+
+fun test_float_to_string() -> bool {
+    let result = float_to_string(3.14)
+    result.contains("3.14")
+}
+
+fun test_float_to_string_negative() -> bool {
+    let result = float_to_string(-2.5)
+    result.contains("-2.5")
+}
+
+// ============================================
+// STRING TO INTEGER TESTS
+// ============================================
+
+fun test_string_to_int_positive() -> bool {
+    let result = string_to_int("42")
+    result == 42
+}
+
+fun test_string_to_int_negative() -> bool {
+    let result = string_to_int("-10")
+    result == -10
+}
+
+fun test_string_to_int_zero() -> bool {
+    let result = string_to_int("0")
+    result == 0
+}
+
+// Note: String to float tests removed - not supported by Ruchy
+
+// ============================================
+// BOOLEAN CONVERSION TESTS
+// ============================================
+
+fun test_bool_to_int_true() -> bool {
+    let result = bool_to_int(true)
+    result == 1
+}
+
+fun test_bool_to_int_false() -> bool {
+    let result = bool_to_int(false)
+    result == 0
+}
+
+fun test_int_to_bool_nonzero() -> bool {
+    let result1 = int_to_bool(1)
+    let result2 = int_to_bool(42)
+    let result3 = int_to_bool(-5)
+    result1 == true && result2 == true && result3 == true
+}
+
+fun test_int_to_bool_zero() -> bool {
+    let result = int_to_bool(0)
+    result == false
+}
+
+fun test_bool_to_string_true() -> bool {
+    let result = bool_to_string(true)
+    result == "true"
+}
+
+fun test_bool_to_string_false() -> bool {
+    let result = bool_to_string(false)
+    result == "false"
+}
+
+fun test_string_to_bool_true() -> bool {
+    let result = string_to_bool("true")
+    result == true
+}
+
+fun test_string_to_bool_false() -> bool {
+    let result = string_to_bool("false")
+    result == false
+}
+
+// Note: Character conversion tests removed - not supported by Ruchy
+
+// ============================================
+// TEST RUNNER
+// ============================================
+
+fun main() {
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Recipe 1.13: Type Conversion - Tests           ║")
+    println("╚═══════════════════════════════════════════════════╝")
+    println("")
+
+    let mut passed = 0
+    let mut total = 0
+
+    println("=== Integer to Float Tests ===")
+    total = total + 1
+    if test_int_to_float_positive() {
+        println("✅ Test 1: Int to float (positive)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 1: FAILED")
+    }
+
+    total = total + 1
+    if test_int_to_float_negative() {
+        println("✅ Test 2: Int to float (negative)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 2: FAILED")
+    }
+
+    total = total + 1
+    if test_int_to_float_zero() {
+        println("✅ Test 3: Int to float (zero)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 3: FAILED")
+    }
+
+    println("")
+    println("=== Float to Integer Tests ===")
+    total = total + 1
+    if test_float_to_int_positive() {
+        println("✅ Test 4: Float to int (positive)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 4: FAILED")
+    }
+
+    total = total + 1
+    if test_float_to_int_negative() {
+        println("✅ Test 5: Float to int (negative)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 5: FAILED")
+    }
+
+    total = total + 1
+    if test_float_to_int_truncation() {
+        println("✅ Test 6: Float to int (truncation)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 6: FAILED")
+    }
+
+    println("")
+    println("=== Integer to String Tests ===")
+    total = total + 1
+    if test_int_to_string_positive() {
+        println("✅ Test 7: Int to string (positive)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 7: FAILED")
+    }
+
+    total = total + 1
+    if test_int_to_string_negative() {
+        println("✅ Test 8: Int to string (negative)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 8: FAILED")
+    }
+
+    total = total + 1
+    if test_int_to_string_zero() {
+        println("✅ Test 9: Int to string (zero)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 9: FAILED")
+    }
+
+    println("")
+    println("=== Float to String Tests ===")
+    total = total + 1
+    if test_float_to_string() {
+        println("✅ Test 10: Float to string")
+        passed = passed + 1
+    } else {
+        println("❌ Test 10: FAILED")
+    }
+
+    total = total + 1
+    if test_float_to_string_negative() {
+        println("✅ Test 11: Float to string (negative)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 11: FAILED")
+    }
+
+    println("")
+    println("=== String to Integer Tests ===")
+    total = total + 1
+    if test_string_to_int_positive() {
+        println("✅ Test 12: String to int (positive)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 12: FAILED")
+    }
+
+    total = total + 1
+    if test_string_to_int_negative() {
+        println("✅ Test 13: String to int (negative)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 13: FAILED")
+    }
+
+    total = total + 1
+    if test_string_to_int_zero() {
+        println("✅ Test 14: String to int (zero)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 14: FAILED")
+    }
+
+    println("")
+    println("=== Boolean Conversion Tests ===")
+    total = total + 1
+    if test_bool_to_int_true() {
+        println("✅ Test 17: Bool to int (true)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 17: FAILED")
+    }
+
+    total = total + 1
+    if test_bool_to_int_false() {
+        println("✅ Test 18: Bool to int (false)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 18: FAILED")
+    }
+
+    total = total + 1
+    if test_int_to_bool_nonzero() {
+        println("✅ Test 19: Int to bool (nonzero)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 19: FAILED")
+    }
+
+    total = total + 1
+    if test_int_to_bool_zero() {
+        println("✅ Test 20: Int to bool (zero)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 20: FAILED")
+    }
+
+    total = total + 1
+    if test_bool_to_string_true() {
+        println("✅ Test 21: Bool to string (true)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 21: FAILED")
+    }
+
+    total = total + 1
+    if test_bool_to_string_false() {
+        println("✅ Test 22: Bool to string (false)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 22: FAILED")
+    }
+
+    total = total + 1
+    if test_string_to_bool_true() {
+        println("✅ Test 23: String to bool (true)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 23: FAILED")
+    }
+
+    total = total + 1
+    if test_string_to_bool_false() {
+        println("✅ Test 24: String to bool (false)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 24: FAILED")
+    }
+
+    println("")
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Test Results: {}/{} tests passed                  ║", passed, total)
+    println("╚═══════════════════════════════════════════════════╝")
+
+    if passed == total {
+        println("✅ All tests PASSED!")
+    } else {
+        println("❌ Some tests FAILED")
+    }
+}

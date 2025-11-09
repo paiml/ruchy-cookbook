@@ -20,6 +20,7 @@
   - [Recipe 1.10: Error Handling Basics](./ch01-foundations.md#recipe-110-error-handling-basics)
   - [Recipe 1.11: Pattern Matching](./ch01-foundations.md#recipe-111-pattern-matching)
   - [Recipe 1.12: String Operations and Manipulation](./ch01-foundations.md#recipe-112-string-operations-and-manipulation)
+  - [Recipe 1.13: Type Conversion and Casting](./ch01-foundations.md#recipe-113-type-conversion-and-casting)
 
 - [Chapter 2: String & Text Processing](./ch02-text-processing.md)
 - [Chapter 3: Collections & Data Structures](./ch03-collections.md)
