@@ -1,0 +1,428 @@
+// Recipe 1.9: Loops and Iteration - Unit Tests
+// EXTREME TDD: Write tests FIRST, then implementation
+
+// ============================================
+// WHILE LOOP TESTS
+// ============================================
+
+fun test_while_loop_basic() -> bool {
+    let mut sum = 0
+    let mut i = 1
+    
+    while i <= 5 {
+        sum = sum + i
+        i = i + 1
+    }
+    
+    sum == 15  // 1+2+3+4+5
+}
+
+fun test_while_loop_countdown() -> bool {
+    let mut count = 5
+    let mut result = 0
+    
+    while count > 0 {
+        result = result + count
+        count = count - 1
+    }
+    
+    result == 15 && count == 0
+}
+
+fun test_while_loop_zero_iterations() -> bool {
+    let mut count = 0
+    let mut executed = false
+    
+    while count > 0 {
+        executed = true
+        count = count - 1
+    }
+    
+    executed == false
+}
+
+// ============================================
+// FOR LOOP TESTS (if supported)
+// ============================================
+
+fun test_for_loop_range() -> bool {
+    let mut sum = 0
+    
+    for i in 0..5 {
+        sum = sum + i
+    }
+    
+    sum == 10  // 0+1+2+3+4
+}
+
+fun test_for_loop_inclusive_range() -> bool {
+    let mut sum = 0
+    
+    for i in 0..=5 {
+        sum = sum + i
+    }
+    
+    sum == 15  // 0+1+2+3+4+5
+}
+
+fun test_for_loop_array() -> bool {
+    let numbers = [1, 2, 3, 4, 5]
+    let mut sum = 0
+    
+    for num in numbers {
+        sum = sum + num
+    }
+    
+    sum == 15
+}
+
+// ============================================
+// BREAK TESTS
+// ============================================
+
+fun test_while_with_break() -> bool {
+    let mut i = 0
+    let mut sum = 0
+    
+    while true {
+        if i >= 5 {
+            break
+        }
+        sum = sum + i
+        i = i + 1
+    }
+    
+    sum == 10 && i == 5
+}
+
+fun test_break_early_exit() -> bool {
+    let mut count = 0
+    
+    while count < 100 {
+        count = count + 1
+        if count == 5 {
+            break
+        }
+    }
+    
+    count == 5
+}
+
+// ============================================
+// CONTINUE TESTS
+// ============================================
+
+fun test_while_with_continue() -> bool {
+    let mut i = 0
+    let mut sum = 0
+    
+    while i < 10 {
+        i = i + 1
+        if i % 2 == 0 {
+            continue  // Skip even numbers
+        }
+        sum = sum + i
+    }
+    
+    sum == 25  // 1+3+5+7+9
+}
+
+fun test_continue_skips_iteration() -> bool {
+    let mut count = 0
+    let mut sum = 0
+    
+    while count < 5 {
+        count = count + 1
+        if count == 3 {
+            continue
+        }
+        sum = sum + count
+    }
+    
+    sum == 12  // 1+2+4+5 (skipped 3)
+}
+
+// ============================================
+// NESTED LOOP TESTS
+// ============================================
+
+fun test_nested_while_loops() -> bool {
+    let mut sum = 0
+    let mut i = 1
+    
+    while i <= 3 {
+        let mut j = 1
+        while j <= 3 {
+            sum = sum + 1
+            j = j + 1
+        }
+        i = i + 1
+    }
+    
+    sum == 9  // 3x3 grid
+}
+
+fun test_nested_loops_multiplication() -> bool {
+    let mut i = 1
+    let mut product = 1
+    
+    while i <= 3 {
+        let mut j = 1
+        while j <= 2 {
+            product = product * 2
+            j = j + 1
+        }
+        i = i + 1
+    }
+    
+    product == 64  // 2^6
+}
+
+// ============================================
+// ACCUMULATION PATTERN TESTS
+// ============================================
+
+fun test_sum_accumulation() -> bool {
+    let numbers = [10, 20, 30, 40, 50]
+    let mut sum = 0
+    let mut i = 0
+    
+    while i < 5 {
+        sum = sum + numbers[i]
+        i = i + 1
+    }
+    
+    sum == 150
+}
+
+fun test_product_accumulation() -> bool {
+    let mut product = 1
+    let mut i = 1
+    
+    while i <= 5 {
+        product = product * i
+        i = i + 1
+    }
+    
+    product == 120  // 5! = 120
+}
+
+fun test_count_accumulation() -> bool {
+    let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    let mut count = 0
+    let mut i = 0
+    
+    while i < 10 {
+        if numbers[i] > 5 {
+            count = count + 1
+        }
+        i = i + 1
+    }
+    
+    count == 5  // 6,7,8,9,10
+}
+
+// ============================================
+// LOOP CONTROL FLOW TESTS
+// ============================================
+
+fun test_loop_with_condition() -> bool {
+    let mut sum = 0
+    let mut i = 0
+    
+    while i < 10 {
+        if i % 2 == 0 {
+            sum = sum + i
+        }
+        i = i + 1
+    }
+    
+    sum == 20  // 0+2+4+6+8
+}
+
+fun test_loop_early_return() -> bool {
+    let mut i = 0
+    
+    while i < 100 {
+        i = i + 1
+        if i == 10 {
+            return i == 10
+        }
+    }
+    
+    false
+}
+
+// ============================================
+// TEST RUNNER
+// ============================================
+
+fun main() {
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Recipe 1.9: Loops and Iteration - Tests         ║")
+    println("╚═══════════════════════════════════════════════════╝")
+    println("")
+
+    let mut passed = 0
+    let mut total = 0
+
+    println("=== While Loop Tests ===")
+    total = total + 1
+    if test_while_loop_basic() {
+        println("✅ Test 1: while loop basic")
+        passed = passed + 1
+    } else {
+        println("❌ Test 1: FAILED")
+    }
+
+    total = total + 1
+    if test_while_loop_countdown() {
+        println("✅ Test 2: while loop countdown")
+        passed = passed + 1
+    } else {
+        println("❌ Test 2: FAILED")
+    }
+
+    total = total + 1
+    if test_while_loop_zero_iterations() {
+        println("✅ Test 3: while loop zero iterations")
+        passed = passed + 1
+    } else {
+        println("❌ Test 3: FAILED")
+    }
+
+    println("")
+    println("=== For Loop Tests ===")
+    total = total + 1
+    if test_for_loop_range() {
+        println("✅ Test 4: for loop range")
+        passed = passed + 1
+    } else {
+        println("❌ Test 4: FAILED")
+    }
+
+    total = total + 1
+    if test_for_loop_inclusive_range() {
+        println("✅ Test 5: for loop inclusive range")
+        passed = passed + 1
+    } else {
+        println("❌ Test 5: FAILED")
+    }
+
+    total = total + 1
+    if test_for_loop_array() {
+        println("✅ Test 6: for loop array")
+        passed = passed + 1
+    } else {
+        println("❌ Test 6: FAILED")
+    }
+
+    println("")
+    println("=== Break Tests ===")
+    total = total + 1
+    if test_while_with_break() {
+        println("✅ Test 7: while with break")
+        passed = passed + 1
+    } else {
+        println("❌ Test 7: FAILED")
+    }
+
+    total = total + 1
+    if test_break_early_exit() {
+        println("✅ Test 8: break early exit")
+        passed = passed + 1
+    } else {
+        println("❌ Test 8: FAILED")
+    }
+
+    println("")
+    println("=== Continue Tests ===")
+    total = total + 1
+    if test_while_with_continue() {
+        println("✅ Test 9: while with continue")
+        passed = passed + 1
+    } else {
+        println("❌ Test 9: FAILED")
+    }
+
+    total = total + 1
+    if test_continue_skips_iteration() {
+        println("✅ Test 10: continue skips iteration")
+        passed = passed + 1
+    } else {
+        println("❌ Test 10: FAILED")
+    }
+
+    println("")
+    println("=== Nested Loop Tests ===")
+    total = total + 1
+    if test_nested_while_loops() {
+        println("✅ Test 11: nested while loops")
+        passed = passed + 1
+    } else {
+        println("❌ Test 11: FAILED")
+    }
+
+    total = total + 1
+    if test_nested_loops_multiplication() {
+        println("✅ Test 12: nested loops multiplication")
+        passed = passed + 1
+    } else {
+        println("❌ Test 12: FAILED")
+    }
+
+    println("")
+    println("=== Accumulation Pattern Tests ===")
+    total = total + 1
+    if test_sum_accumulation() {
+        println("✅ Test 13: sum accumulation")
+        passed = passed + 1
+    } else {
+        println("❌ Test 13: FAILED")
+    }
+
+    total = total + 1
+    if test_product_accumulation() {
+        println("✅ Test 14: product accumulation")
+        passed = passed + 1
+    } else {
+        println("❌ Test 14: FAILED")
+    }
+
+    total = total + 1
+    if test_count_accumulation() {
+        println("✅ Test 15: count accumulation")
+        passed = passed + 1
+    } else {
+        println("❌ Test 15: FAILED")
+    }
+
+    println("")
+    println("=== Loop Control Flow Tests ===")
+    total = total + 1
+    if test_loop_with_condition() {
+        println("✅ Test 16: loop with condition")
+        passed = passed + 1
+    } else {
+        println("❌ Test 16: FAILED")
+    }
+
+    total = total + 1
+    if test_loop_early_return() {
+        println("✅ Test 17: loop early return")
+        passed = passed + 1
+    } else {
+        println("❌ Test 17: FAILED")
+    }
+
+    println("")
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Test Results: {}/{} tests passed                  ║", passed, total)
+    println("╚═══════════════════════════════════════════════════╝")
+
+    if passed == total {
+        println("✅ All tests PASSED!")
+    } else {
+        println("❌ Some tests FAILED")
+    }
+}

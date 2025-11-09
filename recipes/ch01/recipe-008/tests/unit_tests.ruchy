@@ -1,0 +1,362 @@
+// Recipe 1.8: Data Structures - Unit Tests
+// EXTREME TDD: Write tests FIRST, then implementation
+
+// ============================================
+// OBJECT LITERAL TESTS
+// ============================================
+
+fun test_create_simple_object() -> bool {
+    let person = {
+        name: "Alice",
+        age: 30
+    }
+
+    person.name == "Alice" && person.age == 30
+}
+
+fun test_object_field_access() -> bool {
+    let point = {
+        x: 10,
+        y: 20
+    }
+
+    point.x == 10 && point.y == 20
+}
+
+fun test_nested_objects() -> bool {
+    let user = {
+        name: "Bob",
+        address: {
+            city: "NYC",
+            zip: "10001"
+        }
+    }
+
+    user.name == "Bob" && user.address.city == "NYC"
+}
+
+fun test_object_with_mixed_types() -> bool {
+    let data = {
+        id: 42,
+        name: "Widget",
+        price: 19.99,
+        available: true
+    }
+
+    data.id == 42 && data.price == 19.99 && data.available
+}
+
+// ============================================
+// ARRAY TESTS
+// ============================================
+
+fun test_create_array() -> bool {
+    let numbers = [1, 2, 3, 4, 5]
+    numbers.length() == 5
+}
+
+fun test_array_indexing() -> bool {
+    let colors = ["red", "green", "blue"]
+    colors[0] == "red" && colors[2] == "blue"
+}
+
+fun test_array_of_objects() -> bool {
+    let people = [
+        {name: "Alice", age: 30},
+        {name: "Bob", age: 25}
+    ]
+
+    people[0].name == "Alice" && people[1].age == 25
+}
+
+fun test_empty_array() -> bool {
+    let empty = []
+    empty.length() == 0
+}
+
+// ============================================
+// FUNCTION TESTS
+// ============================================
+
+fun add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+fun test_basic_function() -> bool {
+    add(2, 3) == 5
+}
+
+fun multiply(a: i32, b: i32) -> i32 {
+    a * b
+}
+
+fun test_function_composition() -> bool {
+    let result = add(multiply(2, 3), 4)
+    result == 10
+}
+
+fun is_even(n: i32) -> bool {
+    n % 2 == 0
+}
+
+fun test_boolean_function() -> bool {
+    is_even(4) && !is_even(5)
+}
+
+// ============================================
+// CLOSURE TESTS
+// ============================================
+
+fun test_simple_closure() -> bool {
+    let double = |x| x * 2
+    double(5) == 10
+}
+
+fun test_closure_with_capture() -> bool {
+    let factor = 3
+    let multiply_by_factor = |x| x * factor
+    multiply_by_factor(4) == 12
+}
+
+fun test_closure_as_parameter() -> bool {
+    let numbers = [1, 2, 3]
+    let doubled = numbers.map(|x| x * 2)
+    doubled[0] == 2 && doubled[1] == 4 && doubled[2] == 6
+}
+
+// ============================================
+// ARRAY METHOD TESTS
+// ============================================
+
+fun test_array_map() -> bool {
+    let numbers = [1, 2, 3]
+    let squared = numbers.map(|x| x * x)
+    squared[0] == 1 && squared[1] == 4 && squared[2] == 9
+}
+
+fun test_array_filter() -> bool {
+    let numbers = [1, 2, 3, 4, 5, 6]
+    let evens = numbers.filter(|x| x % 2 == 0)
+    evens.length() == 3 && evens[0] == 2
+}
+
+fun test_array_reduce() -> bool {
+    let numbers = [1, 2, 3, 4]
+    let sum = numbers.reduce(|acc, x| acc + x, 0)
+    sum == 10
+}
+
+// ============================================
+// INTEGRATION TESTS
+// ============================================
+
+fun test_object_array_integration() -> bool {
+    let products = [
+        {name: "Widget", price: 10.0},
+        {name: "Gadget", price: 20.0},
+        {name: "Gizmo", price: 15.0}
+    ]
+
+    let total = products.reduce(|acc, p| acc + p.price, 0.0)
+    total == 45.0
+}
+
+fun test_nested_data_structure() -> bool {
+    let company = {
+        name: "Acme Corp",
+        employees: [
+            {name: "Alice", role: "Engineer"},
+            {name: "Bob", role: "Designer"}
+        ]
+    }
+
+    company.employees.length() == 2 && company.employees[0].name == "Alice"
+}
+
+// ============================================
+// TEST RUNNER
+// ============================================
+
+fun main() {
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Recipe 1.8: Data Structures - Unit Tests        ║")
+    println("╚═══════════════════════════════════════════════════╝")
+    println("")
+
+    let mut passed = 0
+    let mut total = 0
+
+    println("=== Object Literal Tests ===")
+    total = total + 1
+    if test_create_simple_object() {
+        println("✅ Test 1: Create simple object")
+        passed = passed + 1
+    } else {
+        println("❌ Test 1: FAILED")
+    }
+
+    total = total + 1
+    if test_object_field_access() {
+        println("✅ Test 2: Object field access")
+        passed = passed + 1
+    } else {
+        println("❌ Test 2: FAILED")
+    }
+
+    total = total + 1
+    if test_nested_objects() {
+        println("✅ Test 3: Nested objects")
+        passed = passed + 1
+    } else {
+        println("❌ Test 3: FAILED")
+    }
+
+    total = total + 1
+    if test_object_with_mixed_types() {
+        println("✅ Test 4: Object with mixed types")
+        passed = passed + 1
+    } else {
+        println("❌ Test 4: FAILED")
+    }
+
+    println("")
+    println("=== Array Tests ===")
+    total = total + 1
+    if test_create_array() {
+        println("✅ Test 5: Create array")
+        passed = passed + 1
+    } else {
+        println("❌ Test 5: FAILED")
+    }
+
+    total = total + 1
+    if test_array_indexing() {
+        println("✅ Test 6: Array indexing")
+        passed = passed + 1
+    } else {
+        println("❌ Test 6: FAILED")
+    }
+
+    total = total + 1
+    if test_array_of_objects() {
+        println("✅ Test 7: Array of objects")
+        passed = passed + 1
+    } else {
+        println("❌ Test 7: FAILED")
+    }
+
+    total = total + 1
+    if test_empty_array() {
+        println("✅ Test 8: Empty array")
+        passed = passed + 1
+    } else {
+        println("❌ Test 8: FAILED")
+    }
+
+    println("")
+    println("=== Function Tests ===")
+    total = total + 1
+    if test_basic_function() {
+        println("✅ Test 9: Basic function")
+        passed = passed + 1
+    } else {
+        println("❌ Test 9: FAILED")
+    }
+
+    total = total + 1
+    if test_function_composition() {
+        println("✅ Test 10: Function composition")
+        passed = passed + 1
+    } else {
+        println("❌ Test 10: FAILED")
+    }
+
+    total = total + 1
+    if test_boolean_function() {
+        println("✅ Test 11: Boolean function")
+        passed = passed + 1
+    } else {
+        println("❌ Test 11: FAILED")
+    }
+
+    println("")
+    println("=== Closure Tests ===")
+    total = total + 1
+    if test_simple_closure() {
+        println("✅ Test 12: Simple closure")
+        passed = passed + 1
+    } else {
+        println("❌ Test 12: FAILED")
+    }
+
+    total = total + 1
+    if test_closure_with_capture() {
+        println("✅ Test 13: Closure with capture")
+        passed = passed + 1
+    } else {
+        println("❌ Test 13: FAILED")
+    }
+
+    total = total + 1
+    if test_closure_as_parameter() {
+        println("✅ Test 14: Closure as parameter")
+        passed = passed + 1
+    } else {
+        println("❌ Test 14: FAILED")
+    }
+
+    println("")
+    println("=== Array Method Tests ===")
+    total = total + 1
+    if test_array_map() {
+        println("✅ Test 15: Array map")
+        passed = passed + 1
+    } else {
+        println("❌ Test 15: FAILED")
+    }
+
+    total = total + 1
+    if test_array_filter() {
+        println("✅ Test 16: Array filter")
+        passed = passed + 1
+    } else {
+        println("❌ Test 16: FAILED")
+    }
+
+    total = total + 1
+    if test_array_reduce() {
+        println("✅ Test 17: Array reduce")
+        passed = passed + 1
+    } else {
+        println("❌ Test 17: FAILED")
+    }
+
+    println("")
+    println("=== Integration Tests ===")
+    total = total + 1
+    if test_object_array_integration() {
+        println("✅ Test 18: Object array integration")
+        passed = passed + 1
+    } else {
+        println("❌ Test 18: FAILED")
+    }
+
+    total = total + 1
+    if test_nested_data_structure() {
+        println("✅ Test 19: Nested data structure")
+        passed = passed + 1
+    } else {
+        println("❌ Test 19: FAILED")
+    }
+
+    println("")
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Test Results: {}/{} tests passed                  ║", passed, total)
+    println("╚═══════════════════════════════════════════════════╝")
+
+    if passed == total {
+        println("✅ All tests PASSED!")
+    } else {
+        println("❌ Some tests FAILED")
+    }
+}

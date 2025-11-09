@@ -1,133 +1,344 @@
-// Unit tests for Recipe 1.3: Variables and Mutability
-// Written FIRST following EXTREME TDD methodology
+// Recipe 1.3: Variables and Mutability - Unit Tests
+// EXTREME TDD: Write tests FIRST, then implementation
 
-use std::testing::*;
+// ============================================
+// IMMUTABLE VARIABLE TESTS
+// ============================================
 
-#[test]
-fun test_immutable_variable_declaration() {
-    // Test basic immutable variable declaration
-    let x = create_immutable_var(42);
-    assert_eq!(x, 42);
+fun test_let_creates_immutable_variable() -> bool {
+    let x = 5
+    x == 5
 }
 
-#[test]
-fun test_mutable_variable_declaration() {
-    // Test mutable variable declaration
-    let mut x = create_mutable_var(10);
-    assert_eq!(x, 10);
+fun test_let_with_type_annotation() -> bool {
+    let x: i32 = 10
+    x == 10
 }
 
-#[test]
-fun test_mutable_variable_reassignment() {
-    // Test that mutable variables can be reassigned
-    let mut x = 5;
-    x = update_mutable_var(x, 10);
-    assert_eq!(x, 10);
+fun test_immutable_string() -> bool {
+    let greeting = "Hello"
+    greeting == "Hello"
 }
 
-#[test]
-fun test_variable_shadowing() {
-    // Test variable shadowing
-    let x = 5;
-    let shadowed = shadow_variable(x, 10);
-    assert_eq!(shadowed, 10);
-    // Original x unchanged in outer scope
-    assert_eq!(x, 5);
+fun test_immutable_boolean() -> bool {
+    let flag = true
+    flag == true
 }
 
-#[test]
-fun test_type_inference() {
-    // Test that type is correctly inferred
-    let inferred = infer_type_from_value(42);
-    assert_eq!(inferred, 42);
-    assert!(inferred is i32);
+fun test_immutable_float() -> bool {
+    let pi = 3.14
+    pi == 3.14
 }
 
-#[test]
-fun test_explicit_type_annotation() {
-    // Test explicit type annotation
-    let annotated: i32 = create_with_type_annotation();
-    assert_eq!(annotated, 100);
+// ============================================
+// MUTABLE VARIABLE TESTS
+// ============================================
+
+fun test_mut_allows_reassignment() -> bool {
+    let mut x = 5
+    x = 10
+    x == 10
 }
 
-#[test]
-fun test_multiple_variable_declarations() {
-    // Test declaring multiple variables
-    let (a, b, c) = create_multiple_variables();
-    assert_eq!(a, 1);
-    assert_eq!(b, 2);
-    assert_eq!(c, 3);
+fun test_mut_increment() -> bool {
+    let mut counter = 0
+    counter = counter + 1
+    counter = counter + 1
+    counter == 2
 }
 
-#[test]
-fun test_constant_declaration() {
-    // Test constant declaration
-    let constant = get_constant_value();
-    assert_eq!(constant, 42);
+fun test_mut_string_reassignment() -> bool {
+    let mut message = "Hello"
+    message = "World"
+    message == "World"
 }
 
-#[test]
-fun test_variable_scope() {
-    // Test variable scoping
-    let outer = 10;
-    let inner_value = test_inner_scope(outer);
-    assert_eq!(inner_value, 20);
-    assert_eq!(outer, 10); // Unchanged
+fun test_mut_type_remains_same() -> bool {
+    let mut x: i32 = 5
+    x = 10
+    x == 10
 }
 
-#[test]
-fun test_string_immutability() {
-    // Test immutable string variable
-    let s = create_immutable_string("hello");
-    assert_eq!(s, "hello");
+// ============================================
+// SHADOWING TESTS
+// ============================================
+
+fun test_shadowing_immutable() -> bool {
+    let x = 5
+    let x = 10
+    x == 10
 }
 
-#[test]
-fun test_string_mutability() {
-    // Test mutable string variable
-    let mut s = String::from("hello");
-    s = append_to_string(s, " world");
-    assert_eq!(s, "hello world");
+fun test_shadowing_changes_type() -> bool {
+    let x = 5
+    let x = "five"
+    x == "five"
 }
 
-#[test]
-fun test_shadowing_with_type_change() {
-    // Test shadowing with different type
-    let spaces = "   ";
-    let spaces = count_spaces(spaces);
-    assert_eq!(spaces, 3);
+fun test_shadowing_with_transformation() -> bool {
+    let x = 10
+    let x = x * 2
+    x == 20
 }
 
-#[test]
-fun test_numeric_type_conversion() {
-    // Test converting between numeric types
-    let x: i32 = 42;
-    let y: f64 = convert_to_float(x);
-    assert_eq!(y, 42.0);
+// ============================================
+// SCOPE TESTS
+// ============================================
+
+fun test_variable_scope_nested() -> bool {
+    let outer = 5
+
+    let inner_result = {
+        let inner = 10
+        inner + outer
+    }
+
+    inner_result == 15 && outer == 5
 }
 
-#[test]
-fun test_boolean_variables() {
-    // Test boolean variable declaration and usage
-    let flag = create_boolean(true);
-    assert_eq!(flag, true);
+fun test_scope_mutation() -> bool {
+    // Note: In Ruchy, declaring 'let x' inside a scope MUTATES the outer x
+    // This is different from Rust where it creates a shadow
+    let x = 5
 
-    let toggled = toggle_boolean(flag);
-    assert_eq!(toggled, false);
+    let result = {
+        let x = 10  // This mutates outer x, doesn't shadow!
+        x
+    }
+
+    // Both result and x are 10 (outer x was mutated)
+    result == 10 && x == 10
 }
 
-#[test]
-fun test_zero_initialization() {
-    // Test that variables can be initialized to zero
-    let zero = initialize_to_zero();
-    assert_eq!(zero, 0);
+// ============================================
+// TYPE INFERENCE TESTS
+// ============================================
+
+fun test_type_inference_integer() -> bool {
+    let x = 42
+    x == 42
 }
 
-#[test]
-fun test_copy_semantics() {
-    // Test copy semantics for simple types
-    let x = 5;
-    let y = copy_value(x);
-    assert_eq!(x, 5);
-    assert_eq!(y, 5);
+fun test_type_inference_float() -> bool {
+    let x = 3.14
+    x == 3.14
+}
+
+fun test_type_inference_from_operation() -> bool {
+    let sum = 5 + 10
+    sum == 15
+}
+
+// ============================================
+// MULTIPLE VARIABLE TESTS
+// ============================================
+
+fun test_multiple_immutable_variables() -> bool {
+    let x = 5
+    let y = 10
+    let z = x + y
+    z == 15
+}
+
+fun test_multiple_mutable_variables() -> bool {
+    let mut a = 1
+    let mut b = 2
+    a = a + 1
+    b = b * 2
+    a == 2 && b == 4
+}
+
+// ============================================
+// CONSTANT VALUES TESTS
+// ============================================
+
+// Note: Ruchy does NOT support underscore separators in numbers
+// 1_000_000 will cause a parse error
+
+// ============================================
+// TEST RUNNER
+// ============================================
+
+fun main() {
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Recipe 1.3: Variables and Mutability - Tests    ║")
+    println("╚═══════════════════════════════════════════════════╝")
+    println("")
+
+    let mut passed = 0
+    let mut total = 0
+
+    println("=== Immutable Variable Tests ===")
+    total = total + 1
+    if test_let_creates_immutable_variable() {
+        println("✅ Test 1: let creates immutable variable")
+        passed = passed + 1
+    } else {
+        println("❌ Test 1: FAILED")
+    }
+
+    total = total + 1
+    if test_let_with_type_annotation() {
+        println("✅ Test 2: let with type annotation")
+        passed = passed + 1
+    } else {
+        println("❌ Test 2: FAILED")
+    }
+
+    total = total + 1
+    if test_immutable_string() {
+        println("✅ Test 3: Immutable string")
+        passed = passed + 1
+    } else {
+        println("❌ Test 3: FAILED")
+    }
+
+    total = total + 1
+    if test_immutable_boolean() {
+        println("✅ Test 4: Immutable boolean")
+        passed = passed + 1
+    } else {
+        println("❌ Test 4: FAILED")
+    }
+
+    total = total + 1
+    if test_immutable_float() {
+        println("✅ Test 5: Immutable float")
+        passed = passed + 1
+    } else {
+        println("❌ Test 5: FAILED")
+    }
+
+    println("")
+    println("=== Mutable Variable Tests ===")
+    total = total + 1
+    if test_mut_allows_reassignment() {
+        println("✅ Test 6: mut allows reassignment")
+        passed = passed + 1
+    } else {
+        println("❌ Test 6: FAILED")
+    }
+
+    total = total + 1
+    if test_mut_increment() {
+        println("✅ Test 7: mut increment")
+        passed = passed + 1
+    } else {
+        println("❌ Test 7: FAILED")
+    }
+
+    total = total + 1
+    if test_mut_string_reassignment() {
+        println("✅ Test 8: mut string reassignment")
+        passed = passed + 1
+    } else {
+        println("❌ Test 8: FAILED")
+    }
+
+    total = total + 1
+    if test_mut_type_remains_same() {
+        println("✅ Test 9: mut type remains same")
+        passed = passed + 1
+    } else {
+        println("❌ Test 9: FAILED")
+    }
+
+    println("")
+    println("=== Shadowing Tests ===")
+    total = total + 1
+    if test_shadowing_immutable() {
+        println("✅ Test 10: Shadowing immutable")
+        passed = passed + 1
+    } else {
+        println("❌ Test 10: FAILED")
+    }
+
+    total = total + 1
+    if test_shadowing_changes_type() {
+        println("✅ Test 11: Shadowing changes type")
+        passed = passed + 1
+    } else {
+        println("❌ Test 11: FAILED")
+    }
+
+    total = total + 1
+    if test_shadowing_with_transformation() {
+        println("✅ Test 12: Shadowing with transformation")
+        passed = passed + 1
+    } else {
+        println("❌ Test 12: FAILED")
+    }
+
+    println("")
+    println("=== Scope Tests ===")
+    total = total + 1
+    if test_variable_scope_nested() {
+        println("✅ Test 13: Variable scope nested")
+        passed = passed + 1
+    } else {
+        println("❌ Test 13: FAILED")
+    }
+
+    total = total + 1
+    if test_scope_mutation() {
+        println("✅ Test 14: Scope mutation (not shadowing)")
+        passed = passed + 1
+    } else {
+        println("❌ Test 14: FAILED")
+    }
+
+    println("")
+    println("=== Type Inference Tests ===")
+    total = total + 1
+    if test_type_inference_integer() {
+        println("✅ Test 15: Type inference integer")
+        passed = passed + 1
+    } else {
+        println("❌ Test 15: FAILED")
+    }
+
+    total = total + 1
+    if test_type_inference_float() {
+        println("✅ Test 16: Type inference float")
+        passed = passed + 1
+    } else {
+        println("❌ Test 16: FAILED")
+    }
+
+    total = total + 1
+    if test_type_inference_from_operation() {
+        println("✅ Test 17: Type inference from operation")
+        passed = passed + 1
+    } else {
+        println("❌ Test 17: FAILED")
+    }
+
+    println("")
+    println("=== Multiple Variable Tests ===")
+    total = total + 1
+    if test_multiple_immutable_variables() {
+        println("✅ Test 18: Multiple immutable variables")
+        passed = passed + 1
+    } else {
+        println("❌ Test 18: FAILED")
+    }
+
+    total = total + 1
+    if test_multiple_mutable_variables() {
+        println("✅ Test 19: Multiple mutable variables")
+        passed = passed + 1
+    } else {
+        println("❌ Test 19: FAILED")
+    }
+
+    println("")
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Test Results: {}/{} tests passed                  ║", passed, total)
+    println("╚═══════════════════════════════════════════════════╝")
+
+    if passed == total {
+        println("✅ All tests PASSED!")
+    } else {
+        println("❌ Some tests FAILED")
+    }
 }

@@ -1,0 +1,295 @@
+// Recipe 1.8: Data Structures
+//
+// Demonstrates Ruchy's ACTUAL data structures:
+// - Object literals (like JavaScript/Ruby)
+// - Arrays
+// - Functions
+// - Closures
+// - Array methods (map, filter, reduce)
+//
+// Written using EXTREME TDD - all features tested and verified to work
+
+// ============================================
+// OBJECT LITERALS
+// ============================================
+
+fun demonstrate_object_literals() {
+    println("=== Object Literals ===")
+
+    // Simple object
+    let person = {
+        name: "Alice",
+        age: 30,
+        city: "NYC"
+    }
+
+    println("Person: {} from {}, age {}", person.name, person.city, person.age)
+
+    // Nested objects
+    let user = {
+        id: 123,
+        profile: {
+            name: "Bob",
+            email: "bob@example.com"
+        },
+        settings: {
+            theme: "dark",
+            notifications: true
+        }
+    }
+
+    println("User: {} ({})", user.profile.name, user.profile.email)
+    println("Theme: {}", user.settings.theme)
+
+    // Object with mixed types
+    let product = {
+        id: 42,
+        name: "Widget",
+        price: 19.99,
+        in_stock: true,
+        tags: ["tool", "gadget", "popular"]
+    }
+
+    println("Product: {} - ${}", product.name, product.price)
+    println("In stock: {}", product.in_stock)
+    println("Tags: {:?}", product.tags)
+    println("")
+}
+
+// ============================================
+// ARRAYS
+// ============================================
+
+fun demonstrate_arrays() {
+    println("=== Arrays ===")
+
+    // Array of numbers
+    let numbers = [1, 2, 3, 4, 5]
+    println("Numbers: {:?}", numbers)
+    println("First: {}, Last: {}", numbers[0], numbers[4])
+    println("Length: {}", numbers.length())
+
+    // Array of strings
+    let colors = ["red", "green", "blue"]
+    println("Colors: {:?}", colors)
+
+    // Array of objects
+    let people = [
+        {name: "Alice", age: 30},
+        {name: "Bob", age: 25},
+        {name: "Carol", age: 35}
+    ]
+
+    println("People:")
+    println("  - {} is {} years old", people[0].name, people[0].age)
+    println("  - {} is {} years old", people[1].name, people[1].age)
+    println("  - {} is {} years old", people[2].name, people[2].age)
+
+    // Empty array
+    let empty = []
+    println("Empty array length: {}", empty.length())
+    println("")
+}
+
+// ============================================
+// FUNCTIONS
+// ============================================
+
+fun add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+fun multiply(a: i32, b: i32) -> i32 {
+    a * b
+}
+
+fun calculate_area(width: f64, height: f64) -> f64 {
+    width * height
+}
+
+fun is_even(n: i32) -> bool {
+    n % 2 == 0
+}
+
+fun greet(name: &str) -> String {
+    format!("Hello, {}!", name)
+}
+
+fun demonstrate_functions() {
+    println("=== Functions ===")
+
+    println("add(5, 3) = {}", add(5, 3))
+    println("multiply(4, 7) = {}", multiply(4, 7))
+    println("calculate_area(5.0, 3.0) = {}", calculate_area(5.0, 3.0))
+    println("is_even(4) = {}", is_even(4))
+    println("is_even(7) = {}", is_even(7))
+    println("{}", greet("Alice"))
+
+    // Function composition
+    let result = add(multiply(2, 3), 4)
+    println("add(multiply(2, 3), 4) = {}", result)
+    println("")
+}
+
+// ============================================
+// CLOSURES
+// ============================================
+
+fun demonstrate_closures() {
+    println("=== Closures ===")
+
+    // Simple closure
+    let double = |x| x * 2
+    println("double(5) = {}", double(5))
+
+    // Closure with capture
+    let factor = 3
+    let multiply_by_factor = |x| x * factor
+    println("multiply_by_factor(4) = {}", multiply_by_factor(4))
+
+    // Closure as parameter (with map)
+    let numbers = [1, 2, 3, 4, 5]
+    let squared = numbers.map(|x| x * x)
+    println("Squared: {:?}", squared)
+
+    // Multiple closures
+    let add_ten = |x| x + 10
+    let subtract_five = |x| x - 5
+    let transform = |x| subtract_five(add_ten(x))
+    println("transform(7) = {}", transform(7))
+    println("")
+}
+
+// ============================================
+// ARRAY METHODS
+// ============================================
+
+fun demonstrate_array_methods() {
+    println("=== Array Methods ===")
+
+    let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    // MAP: Transform each element
+    let doubled = numbers.map(|x| x * 2)
+    println("Doubled: {:?}", doubled)
+
+    let squared = numbers.map(|x| x * x)
+    println("Squared: {:?}", squared)
+
+    // FILTER: Keep only elements matching condition
+    let evens = numbers.filter(|x| x % 2 == 0)
+    println("Evens: {:?}", evens)
+
+    let odds = numbers.filter(|x| x % 2 == 1)
+    println("Odds: {:?}", odds)
+
+    let greater_than_five = numbers.filter(|x| x > 5)
+    println("Greater than 5: {:?}", greater_than_five)
+
+    // REDUCE: Combine all elements into single value
+    let sum = numbers.reduce(|acc, x| acc + x, 0)
+    println("Sum: {}", sum)
+
+    let product = numbers.reduce(|acc, x| acc * x, 1)
+    println("Product: {}", product)
+
+    let max = numbers.reduce(|acc, x| if x > acc { x } else { acc }, numbers[0])
+    println("Max: {}", max)
+    println("")
+}
+
+// ============================================
+// REAL-WORLD EXAMPLES
+// ============================================
+
+fun demonstrate_real_world() {
+    println("=== Real-World Examples ===")
+
+    // Example 1: Shopping cart
+    let cart = [
+        {name: "Widget", price: 10.0, quantity: 2},
+        {name: "Gadget", price: 25.0, quantity: 1},
+        {name: "Gizmo", price: 15.0, quantity: 3}
+    ]
+
+    let total = cart.reduce(|acc, item| acc + (item.price * item.quantity as f64), 0.0)
+    println("Shopping cart total: ${}", total)
+
+    // Example 2: Filter and transform
+    let products = [
+        {name: "Laptop", price: 1000.0, category: "Electronics"},
+        {name: "Book", price: 20.0, category: "Books"},
+        {name: "Phone", price: 500.0, category: "Electronics"},
+        {name: "Desk", price: 300.0, category: "Furniture"}
+    ]
+
+    let electronics = products.filter(|p| p.category == "Electronics")
+    println("Electronics count: {}", electronics.length())
+
+    let expensive = products.filter(|p| p.price > 100.0)
+    let names = expensive.map(|p| p.name)
+    println("Expensive items: {:?}", names)
+
+    // Example 3: Data processing pipeline
+    let scores = [85, 92, 78, 95, 88, 76, 99, 82]
+
+    let passing = scores.filter(|s| s >= 80)
+    let average = passing.reduce(|acc, s| acc + s, 0) / passing.length()
+    println("Passing scores average: {}", average)
+
+    // Example 4: Nested data
+    let company = {
+        name: "Acme Corp",
+        departments: [
+            {
+                name: "Engineering",
+                employees: [
+                    {name: "Alice", salary: 100000},
+                    {name: "Bob", salary: 95000}
+                ]
+            },
+            {
+                name: "Sales",
+                employees: [
+                    {name: "Carol", salary: 80000},
+                    {name: "Dave", salary: 75000}
+                ]
+            }
+        ]
+    }
+
+    println("Company: {}", company.name)
+    println("Departments: {}", company.departments.length())
+    println("Engineering team: {}", company.departments[0].employees.length())
+    println("")
+}
+
+// ============================================
+// MAIN
+// ============================================
+
+fun main() {
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Recipe 1.8: Data Structures                      ║")
+    println("║  (Based on EXTREME TDD - all features tested!)    ║")
+    println("╚═══════════════════════════════════════════════════╝")
+    println("")
+
+    demonstrate_object_literals()
+    demonstrate_arrays()
+    demonstrate_functions()
+    demonstrate_closures()
+    demonstrate_array_methods()
+    demonstrate_real_world()
+
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Key Takeaways                                    ║")
+    println("╠═══════════════════════════════════════════════════╣")
+    println("║  ✅ Object literals: {key: value}                 ║")
+    println("║  ✅ Arrays: [1, 2, 3]                             ║")
+    println("║  ✅ Functions: fun name(args) -> Type {}          ║")
+    println("║  ✅ Closures: |x| x * 2                           ║")
+    println("║  ✅ Array methods: map, filter, reduce            ║")
+    println("║  ✅ Nested structures supported                   ║")
+    println("╚═══════════════════════════════════════════════════╝")
+}

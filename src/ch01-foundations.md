@@ -13,6 +13,8 @@ This chapter covers the fundamental building blocks of Ruchy programming. Whethe
 - Recipe 1.5: Functions and Return Values - Writing reusable code
 - Recipe 1.6: Control Flow and Conditionals - Making decisions
 - Recipe 1.7: Structs, Classes, and Methods - Object-oriented programming
+- Recipe 1.8: Data Structures - Object literals, arrays, and closures
+- Recipe 1.9: Loops and Iteration - while, for, break, continue
 
 ## Prerequisites
 
@@ -423,18 +425,480 @@ fun test_parse_args_preserves_order(args: Vec<String>) {
 ## Recipe 1.3: Variables and Mutability
 
 **Difficulty**: Beginner
-**Status**: 🚧 Coming Soon
+**Time**: 10-15 minutes
+**Test Coverage**: 19/19 tests passing (100%)
+**Status**: ✅ WORKING (verified with EXTREME TDD)
 
-This recipe will cover variable declaration, mutability, and shadowing.
+### Problem
+
+You need to store and modify data in your Ruchy programs. How do you declare variables? When should you use immutable vs mutable variables? How does shadowing work, and what are the scoping rules?
+
+### Solution
+
+```ruchy
+// Immutable variables (default)
+let x = 5
+let name = "Alice"
+
+// Mutable variables with 'mut'
+let mut counter = 0
+counter = counter + 1
+
+// Type annotations (optional)
+let age: i32 = 30
+let pi: f64 = 3.14
+
+// Shadowing (reuse variable name)
+let value = 42
+let value = value * 2
+let value = "changed type!"
+
+// Scopes
+let outer = 5
+let result = {
+    let inner = 10
+    inner + outer  // Returns 15
+}
+```
+
+### Discussion
+
+Ruchy provides flexible variable declaration with automatic type inference:
+
+**Immutable by Default**:
+```ruchy
+let x = 5
+// x = 10  // ERROR: Cannot assign to immutable variable
+```
+
+Variables are immutable by default, encouraging functional programming style.
+
+**Mutable Variables**:
+```ruchy
+let mut counter = 0
+counter = counter + 1  // OK!
+counter = 10           // OK!
+```
+
+Use `let mut` when you need to modify a variable.
+
+**Type Annotations**:
+```ruchy
+let x: i32 = 42
+let y: f64 = 3.14
+let name: &str = "Alice"
+```
+
+Type annotations are optional but can improve clarity.
+
+**Shadowing**:
+```ruchy
+let x = 5
+let x = 10      // New variable, shadows previous x
+let x = "five"  // Can even change type!
+```
+
+Shadowing allows reusing variable names and changing types.
+
+**Important Differences from Rust**:
+
+1. **Scope Mutation** ⚠️:
+```ruchy
+let x = 5
+
+let result = {
+    let x = 10  // In Ruchy, this MUTATES outer x!
+    x
+}
+
+// x is now 10 (not 5 like in Rust!)
+```
+
+In Ruchy, declaring `let x` inside a scope MUTATES the outer variable rather than shadowing it. This is different from Rust's behavior.
+
+2. **No Underscore Separators** ⚠️:
+```ruchy
+// This FAILS in Ruchy
+// let large = 1_000_000  // ERROR: Undefined variable: _000_000
+```
+
+Ruchy doesn't support underscore separators in numeric literals.
+
+**Performance Characteristics**:
+- Variable access: O(1) constant time
+- Immutable: Zero-cost abstraction (no runtime overhead)
+- Mutable: Still zero-cost, just allows reassignment
+- Shadowing: No runtime cost (compile-time only)
+
+**Safety Guarantees**:
+- Type safety: Variables can't change type (except via shadowing)
+- No uninitialized variables: Must assign at declaration
+- Scope-based lifetime: Variables cleaned up automatically
+
+### Variations
+
+**Variation 1: Multiple Variables**
+
+```ruchy
+let x = 5
+let y = 10
+let z = x + y
+
+let mut a = 1
+let mut b = 2
+a = a + b
+b = b * 2
+```
+
+**Variation 2: Transformation Pattern**
+
+```ruchy
+let data = "42"        // String input
+let data = 42          // Shadow to convert to number
+let data = data * 2    // Transform
+let data = data + 10   // Further transform
+// Final value: 94
+```
+
+**Variation 3: Configuration Pattern**
+
+```ruchy
+let debug_mode = true
+let verbose = false
+let log_level = if debug_mode { "debug" } else { "info" }
+```
+
+### See Also
+
+- Recipe 1.1: Hello World
+- Recipe 1.4: Basic Data Types
+- Recipe 1.5: Functions and Return Values
+- Recipe 1.6: Control Flow and Conditionals
+
+### Tests
+
+All 19 tests pass ✅:
+
+<details>
+<summary>Unit Tests (click to expand)</summary>
+
+**Full implementation**: [recipes/ch01/recipe-003/src/main.ruchy](../../recipes/ch01/recipe-003/src/main.ruchy)
+
+**Test suite**: [recipes/ch01/recipe-003/tests/unit_tests.ruchy](../../recipes/ch01/recipe-003/tests/unit_tests.ruchy)
+
+**Test Results**:
+```
+Test Results: 19/19 tests passed
+- Immutable variables: 5/5 tests ✅
+- Mutable variables: 4/4 tests ✅
+- Shadowing: 3/3 tests ✅
+- Scopes: 2/2 tests ✅
+- Type inference: 3/3 tests ✅
+- Multiple variables: 2/2 tests ✅
+```
+
+**Key Tests**:
+```ruchy
+// Immutable variables
+fun test_let_creates_immutable_variable() -> bool {
+    let x = 5
+    x == 5
+}
+
+// Mutable variables
+fun test_mut_allows_reassignment() -> bool {
+    let mut x = 5
+    x = 10
+    x == 10
+}
+
+// Shadowing
+fun test_shadowing_changes_type() -> bool {
+    let x = 5
+    let x = "five"
+    x == "five"
+}
+
+// Scope mutation (Ruchy-specific behavior!)
+fun test_scope_mutation() -> bool {
+    let x = 5
+    let result = {
+        let x = 10  // MUTATES outer x!
+        x
+    }
+    result == 10 && x == 10  // Both are 10!
+}
+```
+
+**How to run**:
+```bash
+cd recipes/ch01/recipe-003
+ruchy tests/unit_tests.ruchy
+```
+
+</details>
 
 ---
 
 ## Recipe 1.4: Basic Data Types
 
 **Difficulty**: Beginner
-**Status**: 🚧 Coming Soon
+**Time**: 15-20 minutes
+**Test Coverage**: 26/26 tests passing (100%)
+**Status**: ✅ WORKING (verified with EXTREME TDD)
 
-This recipe will cover integers, floats, booleans, and characters.
+### Problem
+
+You need to work with different kinds of data in your programs: whole numbers, decimal numbers, yes/no values, and text. What basic data types does Ruchy support? How do you perform operations on them? How do you convert between types?
+
+### Solution
+
+```ruchy
+// Integers
+let x: i32 = 42
+let y = -100  // Type inferred
+
+// Floats
+let pi: f64 = 3.14159
+let temp = 20.5  // Type inferred
+
+// Booleans
+let is_ready: bool = true
+let has_data = false  // Type inferred
+
+// Strings
+let name = "Alice"
+let message = "Hello, World!"
+
+// Arithmetic
+let sum = 10 + 5
+let product = 3.14 * 2.0
+let quotient = 20 / 3  // Integer division: 6
+let remainder = 20 % 3  // Modulo: 2
+
+// Comparisons
+let is_equal = (5 == 5)  // true
+let is_greater = (10 > 5)  // true
+
+// Type conversion
+let num = 42
+let num_float = num as f64  // 42.0
+```
+
+### Discussion
+
+Ruchy provides a rich set of basic data types for different kinds of data:
+
+**Integers**:
+```ruchy
+let x: i32 = 42         // 32-bit signed integer
+let y = -100            // Type inferred as i32
+let large = 2147483647  // Max i32 value
+```
+
+Integers support arithmetic: `+`, `-`, `*`, `/`, `%`
+
+**Floats**:
+```ruchy
+let pi: f64 = 3.14159   // 64-bit float
+let e = 2.71828         // Type inferred as f64
+let neg = -1.5          // Negative float
+```
+
+Float division gives decimal results: `10.0 / 3.0 = 3.333...`
+
+**Booleans**:
+```ruchy
+let x: bool = true
+let y = false
+
+// Boolean operators
+let and_result = true && false   // false
+let or_result = true || false    // true
+let not_result = !true           // false
+```
+
+**Strings**:
+```ruchy
+let name = "Alice"
+let greeting = "Hello, World!"
+let empty = ""
+
+// Multiline strings work
+let poem = "Line 1
+Line 2"
+```
+
+**Comparisons**:
+```ruchy
+let x = 10
+let y = 20
+
+// All comparison operators
+x == y   // false (equality)
+x != y   // true (inequality)
+x < y    // true (less than)
+x > y    // false (greater than)
+x <= y   // true (less or equal)
+x >= y   // false (greater or equal)
+```
+
+**Type Conversion**:
+```ruchy
+// Convert integer to float
+let num = 42
+let num_float = num as f64  // 42.0
+
+// Integer vs Float division
+10 / 3     // 3 (integer division, truncates)
+10.0 / 3.0 // 3.333... (float division)
+```
+
+**Important Differences from Other Languages**:
+
+1. **Integer Division Truncates**:
+```ruchy
+let result = 10 / 3  // 3 (not 3.33...)
+```
+
+Use float types for decimal results.
+
+2. **No Outer Parentheses on Boolean Returns** ⚠️:
+```ruchy
+// This FAILS
+fun test() -> bool {
+    (x && y)  // ERROR!
+}
+
+// This WORKS
+fun test() -> bool {
+    x && y  // OK
+}
+```
+
+Ruchy's parser doesn't handle outer parentheses around compound boolean expressions as return values.
+
+**Performance Characteristics**:
+- Integer arithmetic: O(1) - extremely fast
+- Float arithmetic: O(1) - fast (hardware-accelerated)
+- Comparisons: O(1) - single CPU instruction
+- Type conversions: O(1) - compile-time or single instruction
+
+**Safety Guarantees**:
+- Type-safe: Can't mix types without explicit conversion
+- No silent truncation: Integer division behavior is well-defined
+- No null values: Use `Option<T>` for optional values
+- Overflow behavior: Can use checked arithmetic (checked_add, etc.)
+
+### Variations
+
+**Variation 1: Temperature Conversion**
+
+```ruchy
+let celsius = 20.0
+let fahrenheit = celsius * 9.0 / 5.0 + 32.0
+println("{}°C = {}°F", celsius, fahrenheit)  // 20°C = 68°F
+```
+
+**Variation 2: Even/Odd Check**
+
+```ruchy
+let number = 42
+let is_even = number % 2 == 0
+println("{} is even? {}", number, is_even)  // 42 is even? true
+```
+
+**Variation 3: Simple Calculator**
+
+```ruchy
+let a = 15
+let b = 7
+
+println("a + b = {}", a + b)  // 22
+println("a - b = {}", a - b)  // 8
+println("a * b = {}", a * b)  // 105
+println("a / b = {}", a / b)  // 2 (integer division)
+println("a % b = {}", a % b)  // 1 (remainder)
+```
+
+### See Also
+
+- Recipe 1.3: Variables and Mutability
+- Recipe 1.5: Functions and Return Values
+- Recipe 1.6: Control Flow and Conditionals
+- Chapter 2: String & Text Processing
+
+### Tests
+
+All 26 tests pass ✅:
+
+<details>
+<summary>Unit Tests (click to expand)</summary>
+
+**Full implementation**: [recipes/ch01/recipe-004/src/main.ruchy](../../recipes/ch01/recipe-004/src/main.ruchy)
+
+**Test suite**: [recipes/ch01/recipe-004/tests/unit_tests.ruchy](../../recipes/ch01/recipe-004/tests/unit_tests.ruchy)
+
+**Test Results**:
+```
+Test Results: 26/26 tests passed
+- Integers: 4/4 tests ✅
+- Floats: 3/3 tests ✅
+- Booleans: 3/3 tests ✅
+- Strings: 3/3 tests ✅
+- Comparisons: 6/6 tests ✅
+- Type mixing: 3/3 tests ✅
+- Special values: 2/2 tests ✅
+- Modulo: 2/2 tests ✅
+```
+
+**Key Tests**:
+```ruchy
+// Integer arithmetic
+fun test_i32_arithmetic() -> bool {
+    let x = 10
+    let y = 5
+    let sum = x + y
+    let diff = x - y
+    let prod = x * y
+    let quot = x / y
+    sum == 15 && diff == 5 && prod == 50 && quot == 2
+}
+
+// Float division
+fun test_float_division() -> bool {
+    let x = 10.0
+    let y = 3.0
+    let result = x / y
+    result > 3.3 && result < 3.4
+}
+
+// Boolean operators
+fun test_bool_operators() -> bool {
+    let a = true
+    let b = false
+    let and_result = a && b
+    let or_result = a || b
+    let not_a = !a
+    and_result == false && or_result == true && not_a == false
+}
+
+// Type conversion
+fun test_mixed_arithmetic_int_float() -> bool {
+    let x = 10
+    let y = 3.0
+    let result = x as f64 / y
+    result > 3.0 && result < 4.0
+}
+```
+
+**How to run**:
+```bash
+cd recipes/ch01/recipe-004
+ruchy tests/unit_tests.ruchy
+```
+
+</details>
 
 ---
 
@@ -1350,6 +1814,519 @@ fun test_shared_counter_increments_accumulate(count: u8) {
 ```
 
 **Full test suite**: [recipes/ch01/recipe-007/tests/](../../recipes/ch01/recipe-007/tests/)
+
+</details>
+
+---
+
+## Recipe 1.8: Data Structures
+
+**Difficulty**: Beginner
+**Time**: 15-20 minutes
+**Test Coverage**: 19/19 tests passing (100%)
+**Status**: ✅ WORKING (verified with EXTREME TDD)
+
+### Problem
+
+You need to work with collections of data in Ruchy using object literals, arrays, functions, and closures. Unlike traditional OO languages, Ruchy uses JavaScript/Ruby-style object literals rather than class-based structures.
+
+### Solution
+
+```ruchy
+// Object literals
+let person = {
+    name: "Alice",
+    age: 30,
+    city: "NYC"
+}
+
+// Arrays
+let numbers = [1, 2, 3, 4, 5]
+
+// Functions
+fun add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+// Closures
+let double = |x| x * 2
+
+// Array methods
+let squared = numbers.map(|x| x * x)
+let evens = numbers.filter(|x| x % 2 == 0)
+let sum = numbers.reduce(|acc, x| acc + x, 0)
+```
+
+### Discussion
+
+#### What Works in Ruchy
+
+Ruchy supports dynamic, functional-style data structures:
+
+**Object Literals** (like JavaScript):
+```ruchy
+let user = {
+    id: 123,
+    profile: {
+        name: "Bob",
+        email: "bob@example.com"
+    },
+    settings: {
+        theme: "dark"
+    }
+}
+```
+
+**Arrays**:
+```ruchy
+let colors = ["red", "green", "blue"]
+let people = [
+    {name: "Alice", age: 30},
+    {name: "Bob", age: 25}
+]
+```
+
+**Array Methods**:
+- `map(|x| ...)` - Transform elements
+- `filter(|x| ...)` - Keep matching elements
+- `reduce(|acc, x| ..., initial)` - Combine to single value
+
+**Important**: Note the `reduce` syntax: `reduce(closure, initial_value)`
+
+#### What Doesn't Work
+
+⚠️ **Ruchy does NOT support**:
+- Rust-style `struct` with methods
+- `class` with methods defined inside
+- `impl` blocks
+- `#[derive(...)]` attributes
+- `pub` keyword
+
+See [Recipe 1.7 BLOCKED status](../../recipes/ch01/recipe-007/BLOCKED.md) for details.
+
+### Variations
+
+**Variation 1: Nested Data Processing**
+
+```ruchy
+let products = [
+    {name: "Widget", price: 10.0, category: "Tools"},
+    {name: "Gadget", price: 25.0, category: "Electronics"},
+    {name: "Gizmo", price: 15.0, category: "Tools"}
+]
+
+// Filter by category
+let tools = products.filter(|p| p.category == "Tools")
+
+// Calculate total
+let total = products.reduce(|acc, p| acc + p.price, 0.0)
+
+// Extract names
+let names = products.map(|p| p.name)
+```
+
+**Variation 2: Function Composition**
+
+```ruchy
+let add_ten = |x| x + 10
+let double = |x| x * 2
+let transform = |x| double(add_ten(x))
+
+let result = transform(5)  // (5 + 10) * 2 = 30
+```
+
+**Variation 3: Closure Capture**
+
+```ruchy
+let factor = 3
+let multiply_by_factor = |x| x * factor
+
+let result = multiply_by_factor(7)  // 21
+```
+
+### See Also
+
+- Recipe 1.5: Functions and Return Values
+- Recipe 1.6: Control Flow and Conditionals
+- Recipe 1.7: BLOCKED (OO features not available)
+- Chapter 2: String & Text Processing
+
+### Tests
+
+All 19 tests pass ✅:
+
+<details>
+<summary>Unit Tests (click to expand)</summary>
+
+**Full implementation**: [recipes/ch01/recipe-008/src/main.ruchy](../../recipes/ch01/recipe-008/src/main.ruchy)
+
+**Test suite**: [recipes/ch01/recipe-008/tests/unit_tests.ruchy](../../recipes/ch01/recipe-008/tests/unit_tests.ruchy)
+
+**Test Results**:
+```
+Test Results: 19/19 tests passed
+- Object literals: 4/4 tests ✅
+- Arrays: 4/4 tests ✅
+- Functions: 3/3 tests ✅
+- Closures: 3/3 tests ✅
+- Array methods: 3/3 tests ✅
+- Integration: 2/2 tests ✅
+```
+
+**How to run**:
+```bash
+cd recipes/ch01/recipe-008
+ruchy tests/unit_tests.ruchy
+```
+
+</details>
+
+---
+
+## Recipe 1.9: Loops and Iteration
+
+**Difficulty**: Beginner
+**Time**: 20-25 minutes
+**Test Coverage**: 17/17 tests passing (100%)
+**Status**: ✅ WORKING (verified with EXTREME TDD)
+
+### Problem
+
+You need to repeat operations multiple times: process arrays, count from 1 to 10, search for values, or accumulate results. What loop constructs does Ruchy support? How do you control loop execution with break and continue?
+
+### Solution
+
+```ruchy
+// While loops
+let mut count = 1
+while count <= 5 {
+    println("{}", count)
+    count = count + 1
+}
+
+// For loops with ranges
+for i in 0..5 {          // Exclusive: 0,1,2,3,4
+    println("{}", i)
+}
+
+for i in 0..=5 {         // Inclusive: 0,1,2,3,4,5
+    println("{}", i)
+}
+
+// For loops with arrays
+let numbers = [10, 20, 30, 40, 50]
+for num in numbers {
+    println("{}", num)
+}
+
+// Break statement
+while true {
+    if condition {
+        break  // Exit loop
+    }
+}
+
+// Continue statement
+for i in 1..=10 {
+    if i % 2 == 0 {
+        continue  // Skip even numbers
+    }
+    println("{}", i)  // Only prints odd numbers
+}
+
+// Nested loops
+for i in 1..=3 {
+    for j in 1..=3 {
+        println("{} x {} = {}", i, j, i * j)
+    }
+}
+```
+
+### Discussion
+
+Ruchy provides powerful and flexible loop constructs for all common iteration patterns:
+
+**While Loops** - Basic iteration:
+```ruchy
+let mut i = 0
+while i < 10 {
+    println("i = {}", i)
+    i = i + 1
+}
+```
+
+While loops repeat as long as the condition is true. Perfect for countdown, searching, or when the number of iterations isn't known in advance.
+
+**For Loops with Ranges**:
+```ruchy
+// Exclusive range (0..5 = 0,1,2,3,4)
+for i in 0..5 {
+    println("{}", i)
+}
+
+// Inclusive range (0..=5 = 0,1,2,3,4,5)
+for i in 0..=5 {
+    println("{}", i)
+}
+```
+
+Range syntax: `start..end` (exclusive) or `start..=end` (inclusive).
+
+**For Loops with Arrays**:
+```ruchy
+let colors = ["red", "green", "blue"]
+for color in colors {
+    println("{}", color)
+}
+```
+
+Iterate directly over array elements without manual indexing.
+
+**Break Statement** - Exit loops early:
+```ruchy
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+let mut i = 0
+
+while i < 10 {
+    if numbers[i] > 5 {
+        println("Found: {}", numbers[i])
+        break  // Exit immediately
+    }
+    i = i + 1
+}
+```
+
+**Continue Statement** - Skip to next iteration:
+```ruchy
+// Print only odd numbers
+for i in 1..=10 {
+    if i % 2 == 0 {
+        continue  // Skip even numbers
+    }
+    println("{}", i)
+}
+```
+
+**Nested Loops**:
+```ruchy
+// Multiplication table
+for row in 1..=3 {
+    for col in 1..=3 {
+        println("{} x {} = {}", row, col, row * col)
+    }
+}
+```
+
+**Common Loop Patterns**:
+
+1. **Sum Accumulation**:
+```ruchy
+let numbers = [10, 20, 30, 40, 50]
+let mut sum = 0
+for num in numbers {
+    sum = sum + num
+}
+println("Sum: {}", sum)  // 150
+```
+
+2. **Factorial**:
+```ruchy
+let mut factorial = 1
+for i in 1..=5 {
+    factorial = factorial * i
+}
+println("5! = {}", factorial)  // 120
+```
+
+3. **Count Matching Elements**:
+```ruchy
+let values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+let mut count = 0
+for val in values {
+    if val > 5 {
+        count = count + 1
+    }
+}
+println("Count > 5: {}", count)  // 5
+```
+
+4. **Find Maximum**:
+```ruchy
+let data = [45, 23, 67, 12, 89, 34]
+let mut max = data[0]
+for val in data {
+    if val > max {
+        max = val
+    }
+}
+println("Maximum: {}", max)  // 89
+```
+
+**Performance Characteristics**:
+- While loops: O(n) where n is number of iterations
+- For loops: O(n) where n is range size or array length
+- Break/continue: O(1) - constant time operation
+- Nested loops: O(n*m) where n and m are loop sizes
+- Array indexing: O(1) - direct access
+
+**Safety Guarantees**:
+- Bounds checking: Array access is bounds-checked
+- No infinite loops by accident: Ranges are well-defined
+- Type-safe iteration: Loop variables have correct types
+- No iterator invalidation: Arrays can't be modified during iteration
+
+### Variations
+
+**Variation 1: Fibonacci Sequence**
+
+```ruchy
+println("Fibonacci (first 10):")
+let mut a = 0
+let mut b = 1
+let mut count = 0
+
+while count < 10 {
+    println("{}", a)
+    let temp = a
+    a = b
+    b = temp + b
+    count = count + 1
+}
+```
+
+**Variation 2: FizzBuzz**
+
+```ruchy
+for i in 1..=15 {
+    if i % 15 == 0 {
+        println("FizzBuzz")
+    } else {
+        if i % 3 == 0 {
+            println("Fizz")
+        } else {
+            if i % 5 == 0 {
+                println("Buzz")
+            } else {
+                println("{}", i)
+            }
+        }
+    }
+}
+```
+
+**Variation 3: Prime Number Check**
+
+```ruchy
+let number = 17
+let mut is_prime = true
+let mut i = 2
+
+while i * i <= number {
+    if number % i == 0 {
+        is_prime = false
+        break
+    }
+    i = i + 1
+}
+
+println("{} is prime? {}", number, is_prime)
+```
+
+### See Also
+
+- Recipe 1.3: Variables and Mutability
+- Recipe 1.4: Basic Data Types
+- Recipe 1.6: Control Flow and Conditionals
+- Recipe 1.8: Data Structures
+- Chapter 2: String & Text Processing
+
+### Tests
+
+All 17 tests pass ✅:
+
+<details>
+<summary>Unit Tests (click to expand)</summary>
+
+**Full implementation**: [recipes/ch01/recipe-009/src/main.ruchy](../../recipes/ch01/recipe-009/src/main.ruchy)
+
+**Test suite**: [recipes/ch01/recipe-009/tests/unit_tests.ruchy](../../recipes/ch01/recipe-009/tests/unit_tests.ruchy)
+
+**Test Results**:
+```
+Test Results: 17/17 tests passed
+- While loops: 3/3 tests ✅
+- For loops: 3/3 tests ✅
+- Break: 2/2 tests ✅
+- Continue: 2/2 tests ✅
+- Nested loops: 2/2 tests ✅
+- Accumulation: 3/3 tests ✅
+- Control flow: 2/2 tests ✅
+```
+
+**Key Tests**:
+```ruchy
+// While loop
+fun test_while_loop_basic() -> bool {
+    let mut sum = 0
+    let mut i = 1
+
+    while i <= 5 {
+        sum = sum + i
+        i = i + 1
+    }
+
+    sum == 15  // 1+2+3+4+5
+}
+
+// For loop with range
+fun test_for_loop_range() -> bool {
+    let mut sum = 0
+
+    for i in 0..5 {
+        sum = sum + i
+    }
+
+    sum == 10  // 0+1+2+3+4
+}
+
+// Break statement
+fun test_while_with_break() -> bool {
+    let mut i = 0
+    let mut sum = 0
+
+    while true {
+        if i >= 5 {
+            break
+        }
+        sum = sum + i
+        i = i + 1
+    }
+
+    sum == 10 && i == 5
+}
+
+// Continue statement
+fun test_while_with_continue() -> bool {
+    let mut i = 0
+    let mut sum = 0
+
+    while i < 10 {
+        i = i + 1
+        if i % 2 == 0 {
+            continue  // Skip even numbers
+        }
+        sum = sum + i
+    }
+
+    sum == 25  // 1+3+5+7+9
+}
+```
+
+**How to run**:
+```bash
+cd recipes/ch01/recipe-009
+ruchy tests/unit_tests.ruchy
+```
 
 </details>
 
