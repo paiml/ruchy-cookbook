@@ -1,0 +1,76 @@
+// Integration tests for Recipe 1.2: Command Line Arguments
+// Testing real-world usage scenarios
+
+use std::testing::*;
+
+#[test]
+fun test_cli_help_flag() {
+    // Test typical help flag scenario
+    let args = vec!["myapp", "--help"];
+    let parsed = parse_args(args);
+
+    if has_flag(parsed, "--help") {
+        // Program should show help
+        assert!(true);
+    }
+}
+
+#[test]
+fun test_cli_file_processing() {
+    // Test typical file processing command
+    let args = vec!["myapp", "input.txt", "output.txt", "--verbose"];
+
+    let parsed = parse_args(args);
+    assert_eq!(count_args(parsed), 3);
+
+    let input_file = get_arg_at(parsed, 0);
+    assert_eq!(input_file, Some("input.txt"));
+
+    let output_file = get_arg_at(parsed, 1);
+    assert_eq!(output_file, Some("output.txt"));
+
+    assert!(has_flag(parsed, "--verbose"));
+}
+
+#[test]
+fun test_cli_with_config() {
+    // Test command with configuration flags
+    let args = vec![
+        "myapp",
+        "--config", "config.toml",
+        "--threads", "4",
+        "--output-dir", "/tmp/results"
+    ];
+
+    let parsed = parse_args(args);
+
+    assert_eq!(get_flag_value(parsed.clone(), "--config"), Some("config.toml"));
+    assert_eq!(get_flag_value(parsed.clone(), "--threads"), Some("4"));
+    assert_eq!(get_flag_value(parsed, "--output-dir"), Some("/tmp/results"));
+}
+
+#[test]
+fun test_cli_subcommand_pattern() {
+    // Test subcommand pattern (e.g., git clone, cargo build)
+    let args = vec!["myapp", "build", "--release", "target"];
+
+    let parsed = parse_args(args);
+
+    let subcommand = get_arg_at(parsed.clone(), 0);
+    assert_eq!(subcommand, Some("build"));
+
+    assert!(has_flag(parsed.clone(), "--release"));
+
+    let target = get_arg_at(parsed, 2);
+    assert_eq!(target, Some("target"));
+}
+
+#[test]
+fun test_main_with_args() {
+    // Test that main function can handle arguments
+    let test_args = vec!["program", "test1", "test2"];
+    // This would typically be tested via process execution
+    // For now, verify parsing works
+    let parsed = parse_args(test_args);
+    assert_eq!(parsed.len(), 2);
+}

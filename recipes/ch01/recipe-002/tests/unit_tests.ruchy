@@ -1,0 +1,142 @@
+// Unit tests for Recipe 1.2: Command Line Arguments
+// Written FIRST following EXTREME TDD methodology
+
+use std::testing::*;
+
+#[test]
+fun test_parse_args_empty() {
+    // Test with no arguments (just program name)
+    let args = vec!["program"];
+    let result = parse_args(args);
+    assert!(result.is_empty());
+}
+
+#[test]
+fun test_parse_args_single() {
+    // Test with single argument
+    let args = vec!["program", "hello"];
+    let result = parse_args(args);
+    assert_eq!(result.len(), 1);
+    assert_eq!(result[0], "hello");
+}
+
+#[test]
+fun test_parse_args_multiple() {
+    // Test with multiple arguments
+    let args = vec!["program", "arg1", "arg2", "arg3"];
+    let result = parse_args(args);
+    assert_eq!(result.len(), 3);
+    assert_eq!(result[0], "arg1");
+    assert_eq!(result[1], "arg2");
+    assert_eq!(result[2], "arg3");
+}
+
+#[test]
+fun test_parse_args_with_spaces() {
+    // Test arguments containing spaces
+    let args = vec!["program", "hello world", "foo bar"];
+    let result = parse_args(args);
+    assert_eq!(result.len(), 2);
+    assert_eq!(result[0], "hello world");
+    assert_eq!(result[1], "foo bar");
+}
+
+#[test]
+fun test_parse_args_special_characters() {
+    // Test arguments with special characters
+    let args = vec!["program", "--flag", "-v", "value=123"];
+    let result = parse_args(args);
+    assert_eq!(result.len(), 3);
+    assert!(result.contains("--flag"));
+    assert!(result.contains("-v"));
+}
+
+#[test]
+fun test_get_arg_at_index() {
+    // Test getting argument at specific index
+    let args = vec!["program", "first", "second", "third"];
+    assert_eq!(get_arg_at(args, 0), Some("first"));
+    assert_eq!(get_arg_at(args, 1), Some("second"));
+    assert_eq!(get_arg_at(args, 2), Some("third"));
+}
+
+#[test]
+fun test_get_arg_at_invalid_index() {
+    // Test getting argument at invalid index
+    let args = vec!["program", "first"];
+    assert_eq!(get_arg_at(args, 5), None);
+    assert_eq!(get_arg_at(args, -1), None);
+}
+
+#[test]
+fun test_arg_count() {
+    // Test counting arguments (excluding program name)
+    let args = vec!["program", "arg1", "arg2"];
+    assert_eq!(count_args(args), 2);
+
+    let no_args = vec!["program"];
+    assert_eq!(count_args(no_args), 0);
+}
+
+#[test]
+fun test_has_flag() {
+    // Test checking for presence of flag
+    let args = vec!["program", "--verbose", "file.txt", "-d"];
+    assert!(has_flag(args, "--verbose"));
+    assert!(has_flag(args, "-d"));
+    assert!(!has_flag(args, "--quiet"));
+}
+
+#[test]
+fun test_get_flag_value() {
+    // Test getting value after a flag
+    let args = vec!["program", "--output", "result.txt", "--count", "42"];
+    assert_eq!(get_flag_value(args, "--output"), Some("result.txt"));
+    assert_eq!(get_flag_value(args, "--count"), Some("42"));
+    assert_eq!(get_flag_value(args, "--missing"), None);
+}
+
+#[test]
+fun test_join_args() {
+    // Test joining arguments into single string
+    let args = vec!["program", "hello", "world", "test"];
+    let result = join_args(args, " ");
+    assert_eq!(result, "hello world test");
+}
+
+#[test]
+fun test_args_contain() {
+    // Test checking if args contain specific value
+    let args = vec!["program", "build", "--release", "main.rs"];
+    assert!(args_contain(args, "build"));
+    assert!(args_contain(args, "--release"));
+    assert!(!args_contain(args, "test"));
+}
+
+#[test]
+fun test_empty_program_name() {
+    // Test edge case with empty program name
+    let args = vec![""];
+    let result = parse_args(args);
+    assert!(result.is_empty());
+}
+
+#[test]
+fun test_unicode_arguments() {
+    // Test with unicode characters
+    let args = vec!["program", "こんにちは", "世界", "🚀"];
+    let result = parse_args(args);
+    assert_eq!(result.len(), 3);
+    assert!(result.contains("こんにちは"));
+    assert!(result.contains("🚀"));
+}
+
+#[test]
+fun test_numeric_arguments() {
+    // Test with numeric arguments
+    let args = vec!["program", "123", "456.78", "-99"];
+    let result = parse_args(args);
+    assert_eq!(result.len(), 3);
+    assert_eq!(result[0], "123");
+    assert_eq!(result[1], "456.78");
+}
