@@ -14,6 +14,11 @@
   - [Recipe 1.4: Basic Data Types](./ch01-foundations.md#recipe-14-basic-data-types)
   - [Recipe 1.5: Functions and Return Values](./ch01-foundations.md#recipe-15-functions-and-return-values)
   - [Recipe 1.6: Control Flow and Conditionals](./ch01-foundations.md#recipe-16-control-flow-and-conditionals)
+  - [Recipe 1.7: Structs, Classes, and Methods](./ch01-foundations.md#recipe-17-structs-classes-and-methods)
+  - [Recipe 1.8: Data Structures](./ch01-foundations.md#recipe-18-data-structures)
+  - [Recipe 1.9: Loops and Iteration](./ch01-foundations.md#recipe-19-loops-and-iteration)
+  - [Recipe 1.10: Error Handling Basics](./ch01-foundations.md#recipe-110-error-handling-basics)
+  - [Recipe 1.11: Pattern Matching](./ch01-foundations.md#recipe-111-pattern-matching)
 
 - [Chapter 2: String & Text Processing](./ch02-text-processing.md)
 - [Chapter 3: Collections & Data Structures](./ch03-collections.md)
