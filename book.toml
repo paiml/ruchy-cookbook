@@ -1,0 +1,75 @@
+[book]
+title = "Ruchy Cookbook"
+authors = ["Noah Gift", "Claude (AI Assistant)"]
+description = "A comprehensive, test-driven cookbook for the Ruchy programming language. 500+ recipes with 85%+ test coverage and 80%+ mutation scores."
+language = "en"
+multilingual = false
+src = "src"
+
+[build]
+build-dir = "book"
+create-missing = true
+use-default-preprocessors = true
+
+[preprocessor.links]
+# Enable link checking
+
+[output.html]
+default-theme = "rust"
+preferred-dark-theme = "navy"
+git-repository-url = "https://github.com/paiml/ruchy-cookbook"
+git-repository-icon = "fa-github"
+edit-url-template = "https://github.com/paiml/ruchy-cookbook/edit/main/{path}"
+site-url = "https://interactive.paiml.com/cookbook/"
+cname = "interactive.paiml.com"
+
+[output.html.fold]
+enable = true
+level = 1
+
+[output.html.search]
+enable = true
+limit-results = 30
+teaser-word-count = 30
+use-boolean-and = true
+boost-title = 2
+boost-hierarchy = 1
+boost-paragraph = 1
+expand = true
+heading-split-level = 3
+
+[output.html.print]
+enable = true
+page-break = true
+
+[output.html.playground]
+# Enable interactive code playground
+editable = true
+copyable = true
+line-numbers = true
+runnable = true
+
+[output.html.code]
+# Syntax highlighting theme
+theme = "base16-ocean.dark"
+hidelines = {}
+
+# Additional HTML head content
+[output.html.additional-css]
+# Custom CSS for cookbook styling
+
+[output.html.additional-js]
+# Custom JavaScript for interactive features
+
+# Quality metadata
+[output.html.additional-metadata]
+# Metadata for quality metrics display
+
+# PDF output for print edition
+[output.pdf]
+title = "Ruchy Cookbook - 1000 Page Reference Edition"
+authors = ["Noah Gift", "Claude (AI Assistant)"]
+
+# EPUB output for ebook readers
+[output.epub]
+# EPUB configuration for digital readers

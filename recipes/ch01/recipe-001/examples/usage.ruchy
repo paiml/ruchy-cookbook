@@ -1,0 +1,18 @@
+// Example usage of Recipe 1.1: Hello World
+
+fun main() {
+    // Basic usage
+    let greeting = hello_world();
+    println!("Basic: {}", greeting);
+
+    // Can be used in string interpolation
+    println!("Greeting: {}", hello_world());
+
+    // Can be stored and reused
+    let message = hello_world();
+    println!("Stored: {}", message);
+
+    // Always returns the same value
+    assert_eq!(hello_world(), hello_world());
+    println!("Idempotent: ✓");
+}

@@ -1,0 +1,165 @@
+# PMAT Configuration for Ruchy Cookbook
+# PMAT ruthlessly enforces EXTREME TDD quality standards
+
+[quality]
+# Minimum quality thresholds (BLOCKING)
+minimum_coverage = 85
+minimum_mutation_score = 80
+maximum_complexity = 20
+satd_tolerance = 0
+enforcement_mode = "strict"
+
+[quality.grades]
+# PMAT grading scale
+A_plus = { coverage = 95, mutation = 90, complexity = 10 }
+A = { coverage = 90, mutation = 85, complexity = 15 }
+B = { coverage = 85, mutation = 80, complexity = 20 }
+C = { coverage = 75, mutation = 70, complexity = 25 }
+F = { coverage = 0, mutation = 0, complexity = 100 }
+
+[gates]
+# Pre-commit quality gates (ALL BLOCKING)
+pre_commit = [
+    "pmat analyze --min-grade A+",
+    "pmat test --min-coverage 85",
+    "pmat mutation-test --min-score 80",
+    "pmat complexity --max 20",
+    "pmat satd --count 0",
+]
+
+[gates.test]
+enabled = true
+blocking = true
+timeout = 300
+
+[gates.coverage]
+enabled = true
+blocking = true
+minimum = 85
+
+[gates.mutation]
+enabled = true
+blocking = true
+minimum_score = 80
+
+[gates.complexity]
+enabled = true
+blocking = true
+cyclomatic_max = 20
+cognitive_max = 15
+
+[gates.satd]
+enabled = true
+blocking = true
+tolerance = 0
+patterns = ["TODO", "FIXME", "HACK", "XXX", "OPTIMIZE", "REFACTOR"]
+
+[roadmap]
+# PMAT-managed roadmap configuration
+source = ".pmat/roadmap.yaml"
+managed_by = "pmat"
+ticket_sync = "github"
+auto_create_tickets = true
+strict_mode = true
+
+[roadmap.milestones]
+# Define milestones for tracking
+foundation = { chapters = "1-5", recipes = 75, target_date = "2025-12-01" }
+core = { chapters = "6-15", recipes = 150, target_date = "2026-03-01" }
+intermediate = { chapters = "16-25", recipes = 150, target_date = "2026-06-01" }
+advanced = { chapters = "26-35", recipes = 150, target_date = "2026-09-01" }
+expert = { chapters = "36-40", recipes = 75, target_date = "2026-11-01" }
+
+[testing]
+# Testing configuration
+frameworks = ["ruchy-test", "proptest"]
+coverage_tool = "ruchy-coverage"
+mutation_tool = "cargo-mutants"
+
+[testing.unit]
+min_tests_per_recipe = 10
+timeout = 60
+
+[testing.property]
+min_properties_per_recipe = 3
+test_cases_per_property = 1000
+
+[testing.mutation]
+timeout = 300
+exclude_patterns = ["test_", "prop_"]
+
+[ci]
+# CI/CD configuration
+provider = "github-actions"
+deploy_on_main = true
+quality_gates_required = true
+
+[ci.workflows]
+test = ".github/workflows/test.yml"
+quality_gates = ".github/workflows/quality-gates.yml"
+deploy = ".github/workflows/deploy.yml"
+mutation_test = ".github/workflows/mutation-test.yml"
+
+[hooks]
+# Pre-commit hooks configuration
+enabled = true
+strict_mode = true
+bypass_allowed = false
+
+[[hooks.pre_commit]]
+name = "test"
+command = "make test"
+blocking = true
+timeout = 300
+
+[[hooks.pre_commit]]
+name = "coverage"
+command = "pmat test --min-coverage 85"
+blocking = true
+timeout = 180
+
+[[hooks.pre_commit]]
+name = "mutation"
+command = "pmat mutation-test --min-score 80"
+blocking = true
+timeout = 600
+
+[[hooks.pre_commit]]
+name = "complexity"
+command = "pmat complexity --max 20"
+blocking = true
+timeout = 60
+
+[[hooks.pre_commit]]
+name = "satd"
+command = "pmat satd --count 0"
+blocking = true
+timeout = 30
+
+[[hooks.pre_commit]]
+name = "roadmap"
+command = "pmat roadmap verify"
+blocking = true
+timeout = 30
+
+[analysis]
+# Code analysis configuration
+tools = ["clippy", "ruchy-analyzer"]
+fail_on_warnings = true
+
+[analysis.metrics]
+collect_loc = true
+collect_complexity = true
+collect_duplication = true
+collect_maintainability = true
+
+[output]
+# Output and reporting
+format = "json"
+verbose = true
+color = true
+
+[output.reports]
+coverage = "docs/quality/coverage-reports/"
+mutation = "docs/quality/mutation-reports/"
+analysis = "docs/quality/pmat-analysis/"

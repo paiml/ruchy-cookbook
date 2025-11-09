@@ -1,0 +1,28 @@
+// Recipe 1.1: Hello World
+// The classic first program in any language
+//
+// This implementation satisfies all test requirements:
+// - Returns "Hello, World!" string
+// - Proper formatting with comma and exclamation
+// - Idempotent (always returns same value)
+// - Type-safe String return
+
+/// Returns the classic "Hello, World!" greeting
+///
+/// # Returns
+/// A String containing "Hello, World!"
+///
+/// # Examples
+/// ```
+/// let greeting = hello_world();
+/// assert_eq!(greeting, "Hello, World!");
+/// ```
+pub fun hello_world() -> String {
+    "Hello, World!"
+}
+
+/// Main entry point for the program
+/// Prints "Hello, World!" to standard output
+fun main() {
+    println!("{}", hello_world());
+}
