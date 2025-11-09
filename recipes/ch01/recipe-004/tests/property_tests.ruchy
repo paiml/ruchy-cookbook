@@ -1,0 +1,71 @@
+// Property-based tests for Recipe 1.4: Basic Data Types
+// Testing invariant properties
+
+use std::testing::proptest::*;
+
+#[proptest]
+fun test_int_to_float_preserves_value(value: i32) {
+    // Property: Converting int to float preserves the value
+    let as_float = convert_int_to_float(value);
+    let back_to_int = as_float as i32;
+    assert_eq!(back_to_int, value);
+}
+
+#[proptest]
+fun test_type_conversions_reversible(value: i32) {
+    // Property: i32 -> i64 -> i32 is reversible
+    let as_i64 = cast_i32_to_i64(value);
+    let back_to_i32 = as_i64 as i32;
+    assert_eq!(back_to_i32, value);
+}
+
+#[proptest]
+fun test_bool_double_negation(value: bool) {
+    // Property: Double negation returns original value
+    let negated = bool_not(value);
+    let double_neg = bool_not(negated);
+    assert_eq!(double_neg, value);
+}
+
+#[proptest]
+fun test_bool_and_commutative(a: bool, b: bool) {
+    // Property: AND operation is commutative
+    assert_eq!(bool_and(a, b), bool_and(b, a));
+}
+
+#[proptest]
+fun test_bool_or_commutative(a: bool, b: bool) {
+    // Property: OR operation is commutative
+    assert_eq!(bool_or(a, b), bool_or(b, a));
+}
+
+#[proptest]
+fun test_checked_add_never_overflows(a: u8, b: u8) {
+    // Property: Checked addition either returns valid result or None
+    let result = checked_add_u8(a, b);
+    if result.is_some() {
+        let sum = result.unwrap();
+        assert!(sum >= a);
+        assert!(sum >= b);
+    } else {
+        // Overflow occurred
+        assert!(a as u16 + b as u16 > 255);
+    }
+}
+
+#[proptest]
+fun test_saturating_add_bounds(a: u8, b: u8) {
+    // Property: Saturating addition never exceeds max value
+    let result = saturating_add_u8(a, b);
+    assert!(result <= 255);
+    assert!(result >= a);
+    assert!(result >= b);
+}
+
+#[proptest]
+fun test_char_case_conversion_consistent(c: char) {
+    // Property: Uppercase conversion is consistent
+    let upper = char_to_uppercase(c);
+    let upper_again = char_to_uppercase(upper);
+    assert_eq!(upper, upper_again);
+}

@@ -1,0 +1,296 @@
+// Recipe 1.4: Basic Data Types
+// Implementation written AFTER tests following EXTREME TDD
+
+// Integer type creation functions
+pub fun create_i32(value: i32) -> i32 {
+    value
+}
+
+pub fun create_i64(value: i64) -> i64 {
+    value
+}
+
+pub fun create_u32(value: u32) -> u32 {
+    value
+}
+
+pub fun create_u64(value: u64) -> u64 {
+    value
+}
+
+// Type range functions
+pub fun get_i8_min() -> i8 {
+    i8::MIN
+}
+
+pub fun get_i8_max() -> i8 {
+    i8::MAX
+}
+
+pub fun get_u8_min() -> u8 {
+    u8::MIN
+}
+
+pub fun get_u8_max() -> u8 {
+    u8::MAX
+}
+
+// Floating point functions
+pub fun create_f32(value: f32) -> f32 {
+    value
+}
+
+pub fun create_f64(value: f64) -> f64 {
+    value
+}
+
+// Boolean functions
+pub fun create_bool(value: bool) -> bool {
+    value
+}
+
+pub fun bool_and(a: bool, b: bool) -> bool {
+    a && b
+}
+
+pub fun bool_or(a: bool, b: bool) -> bool {
+    a || b
+}
+
+pub fun bool_not(value: bool) -> bool {
+    !value
+}
+
+// Character functions
+pub fun create_char(c: char) -> char {
+    c
+}
+
+pub fun char_to_uppercase(c: char) -> char {
+    c.to_uppercase().next().unwrap_or(c)
+}
+
+// Type conversion functions
+pub fun convert_int_to_float(value: i32) -> f64 {
+    value as f64
+}
+
+pub fun convert_float_to_int(value: f64) -> i32 {
+    value as i32
+}
+
+pub fun cast_i32_to_i64(value: i32) -> i64 {
+    value as i64
+}
+
+// Numeric literal functions
+pub fun parse_decimal_literal() -> i32 {
+    98_222
+}
+
+pub fun parse_hex_literal() -> i32 {
+    0xff
+}
+
+pub fun parse_binary_literal() -> i32 {
+    0b1111_0000
+}
+
+pub fun parse_octal_literal() -> i32 {
+    0o77
+}
+
+// Type inference functions
+pub fun infer_from_literal() -> i32 {
+    42
+}
+
+pub fun create_with_suffix_u64() -> u64 {
+    42u64
+}
+
+// Overflow handling functions
+pub fun checked_add_u8(a: u8, b: u8) -> Option<u8> {
+    a.checked_add(b)
+}
+
+pub fun saturating_add_u8(a: u8, b: u8) -> u8 {
+    a.saturating_add(b)
+}
+
+pub fun wrapping_add_u8(a: u8, b: u8) -> u8 {
+    a.wrapping_add(b)
+}
+
+// Temperature conversion functions
+pub fun celsius_to_fahrenheit(celsius: f64) -> f64 {
+    celsius * 9.0 / 5.0 + 32.0
+}
+
+pub fun fahrenheit_to_celsius(fahrenheit: f64) -> f64 {
+    (fahrenheit - 32.0) * 5.0 / 9.0
+}
+
+// Age validation
+pub fun is_valid_age(age: u8) -> bool {
+    age > 0 && age < 150
+}
+
+// RGB color structure and functions
+pub struct RgbColor {
+    pub r: u8,
+    pub g: u8,
+    pub b: u8,
+}
+
+pub fun create_rgb(r: u8, g: u8, b: u8) -> RgbColor {
+    RgbColor { r, g, b }
+}
+
+pub fun get_red(color: RgbColor) -> u8 {
+    color.r
+}
+
+pub fun get_green(color: RgbColor) -> u8 {
+    color.g
+}
+
+pub fun get_blue(color: RgbColor) -> u8 {
+    color.b
+}
+
+// Grade calculation functions
+pub fun calculate_average(scores: Vec<f64>) -> f64 {
+    let sum: f64 = scores.iter().sum();
+    sum / scores.len() as f64
+}
+
+pub fun get_letter_grade(score: f64) -> char {
+    if score >= 90.0 {
+        'A'
+    } else if score >= 80.0 {
+        'B'
+    } else if score >= 70.0 {
+        'C'
+    } else if score >= 60.0 {
+        'D'
+    } else {
+        'F'
+    }
+}
+
+// File size conversion functions
+pub fun bytes_to_kilobytes(bytes: u64) -> u64 {
+    bytes / 1024
+}
+
+pub fun bytes_to_megabytes(bytes: u64) -> u64 {
+    bytes / (1024 * 1024)
+}
+
+// Bit flag functions
+pub fun combine_flags(flag1: u8, flag2: u8) -> u8 {
+    flag1 | flag2
+}
+
+pub fun has_flag(permissions: u8, flag: u8) -> bool {
+    (permissions & flag) == flag
+}
+
+/// Main entry point demonstrating basic data types
+fun main() {
+    println!("Basic Data Types Demo");
+    println!("====================");
+    println!();
+
+    // Integer types
+    println!("1. Integer Types:");
+    let int8: i8 = -128;
+    let uint8: u8 = 255;
+    let int32: i32 = 42;
+    let int64: i64 = 1_000_000;
+    println!("   i8 (signed 8-bit):   {} to {}", i8::MIN, i8::MAX);
+    println!("   u8 (unsigned 8-bit): {} to {}", u8::MIN, u8::MAX);
+    println!("   i32 (default int):   {}", int32);
+    println!("   i64 (large numbers): {}", int64);
+    println!();
+
+    // Floating point types
+    println!("2. Floating Point Types:");
+    let pi: f64 = 3.14159;
+    let e: f32 = 2.71828;
+    println!("   f64 (double precision): {}", pi);
+    println!("   f32 (single precision): {}", e);
+    println!("   Scientific notation:     {}", 6.022e23);
+    println!();
+
+    // Boolean type
+    println!("3. Boolean Type:");
+    let is_true: bool = true;
+    let is_false: bool = false;
+    println!("   true:        {}", is_true);
+    println!("   false:       {}", is_false);
+    println!("   true && false: {}", is_true && is_false);
+    println!("   true || false: {}", is_true || is_false);
+    println!("   !true:       {}", !is_true);
+    println!();
+
+    // Character type
+    println!("4. Character Type:");
+    let letter: char = 'R';
+    let emoji: char = '🚀';
+    let unicode: char = '世';
+    println!("   ASCII character:   '{}'", letter);
+    println!("   Emoji:            '{}'", emoji);
+    println!("   Unicode:          '{}'", unicode);
+    println!();
+
+    // Numeric literals
+    println!("5. Numeric Literals:");
+    println!("   Decimal:     {}", 98_222);
+    println!("   Hexadecimal: {}", 0xff);
+    println!("   Binary:      {}", 0b1111_0000);
+    println!("   Octal:       {}", 0o77);
+    println!();
+
+    // Type conversions
+    println!("6. Type Conversions:");
+    let int_val: i32 = 42;
+    let float_val: f64 = int_val as f64;
+    println!("   i32 to f64: {} -> {}", int_val, float_val);
+    let float_to_int: i32 = 3.99 as i32;
+    println!("   f64 to i32: {} -> {} (truncates)", 3.99, float_to_int);
+    println!();
+
+    // Overflow handling
+    println!("7. Overflow Handling:");
+    let a: u8 = 200;
+    let b: u8 = 100;
+    println!("   {} + {} =", a, b);
+    println!("   Checked:    {:?} (None = overflow)", a.checked_add(b));
+    println!("   Saturating: {} (caps at max)", a.saturating_add(b));
+    println!("   Wrapping:   {} (wraps around)", a.wrapping_add(b));
+    println!();
+
+    // Real-world example: Temperature conversion
+    println!("8. Real-world Example - Temperature:");
+    let celsius = 25.0;
+    let fahrenheit = celsius * 9.0 / 5.0 + 32.0;
+    println!("   {}°C = {}°F", celsius, fahrenheit);
+    println!();
+
+    // Real-world example: RGB color
+    println!("9. Real-world Example - RGB Color:");
+    let red: u8 = 255;
+    let green: u8 = 128;
+    let blue: u8 = 0;
+    println!("   Color: rgb({}, {}, {})", red, green, blue);
+    println!();
+
+    // Real-world example: File sizes
+    println!("10. Real-world Example - File Sizes:");
+    let bytes: u64 = 1_048_576;
+    println!("    {} bytes", bytes);
+    println!("    {} KB", bytes / 1024);
+    println!("    {} MB", bytes / (1024 * 1024));
+}

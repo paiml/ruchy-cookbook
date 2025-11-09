@@ -1,0 +1,206 @@
+// Unit tests for Recipe 1.4: Basic Data Types
+// Written FIRST following EXTREME TDD methodology
+
+use std::testing::*;
+
+// Integer type tests
+#[test]
+fun test_i32_type() {
+    let x = create_i32(42);
+    assert_eq!(x, 42);
+    assert!(x is i32);
+}
+
+#[test]
+fun test_i64_type() {
+    let x = create_i64(1000000);
+    assert_eq!(x, 1000000);
+    assert!(x is i64);
+}
+
+#[test]
+fun test_u32_type() {
+    let x = create_u32(100);
+    assert_eq!(x, 100);
+    assert!(x is u32);
+}
+
+#[test]
+fun test_u64_type() {
+    let x = create_u64(9999999);
+    assert_eq!(x, 9999999);
+    assert!(x is u64);
+}
+
+#[test]
+fun test_i8_range() {
+    let min = get_i8_min();
+    let max = get_i8_max();
+    assert_eq!(min, -128);
+    assert_eq!(max, 127);
+}
+
+#[test]
+fun test_u8_range() {
+    let min = get_u8_min();
+    let max = get_u8_max();
+    assert_eq!(min, 0);
+    assert_eq!(max, 255);
+}
+
+// Floating point tests
+#[test]
+fun test_f32_type() {
+    let x = create_f32(3.14);
+    assert!(x > 3.13 && x < 3.15);
+    assert!(x is f32);
+}
+
+#[test]
+fun test_f64_type() {
+    let x = create_f64(2.71828);
+    assert!(x > 2.71 && x < 2.72);
+    assert!(x is f64);
+}
+
+#[test]
+fun test_float_precision() {
+    let f32_val = create_f32(0.1);
+    let f64_val = create_f64(0.1);
+    // f64 has higher precision
+    assert!(f64_val is f64);
+    assert!(f32_val is f32);
+}
+
+// Boolean tests
+#[test]
+fun test_bool_true() {
+    let x = create_bool(true);
+    assert_eq!(x, true);
+    assert!(x is bool);
+}
+
+#[test]
+fun test_bool_false() {
+    let x = create_bool(false);
+    assert_eq!(x, false);
+}
+
+#[test]
+fun test_bool_operations() {
+    let t = true;
+    let f = false;
+    assert_eq!(bool_and(t, t), true);
+    assert_eq!(bool_and(t, f), false);
+    assert_eq!(bool_or(t, f), true);
+    assert_eq!(bool_not(t), false);
+}
+
+// Character tests
+#[test]
+fun test_char_ascii() {
+    let c = create_char('A');
+    assert_eq!(c, 'A');
+    assert!(c is char);
+}
+
+#[test]
+fun test_char_unicode() {
+    let c = create_char('😀');
+    assert_eq!(c, '😀');
+}
+
+#[test]
+fun test_char_to_uppercase() {
+    let lower = 'a';
+    let upper = char_to_uppercase(lower);
+    assert_eq!(upper, 'A');
+}
+
+// Type conversion tests
+#[test]
+fun test_int_to_float() {
+    let i = 42;
+    let f = convert_int_to_float(i);
+    assert_eq!(f, 42.0);
+    assert!(f is f64);
+}
+
+#[test]
+fun test_float_to_int() {
+    let f = 42.9;
+    let i = convert_float_to_int(f);
+    assert_eq!(i, 42); // Truncates
+}
+
+#[test]
+fun test_type_cast_i32_to_i64() {
+    let small: i32 = 100;
+    let large = cast_i32_to_i64(small);
+    assert_eq!(large, 100);
+    assert!(large is i64);
+}
+
+// Numeric literals tests
+#[test]
+fun test_decimal_literal() {
+    let x = parse_decimal_literal();
+    assert_eq!(x, 98_222);
+}
+
+#[test]
+fun test_hex_literal() {
+    let x = parse_hex_literal();
+    assert_eq!(x, 0xff);
+}
+
+#[test]
+fun test_binary_literal() {
+    let x = parse_binary_literal();
+    assert_eq!(x, 0b1111_0000);
+}
+
+#[test]
+fun test_octal_literal() {
+    let x = parse_octal_literal();
+    assert_eq!(x, 0o77);
+}
+
+// Type inference tests
+#[test]
+fun test_type_inference_from_literal() {
+    let x = infer_from_literal();
+    assert_eq!(x, 42);
+    assert!(x is i32);
+}
+
+#[test]
+fun test_type_suffix() {
+    let x = create_with_suffix_u64();
+    assert!(x is u64);
+}
+
+// Overflow/underflow tests
+#[test]
+fun test_checked_addition() {
+    let a: u8 = 200;
+    let b: u8 = 100;
+    let result = checked_add_u8(a, b);
+    assert!(result is None); // Overflow
+}
+
+#[test]
+fun test_saturating_addition() {
+    let a: u8 = 200;
+    let b: u8 = 100;
+    let result = saturating_add_u8(a, b);
+    assert_eq!(result, 255); // Saturates at max
+}
+
+#[test]
+fun test_wrapping_addition() {
+    let a: u8 = 200;
+    let b: u8 = 100;
+    let result = wrapping_add_u8(a, b);
+    assert_eq!(result, 44); // Wraps around
+}
