@@ -1,0 +1,251 @@
+// Unit tests for Recipe 1.6: Control Flow and Conditionals
+// Write tests FIRST following EXTREME TDD
+
+use std::testing::*;
+
+// Test simple if/else
+#[test]
+fun test_if_else_positive() {
+    let result = check_sign(5);
+    assert_eq!(result, "positive");
+}
+
+#[test]
+fun test_if_else_negative() {
+    let result = check_sign(-5);
+    assert_eq!(result, "negative");
+}
+
+#[test]
+fun test_if_else_zero() {
+    let result = check_sign(0);
+    assert_eq!(result, "zero");
+}
+
+// Test comparison operators
+#[test]
+fun test_is_greater() {
+    assert!(is_greater(10, 5));
+    assert!(!is_greater(5, 10));
+    assert!(!is_greater(5, 5));
+}
+
+#[test]
+fun test_is_equal() {
+    assert!(is_equal(5, 5));
+    assert!(!is_equal(5, 10));
+}
+
+#[test]
+fun test_is_in_range() {
+    assert!(is_in_range(5, 1, 10));
+    assert!(!is_in_range(15, 1, 10));
+    assert!(is_in_range(1, 1, 10));
+    assert!(is_in_range(10, 1, 10));
+}
+
+// Test logical operators
+#[test]
+fun test_logical_and() {
+    assert!(logical_and(true, true));
+    assert!(!logical_and(true, false));
+    assert!(!logical_and(false, true));
+    assert!(!logical_and(false, false));
+}
+
+#[test]
+fun test_logical_or() {
+    assert!(logical_or(true, true));
+    assert!(logical_or(true, false));
+    assert!(logical_or(false, true));
+    assert!(!logical_or(false, false));
+}
+
+#[test]
+fun test_logical_not() {
+    assert!(!logical_not(true));
+    assert!(logical_not(false));
+}
+
+// Test match expressions
+#[test]
+fun test_match_number_one() {
+    let result = match_number(1);
+    assert_eq!(result, "one");
+}
+
+#[test]
+fun test_match_number_two() {
+    let result = match_number(2);
+    assert_eq!(result, "two");
+}
+
+#[test]
+fun test_match_number_three() {
+    let result = match_number(3);
+    assert_eq!(result, "three");
+}
+
+#[test]
+fun test_match_number_other() {
+    let result = match_number(99);
+    assert_eq!(result, "other");
+}
+
+// Test match with ranges
+#[test]
+fun test_match_range_small() {
+    let result = match_range(5);
+    assert_eq!(result, "small");
+}
+
+#[test]
+fun test_match_range_medium() {
+    let result = match_range(50);
+    assert_eq!(result, "medium");
+}
+
+#[test]
+fun test_match_range_large() {
+    let result = match_range(150);
+    assert_eq!(result, "large");
+}
+
+// Test nested conditionals
+#[test]
+fun test_nested_positive_even() {
+    let result = classify_number(10);
+    assert_eq!(result, "positive even");
+}
+
+#[test]
+fun test_nested_positive_odd() {
+    let result = classify_number(5);
+    assert_eq!(result, "positive odd");
+}
+
+#[test]
+fun test_nested_negative_even() {
+    let result = classify_number(-10);
+    assert_eq!(result, "negative even");
+}
+
+#[test]
+fun test_nested_negative_odd() {
+    let result = classify_number(-5);
+    assert_eq!(result, "negative odd");
+}
+
+#[test]
+fun test_nested_zero() {
+    let result = classify_number(0);
+    assert_eq!(result, "zero");
+}
+
+// Test guard clauses
+#[test]
+fun test_guard_clause_invalid() {
+    let result = process_age(0);
+    assert_eq!(result, "Invalid age");
+}
+
+#[test]
+fun test_guard_clause_child() {
+    let result = process_age(10);
+    assert_eq!(result, "Child");
+}
+
+#[test]
+fun test_guard_clause_teen() {
+    let result = process_age(15);
+    assert_eq!(result, "Teen");
+}
+
+#[test]
+fun test_guard_clause_adult() {
+    let result = process_age(25);
+    assert_eq!(result, "Adult");
+}
+
+#[test]
+fun test_guard_clause_senior() {
+    let result = process_age(70);
+    assert_eq!(result, "Senior");
+}
+
+// Test early returns
+#[test]
+fun test_early_return_empty() {
+    let result = validate_input("");
+    assert_eq!(result, "empty");
+}
+
+#[test]
+fun test_early_return_too_short() {
+    let result = validate_input("ab");
+    assert_eq!(result, "too short");
+}
+
+#[test]
+fun test_early_return_valid() {
+    let result = validate_input("hello");
+    assert_eq!(result, "valid");
+}
+
+// Test multiple conditions
+#[test]
+fun test_multiple_conditions_all_true() {
+    assert!(check_all_conditions(true, true, true));
+}
+
+#[test]
+fun test_multiple_conditions_one_false() {
+    assert!(!check_all_conditions(true, false, true));
+}
+
+#[test]
+fun test_multiple_conditions_any_true() {
+    assert!(check_any_condition(false, false, true));
+}
+
+#[test]
+fun test_multiple_conditions_all_false() {
+    assert!(!check_any_condition(false, false, false));
+}
+
+// Test max of three
+#[test]
+fun test_max_of_three() {
+    assert_eq!(max_of_three(5, 10, 3), 10);
+    assert_eq!(max_of_three(20, 10, 15), 20);
+    assert_eq!(max_of_three(5, 10, 30), 30);
+}
+
+// Test absolute value using if
+#[test]
+fun test_abs_value_positive() {
+    assert_eq!(abs_value(10), 10);
+}
+
+#[test]
+fun test_abs_value_negative() {
+    assert_eq!(abs_value(-10), 10);
+}
+
+#[test]
+fun test_abs_value_zero() {
+    assert_eq!(abs_value(0), 0);
+}
+
+// Test if let pattern
+#[test]
+fun test_if_let_some() {
+    let result = unwrap_or_default(Some(42));
+    assert_eq!(result, 42);
+}
+
+#[test]
+fun test_if_let_none() {
+    let result = unwrap_or_default(None);
+    assert_eq!(result, 0);
+}

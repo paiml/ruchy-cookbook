@@ -22,6 +22,8 @@ git-repository-icon = "fa-github"
 edit-url-template = "https://github.com/paiml/ruchy-cookbook/edit/main/{path}"
 site-url = "https://interactive.paiml.com/cookbook/"
 cname = "interactive.paiml.com"
+additional-css = []
+additional-js = []
 
 [output.html.fold]
 enable = true
@@ -54,22 +56,12 @@ runnable = true
 theme = "base16-ocean.dark"
 hidelines = {}
 
-# Additional HTML head content
-[output.html.additional-css]
-# Custom CSS for cookbook styling
-
-[output.html.additional-js]
-# Custom JavaScript for interactive features
-
-# Quality metadata
-[output.html.additional-metadata]
-# Metadata for quality metrics display
-
-# PDF output for print edition
+# PDF output for print edition (optional - requires mdbook-pdf)
 [output.pdf]
+optional = true
 title = "Ruchy Cookbook - 1000 Page Reference Edition"
 authors = ["Noah Gift", "Claude (AI Assistant)"]
 
-# EPUB output for ebook readers
+# EPUB output for ebook readers (optional - requires mdbook-epub)
 [output.epub]
-# EPUB configuration for digital readers
+optional = true

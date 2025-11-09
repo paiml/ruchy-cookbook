@@ -1,0 +1,331 @@
+// Recipe 1.7: Structs, Classes, and Methods
+// Implementation written AFTER tests following EXTREME TDD
+
+/// Public struct with public fields (plain data)
+pub struct Rectangle {
+    pub width: i32,
+    pub height: i32,
+}
+
+/// Implementation block - adds methods to Rectangle
+impl Rectangle {
+    /// Associated function (constructor) - creates a square
+    pub fun square(size: i32) -> Self {
+        Rectangle {
+            width: size,
+            height: size,
+        }
+    }
+
+    /// Associated function (constructor) - creates from dimensions
+    pub fun from_dimensions(width: i32, height: i32) -> Self {
+        Rectangle { width, height }
+    }
+
+    /// Instance method - calculates area
+    pub fun area(&self) -> i32 {
+        self.width * self.height
+    }
+
+    /// Instance method - calculates perimeter
+    pub fun perimeter(&self) -> i32 {
+        2 * (self.width + self.height)
+    }
+
+    /// Instance method - checks if square
+    pub fun is_square(&self) -> bool {
+        self.width == self.height
+    }
+
+    /// Mutable method - scales dimensions
+    pub fun scale(&mut self, factor: i32) {
+        self.width *= factor;
+        self.height *= factor;
+    }
+
+    /// Mutable method with chaining - sets width
+    pub fun set_width(&mut self, width: i32) -> &mut Self {
+        self.width = width;
+        self
+    }
+
+    /// Mutable method with chaining - sets height
+    pub fun set_height(&mut self, height: i32) -> &mut Self {
+        self.height = height;
+        self
+    }
+
+    /// Method returning new instance - doubles dimensions
+    pub fun doubled(&self) -> Rectangle {
+        Rectangle {
+            width: self.width * 2,
+            height: self.height * 2,
+        }
+    }
+
+    /// Method comparing with another rectangle
+    pub fun can_hold(&self, other: &Rectangle) -> bool {
+        self.width >= other.width && self.height >= other.height
+    }
+}
+
+/// Struct with private fields (encapsulation)
+pub struct Point {
+    x: i32,  // Private field
+    y: i32,  // Private field
+}
+
+impl Point {
+    /// Constructor
+    pub fun new(x: i32, y: i32) -> Self {
+        Point { x, y }
+    }
+
+    /// Static method - creates point at origin
+    pub fun zero() -> Self {
+        Point { x: 0, y: 0 }
+    }
+
+    /// Static method - alias for zero
+    pub fun origin() -> Self {
+        Self::zero()
+    }
+
+    /// Getter for x (read-only access to private field)
+    pub fun x(&self) -> i32 {
+        self.x
+    }
+
+    /// Getter for y (read-only access to private field)
+    pub fun y(&self) -> i32 {
+        self.y
+    }
+
+    /// Setter for x (controlled write access)
+    pub fun set_x(&mut self, x: i32) {
+        self.x = x;
+    }
+
+    /// Setter for y (controlled write access)
+    pub fun set_y(&mut self, y: i32) {
+        self.y = y;
+    }
+
+    /// Calculate distance to another point
+    pub fun distance(&self, other: &Point) -> f64 {
+        let dx = (self.x - other.x) as f64;
+        let dy = (self.y - other.y) as f64;
+        (dx * dx + dy * dy).sqrt()
+    }
+
+    /// Check equality with another point
+    pub fun equals(&self, other: &Point) -> bool {
+        self.x == other.x && self.y == other.y
+    }
+}
+
+/// Stateful struct with encapsulated counter
+pub struct Counter {
+    value: i32,  // Private field
+}
+
+impl Counter {
+    /// Constructor
+    pub fun new() -> Self {
+        Counter { value: 0 }
+    }
+
+    /// Getter for value
+    pub fun value(&self) -> i32 {
+        self.value
+    }
+
+    /// Increment counter
+    pub fun increment(&mut self) {
+        self.value += 1;
+    }
+
+    /// Decrement counter
+    pub fun decrement(&mut self) {
+        self.value -= 1;
+    }
+
+    /// Reset counter to zero
+    pub fun reset(&mut self) {
+        self.value = 0;
+    }
+}
+
+/// Plain struct with no methods (just data)
+pub struct PlainData {
+    pub value: i32,
+}
+
+/// Person struct with private fields
+pub struct Person {
+    name: String,
+    age: i32,
+    email: String,
+}
+
+impl Person {
+    /// Getter for name
+    pub fun name(&self) -> &str {
+        &self.name
+    }
+
+    /// Getter for age
+    pub fun age(&self) -> i32 {
+        self.age
+    }
+
+    /// Getter for email
+    pub fun email(&self) -> &str {
+        &self.email
+    }
+}
+
+/// Builder pattern for Person
+pub struct PersonBuilder {
+    name: Option<String>,
+    age: Option<i32>,
+    email: Option<String>,
+}
+
+impl PersonBuilder {
+    /// Start building a Person
+    pub fun new() -> Self {
+        PersonBuilder {
+            name: None,
+            age: None,
+            email: None,
+        }
+    }
+
+    /// Set name (fluent interface)
+    pub fun name(mut self, name: &str) -> Self {
+        self.name = Some(name.to_string());
+        self
+    }
+
+    /// Set age (fluent interface)
+    pub fun age(mut self, age: i32) -> Self {
+        self.age = Some(age);
+        self
+    }
+
+    /// Set email (fluent interface)
+    pub fun email(mut self, email: &str) -> Self {
+        self.email = Some(email.to_string());
+        self
+    }
+
+    /// Build the Person
+    pub fun build(self) -> Person {
+        Person {
+            name: self.name.unwrap_or_else(|| "Unknown".to_string()),
+            age: self.age.unwrap_or(0),
+            email: self.email.unwrap_or_else(|| "".to_string()),
+        }
+    }
+}
+
+/// Main entry point demonstrating structs, classes, and methods
+fun main() {
+    println!("Structs, Classes, and Methods Demo");
+    println!("===================================");
+    println!();
+
+    // 1. Basic struct with public fields
+    println!("1. Rectangle (Public Fields):");
+    let rect = Rectangle { width: 30, height: 50 };
+    println!("   Dimensions: {}x{}", rect.width, rect.height);
+    println!("   Area: {}", rect.area());
+    println!("   Perimeter: {}", rect.perimeter());
+    println!("   Is square? {}", rect.is_square());
+    println!();
+
+    // 2. Associated functions (constructors)
+    println!("2. Constructor Methods:");
+    let square = Rectangle::square(20);
+    println!("   Square: {}x{}", square.width, square.height);
+    let rect2 = Rectangle::from_dimensions(15, 25);
+    println!("   Rectangle: {}x{}", rect2.width, rect2.height);
+    println!();
+
+    // 3. Mutable methods
+    println!("3. Mutable Methods:");
+    let mut rect3 = Rectangle { width: 10, height: 20 };
+    println!("   Before scaling: {}x{}", rect3.width, rect3.height);
+    rect3.scale(2);
+    println!("   After scale(2): {}x{}", rect3.width, rect3.height);
+    println!();
+
+    // 4. Method chaining
+    println!("4. Method Chaining:");
+    let mut rect4 = Rectangle { width: 5, height: 10 };
+    rect4.set_width(15).set_height(20).scale(2);
+    println!("   After chaining: {}x{}", rect4.width, rect4.height);
+    println!();
+
+    // 5. Encapsulation with Point
+    println!("5. Point (Private Fields):");
+    let p1 = Point::new(10, 20);
+    println!("   Point coordinates: ({}, {})", p1.x(), p1.y());
+
+    let p2 = Point::new(13, 24);
+    println!("   Distance: {}", p1.distance(&p2));
+    println!();
+
+    // 6. Static methods
+    println!("6. Static Methods:");
+    let origin = Point::zero();
+    println!("   Origin: ({}, {})", origin.x(), origin.y());
+    println!();
+
+    // 7. Stateful object (Counter)
+    println!("7. Stateful Counter:");
+    let mut counter = Counter::new();
+    println!("   Initial: {}", counter.value());
+    counter.increment();
+    counter.increment();
+    counter.increment();
+    println!("   After 3 increments: {}", counter.value());
+    counter.decrement();
+    println!("   After 1 decrement: {}", counter.value());
+    counter.reset();
+    println!("   After reset: {}", counter.value());
+    println!();
+
+    // 8. Builder pattern
+    println!("8. Builder Pattern:");
+    let person = PersonBuilder::new()
+        .name("Alice Smith")
+        .age(30)
+        .email("alice@example.com")
+        .build();
+
+    println!("   Name: {}", person.name());
+    println!("   Age: {}", person.age());
+    println!("   Email: {}", person.email());
+    println!();
+
+    // 9. Plain struct vs struct with methods
+    println!("9. Plain Data vs Encapsulated:");
+    let data = PlainData { value: 42 };
+    println!("   Plain struct: {}", data.value);
+
+    let counter2 = Counter::new();
+    println!("   Encapsulated counter: {}", counter2.value());
+    println!();
+
+    // 10. Composition
+    println!("10. Struct Composition:");
+    let top_left = Point::new(0, 0);
+    let bottom_right = Point::new(30, 40);
+    let width = (bottom_right.x() - top_left.x()).abs();
+    let height = (bottom_right.y() - top_left.y()).abs();
+    let rect5 = Rectangle { width, height };
+    println!("   Rectangle from points: {}x{}", width, height);
+    println!("   Area: {}", rect5.area());
+}

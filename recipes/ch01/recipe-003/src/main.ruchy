@@ -1,0 +1,252 @@
+// Recipe 1.3: Variables and Mutability
+// Implementation written AFTER tests following EXTREME TDD
+
+// Constant declaration (global scope)
+const GLOBAL_CONSTANT: i32 = 42;
+
+/// Create an immutable variable with given value
+pub fun create_immutable_var(value: i32) -> i32 {
+    let x = value;
+    x
+}
+
+/// Create a mutable variable with given value
+pub fun create_mutable_var(value: i32) -> i32 {
+    let mut x = value;
+    x
+}
+
+/// Update a mutable variable (demonstrates reassignment)
+pub fun update_mutable_var(_old: i32, new: i32) -> i32 {
+    new
+}
+
+/// Demonstrate variable shadowing
+pub fun shadow_variable(_outer: i32, inner: i32) -> i32 {
+    let x = inner;  // Shadows outer scope
+    x
+}
+
+/// Infer type from value
+pub fun infer_type_from_value(value: i32) -> i32 {
+    let x = value;  // Type inferred as i32
+    x
+}
+
+/// Create variable with explicit type annotation
+pub fun create_with_type_annotation() -> i32 {
+    let x: i32 = 100;
+    x
+}
+
+/// Create multiple variables using destructuring
+pub fun create_multiple_variables() -> (i32, i32, i32) {
+    let (a, b, c) = (1, 2, 3);
+    (a, b, c)
+}
+
+/// Get constant value
+pub fun get_constant_value() -> i32 {
+    GLOBAL_CONSTANT
+}
+
+/// Test inner scope behavior
+pub fun test_inner_scope(outer: i32) -> i32 {
+    let inner = outer * 2;
+    inner
+}
+
+/// Create immutable string
+pub fun create_immutable_string(s: &str) -> String {
+    String::from(s)
+}
+
+/// Append to string (mutable operation)
+pub fun append_to_string(mut s: String, suffix: &str) -> String {
+    s.push_str(suffix);
+    s
+}
+
+/// Count spaces in string (shadowing with type change)
+pub fun count_spaces(s: &str) -> usize {
+    s.chars().filter(|c| *c == ' ').count()
+}
+
+/// Convert integer to float
+pub fun convert_to_float(x: i32) -> f64 {
+    x as f64
+}
+
+/// Create boolean value
+pub fun create_boolean(value: bool) -> bool {
+    value
+}
+
+/// Toggle boolean value
+pub fun toggle_boolean(value: bool) -> bool {
+    !value
+}
+
+/// Initialize to zero
+pub fun initialize_to_zero() -> i32 {
+    0
+}
+
+/// Copy value (demonstrates copy semantics)
+pub fun copy_value(value: i32) -> i32 {
+    value
+}
+
+/// Increment counter
+pub fun increment_counter(counter: i32) -> i32 {
+    counter + 1
+}
+
+/// Configuration structure
+pub struct Config {
+    pub host: String,
+    pub port: u16,
+}
+
+/// Create configuration
+pub fun create_config(host: &str, port: u16) -> Config {
+    Config {
+        host: String::from(host),
+        port,
+    }
+}
+
+/// Get config host
+pub fun get_config_host(config: Config) -> String {
+    config.host
+}
+
+/// Get config port
+pub fun get_config_port(config: Config) -> u16 {
+    config.port
+}
+
+/// Add to accumulator
+pub fun add_to_accumulator(sum: i32, value: i32) -> i32 {
+    sum + value
+}
+
+/// Double a value
+pub fun double_value(value: i32) -> i32 {
+    value * 2
+}
+
+/// Increment a value
+pub fun increment_value(value: i32) -> i32 {
+    value + 1
+}
+
+/// Square a value
+pub fun square_value(value: i32) -> i32 {
+    value * value
+}
+
+/// Calculate with scope
+pub fun calculate_with_scope(outer: i32, inner: i32) -> i32 {
+    outer + inner
+}
+
+/// Swap two values
+pub fun swap_values(a: i32, b: i32) -> (i32, i32) {
+    (b, a)
+}
+
+/// Main entry point demonstrating variables and mutability
+fun main() {
+    println!("Variables and Mutability Demo");
+    println!("============================");
+    println!();
+
+    // Immutable variables
+    println!("1. Immutable Variables:");
+    let x = 5;
+    println!("   let x = 5");
+    println!("   x = {}", x);
+    println!();
+
+    // Mutable variables
+    println!("2. Mutable Variables:");
+    let mut y = 10;
+    println!("   let mut y = 10");
+    println!("   y = {}", y);
+    y = 20;
+    println!("   y = 20 (after reassignment)");
+    println!("   y = {}", y);
+    println!();
+
+    // Shadowing
+    println!("3. Variable Shadowing:");
+    let z = 5;
+    println!("   let z = 5");
+    println!("   z = {}", z);
+    let z = z + 1;
+    println!("   let z = z + 1 (shadowing)");
+    println!("   z = {}", z);
+    let z = z * 2;
+    println!("   let z = z * 2 (shadowing again)");
+    println!("   z = {}", z);
+    println!();
+
+    // Type inference
+    println!("4. Type Inference:");
+    let inferred = 42;
+    println!("   let inferred = 42 (type inferred as i32)");
+    println!("   inferred = {}", inferred);
+    println!();
+
+    // Explicit type annotation
+    println!("5. Explicit Type Annotation:");
+    let annotated: f64 = 3.14;
+    println!("   let annotated: f64 = 3.14");
+    println!("   annotated = {}", annotated);
+    println!();
+
+    // Multiple declarations
+    println!("6. Multiple Variable Declarations:");
+    let (a, b, c) = (1, 2, 3);
+    println!("   let (a, b, c) = (1, 2, 3)");
+    println!("   a = {}, b = {}, c = {}", a, b, c);
+    println!();
+
+    // Constants
+    println!("7. Constants:");
+    println!("   const GLOBAL_CONSTANT: i32 = 42");
+    println!("   GLOBAL_CONSTANT = {}", GLOBAL_CONSTANT);
+    println!();
+
+    // Scope
+    println!("8. Variable Scope:");
+    let outer = 100;
+    println!("   let outer = 100");
+    {
+        let inner = 50;
+        println!("   {{ let inner = 50 }}");
+        println!("   In inner scope: outer = {}, inner = {}", outer, inner);
+    }
+    println!("   Outside inner scope: outer = {}", outer);
+    println!("   (inner is no longer accessible)");
+    println!();
+
+    // Shadowing with type change
+    println!("9. Shadowing with Type Change:");
+    let spaces = "   ";
+    println!("   let spaces = \"   \" (type: &str)");
+    let spaces = spaces.len();
+    println!("   let spaces = spaces.len() (type: usize)");
+    println!("   spaces = {}", spaces);
+    println!();
+
+    // Counter pattern
+    println!("10. Common Pattern - Counter:");
+    let mut counter = 0;
+    println!("    let mut counter = 0");
+    for i in 1..=5 {
+        counter += 1;
+        println!("    Iteration {}: counter = {}", i, counter);
+    }
+}

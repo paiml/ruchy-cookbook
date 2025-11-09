@@ -1,0 +1,216 @@
+// Recipe 1.5: Functions and Return Values
+// Implementation written AFTER tests following EXTREME TDD
+
+/// Function with no parameters returning a constant
+pub fun get_constant() -> i32 {
+    42
+}
+
+/// Function with no parameters returning a string
+pub fun get_greeting() -> &'static str {
+    "Hello"
+}
+
+/// Function with single parameter - doubles the value
+pub fun double(x: i32) -> i32 {
+    x * 2
+}
+
+/// Function with two parameters - adds them
+pub fun add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+/// Function with two parameters - multiplies them
+pub fun multiply(a: i32, b: i32) -> i32 {
+    a * b
+}
+
+/// Function with three parameters - sums them
+pub fun sum_three(a: i32, b: i32, c: i32) -> i32 {
+    a + b + c
+}
+
+/// Function returning boolean - checks if positive
+pub fun is_positive(x: i32) -> bool {
+    x > 0
+}
+
+/// Function returning f64 - division
+pub fun divide(a: f64, b: f64) -> f64 {
+    a / b
+}
+
+/// Function returning char - gets first character
+pub fun get_first_char(s: &str) -> char {
+    s.chars().next().unwrap_or('\0')
+}
+
+/// Function returning tuple - swaps two values
+pub fun swap(a: i32, b: i32) -> (i32, i32) {
+    (b, a)
+}
+
+/// Function returning triple - 3D coordinates
+pub fun get_coordinates() -> (i32, i32, i32) {
+    (10, 20, 30)
+}
+
+/// Function returning mixed tuple
+pub fun get_mixed_tuple() -> (i32, &'static str) {
+    (42, "answer")
+}
+
+/// Function returning unit type
+pub fun do_nothing() -> () {
+    ()
+}
+
+/// Function with side effect (prints message)
+pub fun print_message(msg: &str) {
+    // Normally would print, but for testing just return
+}
+
+/// Function with early return
+pub fun check_and_return(x: i32) -> i32 {
+    if x < 0 {
+        return 0;
+    }
+    x * x
+}
+
+/// Function with expression-based return
+pub fun square(x: i32) -> i32 {
+    x * x
+}
+
+/// Function demonstrating last expression as return value
+pub fun calculate(a: i32, b: i32) -> i32 {
+    let sum = a + b;
+    sum * 2
+}
+
+/// Function with explicit return statement
+pub fun abs(x: i32) -> i32 {
+    if x < 0 {
+        return -x;
+    }
+    x
+}
+
+/// Function with string parameter
+pub fun count_chars(s: &str) -> usize {
+    s.len()
+}
+
+/// Function returning owned String
+pub fun make_greeting(name: &str) -> String {
+    format!("Hello, {}!", name)
+}
+
+/// Function returning maximum of two values
+pub fun max(a: i32, b: i32) -> i32 {
+    if a > b {
+        a
+    } else {
+        b
+    }
+}
+
+/// Function returning minimum of two values
+pub fun min(a: i32, b: i32) -> i32 {
+    if a < b {
+        a
+    } else {
+        b
+    }
+}
+
+/// Main entry point demonstrating functions and return values
+fun main() {
+    println!("Functions and Return Values Demo");
+    println!("=================================");
+    println!();
+
+    // Functions with no parameters
+    println!("1. Functions with No Parameters:");
+    println!("   get_constant() = {}", get_constant());
+    println!("   get_greeting() = \"{}\"", get_greeting());
+    println!();
+
+    // Functions with single parameter
+    println!("2. Functions with Single Parameter:");
+    let value = 5;
+    println!("   double({}) = {}", value, double(value));
+    println!("   square({}) = {}", value, square(value));
+    println!();
+
+    // Functions with multiple parameters
+    println!("3. Functions with Multiple Parameters:");
+    let a = 10;
+    let b = 3;
+    println!("   add({}, {}) = {}", a, b, add(a, b));
+    println!("   multiply({}, {}) = {}", a, b, multiply(a, b));
+    println!("   sum_three(1, 2, 3) = {}", sum_three(1, 2, 3));
+    println!();
+
+    // Functions returning different types
+    println!("4. Functions Returning Different Types:");
+    println!("   is_positive(5) = {}", is_positive(5));
+    println!("   is_positive(-2) = {}", is_positive(-2));
+    println!("   divide(10.0, 2.0) = {}", divide(10.0, 2.0));
+    println!("   get_first_char(\"Hello\") = '{}'", get_first_char("Hello"));
+    println!();
+
+    // Functions returning tuples
+    println!("5. Functions Returning Tuples:");
+    let (x, y) = swap(1, 2);
+    println!("   swap(1, 2) = ({}, {})", x, y);
+    let (x, y, z) = get_coordinates();
+    println!("   get_coordinates() = ({}, {}, {})", x, y, z);
+    let (num, text) = get_mixed_tuple();
+    println!("   get_mixed_tuple() = ({}, \"{}\")", num, text);
+    println!();
+
+    // Functions returning unit type
+    println!("6. Functions Returning Unit Type ():");
+    let result = do_nothing();
+    println!("   do_nothing() = {:?}", result);
+    print_message("test");
+    println!("   print_message(\"test\") - executed without return value");
+    println!();
+
+    // Early returns
+    println!("7. Functions with Early Returns:");
+    println!("   check_and_return(10) = {}", check_and_return(10));
+    println!("   check_and_return(-5) = {}", check_and_return(-5));
+    println!();
+
+    // Expression-based returns
+    println!("8. Expression-Based Returns:");
+    println!("   calculate(2, 3) = {}", calculate(2, 3));
+    println!();
+
+    // Statement-based returns
+    println!("9. Statement-Based Returns:");
+    println!("   abs(-10) = {}", abs(-10));
+    println!("   abs(7) = {}", abs(7));
+    println!();
+
+    // Complex function signatures
+    println!("10. Complex Function Signatures:");
+    println!("    count_chars(\"hello\") = {}", count_chars("hello"));
+    println!("    make_greeting(\"Alice\") = \"{}\"", make_greeting("Alice"));
+    println!("    max(5, 3) = {}", max(5, 3));
+    println!("    min(5, 3) = {}", min(5, 3));
+    println!();
+
+    // Chaining functions
+    println!("11. Chaining Functions:");
+    let val = 5;
+    let doubled = double(val);
+    let squared = square(doubled);
+    println!("    value = {}", val);
+    println!("    double({}) = {}", val, doubled);
+    println!("    square({}) = {}", doubled, squared);
+}

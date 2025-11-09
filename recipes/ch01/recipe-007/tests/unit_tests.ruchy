@@ -1,0 +1,238 @@
+// Unit tests for Recipe 1.7: Structs, Classes, and Methods
+// Write tests FIRST following EXTREME TDD
+
+use std::testing::*;
+
+// Test basic struct creation
+#[test]
+fun test_create_struct() {
+    let point = Point::new(10, 20);
+    assert_eq!(point.x(), 10);
+    assert_eq!(point.y(), 20);
+}
+
+#[test]
+fun test_struct_fields() {
+    let rect = Rectangle { width: 100, height: 50 };
+    assert_eq!(rect.width, 100);
+    assert_eq!(rect.height, 50);
+}
+
+// Test methods
+#[test]
+fun test_method_area() {
+    let rect = Rectangle { width: 30, height: 50 };
+    assert_eq!(rect.area(), 1500);
+}
+
+#[test]
+fun test_method_perimeter() {
+    let rect = Rectangle { width: 30, height: 50 };
+    assert_eq!(rect.perimeter(), 160);
+}
+
+#[test]
+fun test_method_is_square() {
+    let square = Rectangle { width: 10, height: 10 };
+    let rect = Rectangle { width: 10, height: 20 };
+    assert!(square.is_square());
+    assert!(!rect.is_square());
+}
+
+// Test associated functions (constructors)
+#[test]
+fun test_constructor_square() {
+    let square = Rectangle::square(15);
+    assert_eq!(square.width, 15);
+    assert_eq!(square.height, 15);
+}
+
+#[test]
+fun test_constructor_from_dimensions() {
+    let rect = Rectangle::from_dimensions(40, 60);
+    assert_eq!(rect.width, 40);
+    assert_eq!(rect.height, 60);
+}
+
+// Test mutable methods
+#[test]
+fun test_mutable_method_scale() {
+    let mut rect = Rectangle { width: 10, height: 20 };
+    rect.scale(2);
+    assert_eq!(rect.width, 20);
+    assert_eq!(rect.height, 40);
+}
+
+#[test]
+fun test_mutable_method_set_width() {
+    let mut rect = Rectangle { width: 10, height: 20 };
+    rect.set_width(30);
+    assert_eq!(rect.width, 30);
+}
+
+#[test]
+fun test_mutable_method_set_height() {
+    let mut rect = Rectangle { width: 10, height: 20 };
+    rect.set_height(40);
+    assert_eq!(rect.height, 40);
+}
+
+// Test method chaining
+#[test]
+fun test_method_chaining() {
+    let mut rect = Rectangle { width: 10, height: 20 };
+    rect.set_width(15).set_height(25).scale(2);
+    assert_eq!(rect.width, 30);
+    assert_eq!(rect.height, 50);
+}
+
+// Test encapsulation with private fields
+#[test]
+fun test_encapsulation_point() {
+    let point = Point::new(5, 10);
+    // Cannot access private fields directly, must use methods
+    assert_eq!(point.x(), 5);
+    assert_eq!(point.y(), 10);
+}
+
+#[test]
+fun test_encapsulation_setter() {
+    let mut point = Point::new(5, 10);
+    point.set_x(15);
+    point.set_y(25);
+    assert_eq!(point.x(), 15);
+    assert_eq!(point.y(), 25);
+}
+
+// Test distance calculation
+#[test]
+fun test_point_distance() {
+    let p1 = Point::new(0, 0);
+    let p2 = Point::new(3, 4);
+    assert_eq!(p1.distance(&p2), 5.0);
+}
+
+#[test]
+fun test_point_distance_same() {
+    let p1 = Point::new(5, 5);
+    let p2 = Point::new(5, 5);
+    assert_eq!(p1.distance(&p2), 0.0);
+}
+
+// Test builder pattern
+#[test]
+fun test_builder_pattern() {
+    let person = PersonBuilder::new()
+        .name("Alice")
+        .age(30)
+        .email("alice@example.com")
+        .build();
+
+    assert_eq!(person.name(), "Alice");
+    assert_eq!(person.age(), 30);
+    assert_eq!(person.email(), "alice@example.com");
+}
+
+#[test]
+fun test_builder_partial() {
+    let person = PersonBuilder::new()
+        .name("Bob")
+        .age(25)
+        .build();
+
+    assert_eq!(person.name(), "Bob");
+    assert_eq!(person.age(), 25);
+}
+
+// Test struct with methods vs plain struct
+#[test]
+fun test_plain_struct() {
+    let data = PlainData { value: 42 };
+    assert_eq!(data.value, 42);
+}
+
+#[test]
+fun test_struct_with_methods() {
+    let counter = Counter::new();
+    assert_eq!(counter.value(), 0);
+}
+
+#[test]
+fun test_counter_increment() {
+    let mut counter = Counter::new();
+    counter.increment();
+    assert_eq!(counter.value(), 1);
+}
+
+#[test]
+fun test_counter_increment_multiple() {
+    let mut counter = Counter::new();
+    counter.increment();
+    counter.increment();
+    counter.increment();
+    assert_eq!(counter.value(), 3);
+}
+
+#[test]
+fun test_counter_decrement() {
+    let mut counter = Counter::new();
+    counter.increment();
+    counter.increment();
+    counter.decrement();
+    assert_eq!(counter.value(), 1);
+}
+
+#[test]
+fun test_counter_reset() {
+    let mut counter = Counter::new();
+    counter.increment();
+    counter.increment();
+    counter.reset();
+    assert_eq!(counter.value(), 0);
+}
+
+// Test self reference
+#[test]
+fun test_self_reference() {
+    let rect = Rectangle { width: 10, height: 20 };
+    let doubled = rect.doubled();
+    assert_eq!(doubled.width, 20);
+    assert_eq!(doubled.height, 40);
+}
+
+// Test comparison methods
+#[test]
+fun test_rectangle_can_hold() {
+    let rect1 = Rectangle { width: 30, height: 50 };
+    let rect2 = Rectangle { width: 10, height: 40 };
+    let rect3 = Rectangle { width: 60, height: 45 };
+
+    assert!(rect1.can_hold(&rect2));
+    assert!(!rect1.can_hold(&rect3));
+}
+
+// Test static methods
+#[test]
+fun test_static_method_zero() {
+    let point = Point::zero();
+    assert_eq!(point.x(), 0);
+    assert_eq!(point.y(), 0);
+}
+
+#[test]
+fun test_static_method_origin() {
+    let point = Point::origin();
+    assert_eq!(point.x(), 0);
+    assert_eq!(point.y(), 0);
+}
+
+// Test struct equality
+#[test]
+fun test_point_equality() {
+    let p1 = Point::new(5, 10);
+    let p2 = Point::new(5, 10);
+    let p3 = Point::new(10, 5);
+
+    assert!(p1.equals(&p2));
+    assert!(!p1.equals(&p3));
+}

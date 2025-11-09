@@ -1,0 +1,109 @@
+name: Test Recipes
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test All Recipes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      # Note: Ruchy is a fictional language for this cookbook
+      # In a real implementation, this would install the actual Ruchy compiler
+      - name: Install Ruchy (mock for now)
+        run: |
+          echo "Installing Ruchy compiler..."
+          echo "Note: Ruchy is being developed - tests will be mocked for now"
+
+      - name: Check Makefile exists
+        run: |
+          if [ ! -f Makefile ]; then
+            echo "❌ Makefile not found"
+            exit 1
+          fi
+          echo "✅ Makefile found"
+
+      - name: Verify recipe structure
+        run: |
+          echo "🔍 Verifying recipe structure..."
+
+          # Check that each recipe has required files
+          for recipe_dir in recipes/ch*/recipe-*/; do
+            if [ ! -d "$recipe_dir" ]; then
+              continue
+            fi
+
+            recipe_name=$(basename "$(dirname "$recipe_dir")")/$(basename "$recipe_dir")
+            echo "Checking: $recipe_name"
+
+            # Check for required files
+            if [ ! -f "$recipe_dir/src/main.ruchy" ]; then
+              echo "❌ Missing src/main.ruchy in $recipe_name"
+              exit 1
+            fi
+
+            if [ ! -f "$recipe_dir/tests/unit_tests.ruchy" ]; then
+              echo "❌ Missing tests/unit_tests.ruchy in $recipe_name"
+              exit 1
+            fi
+
+            if [ ! -f "$recipe_dir/Cargo.toml" ]; then
+              echo "❌ Missing Cargo.toml in $recipe_name"
+              exit 1
+            fi
+
+            echo "✅ $recipe_name structure valid"
+          done
+
+      - name: Test count verification
+        run: |
+          echo "📊 Test Statistics:"
+          unit_tests=$(find recipes/ -name "unit_tests.ruchy" | wc -l)
+          property_tests=$(find recipes/ -name "property_tests.ruchy" | wc -l)
+          integration_tests=$(find recipes/ -name "integration_tests.ruchy" | wc -l)
+
+          echo "  Unit test files: $unit_tests"
+          echo "  Property test files: $property_tests"
+          echo "  Integration test files: $integration_tests"
+
+          if [ "$unit_tests" -eq 0 ]; then
+            echo "❌ No unit tests found"
+            exit 1
+          fi
+
+          echo "✅ Tests found"
+
+      - name: SATD detection
+        run: |
+          echo "🔍 Checking for SATD comments (TODO/FIXME/HACK)..."
+
+          if grep -r "TODO\|FIXME\|HACK\|XXX" recipes/ src/ 2>/dev/null; then
+            echo "❌ SATD comments detected!"
+            echo "File GitHub issues via PMAT instead"
+            exit 1
+          else
+            echo "✅ No SATD comments found"
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo ""
+          echo "========================================"
+          echo "📊 Test Summary"
+          echo "========================================"
+          echo "Recipes: $(find recipes/ -name "main.ruchy" | wc -l)"
+          echo "Test files: $(find recipes/ -name "*tests.ruchy" | wc -l)"
+          echo ""

@@ -1,0 +1,97 @@
+// Integration tests for Recipe 1.6: Control Flow and Conditionals
+// Testing real-world usage scenarios
+
+use std::testing::*;
+
+#[test]
+fun test_grade_calculator_workflow() {
+    // Test complete grading system with nested conditionals
+    assert_eq!(calculate_letter_grade(95), 'A');
+    assert_eq!(calculate_letter_grade(85), 'B');
+    assert_eq!(calculate_letter_grade(75), 'C');
+    assert_eq!(calculate_letter_grade(65), 'D');
+    assert_eq!(calculate_letter_grade(55), 'F');
+}
+
+#[test]
+fun test_access_control_system() {
+    // Test access control with multiple conditions
+    assert!(can_access(25, true, "admin"));
+    assert!(can_access(20, true, "user"));
+    assert!(!can_access(15, true, "user"));  // Too young
+    assert!(!can_access(25, false, "user"));  // Not authenticated
+}
+
+#[test]
+fun test_shipping_cost_calculator() {
+    // Test shipping cost calculation with weight ranges
+    assert_eq!(calculate_shipping(0.5), 5.0);   // Light
+    assert_eq!(calculate_shipping(3.0), 10.0);  // Medium
+    assert_eq!(calculate_shipping(8.0), 20.0);  // Heavy
+    assert_eq!(calculate_shipping(25.0), 50.0); // Extra heavy
+}
+
+#[test]
+fun test_discount_calculation_chain() {
+    // Test discount calculation with multiple conditions
+    let amount = 100.0;
+    let is_member = true;
+    let loyalty_years = 5;
+
+    let discount = calculate_discount(amount, is_member, loyalty_years);
+    assert!(discount > 0.0);
+    assert!(discount <= amount);
+}
+
+#[test]
+fun test_fizzbuzz_pattern() {
+    // Test FizzBuzz-like pattern matching
+    assert_eq!(fizzbuzz(15), "FizzBuzz");
+    assert_eq!(fizzbuzz(9), "Fizz");
+    assert_eq!(fizzbuzz(10), "Buzz");
+    assert_eq!(fizzbuzz(7), "7");
+}
+
+#[test]
+fun test_password_strength_validator() {
+    // Test password strength validation with multiple criteria
+    assert_eq!(password_strength("weak"), "Weak");
+    assert_eq!(password_strength("Medium1"), "Medium");
+    assert_eq!(password_strength("Strong1!"), "Strong");
+}
+
+#[test]
+fun test_traffic_light_state_machine() {
+    // Test state machine pattern
+    assert_eq!(next_traffic_light("red"), "green");
+    assert_eq!(next_traffic_light("green"), "yellow");
+    assert_eq!(next_traffic_light("yellow"), "red");
+}
+
+#[test]
+fun test_bmi_calculator_with_categories() {
+    // Test BMI calculation with categorization
+    let height = 1.75;  // meters
+    let weight = 70.0;  // kg
+
+    let category = bmi_category(weight, height);
+    assert_eq!(category, "Normal");
+}
+
+#[test]
+fun test_tax_bracket_calculator() {
+    // Test progressive tax calculation
+    assert_eq!(tax_bracket(25000), "10%");
+    assert_eq!(tax_bracket(50000), "15%");
+    assert_eq!(tax_bracket(100000), "25%");
+    assert_eq!(tax_bracket(250000), "35%");
+}
+
+#[test]
+fun test_validation_pipeline() {
+    // Test input validation with early returns
+    assert!(validate_user_input("ValidUser123", "pass1234", 25));
+    assert!(!validate_user_input("", "pass1234", 25));  // Empty username
+    assert!(!validate_user_input("User", "123", 25));  // Short password
+    assert!(!validate_user_input("User", "pass1234", 10));  // Too young
+}

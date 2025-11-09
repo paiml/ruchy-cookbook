@@ -1,0 +1,184 @@
+// Integration tests for Recipe 1.7: Structs, Classes, and Methods
+// Testing real-world OO usage patterns
+
+use std::testing::*;
+
+#[test]
+fun test_geometry_workflow() {
+    // Test a complete geometry calculation workflow
+    let rect = Rectangle { width: 30, height: 40 };
+
+    // Calculate area and perimeter
+    let area = rect.area();
+    let perimeter = rect.perimeter();
+
+    assert_eq!(area, 1200);
+    assert_eq!(perimeter, 140);
+
+    // Test relationship with other rectangles
+    let small_rect = Rectangle { width: 10, height: 15 };
+    assert!(rect.can_hold(&small_rect));
+}
+
+#[test]
+fun test_point_geometry_system() {
+    // Test a coordinate system with multiple points
+    let origin = Point::zero();
+    let p1 = Point::new(3, 4);
+    let p2 = Point::new(6, 8);
+
+    // Verify distances form expected pattern
+    assert_eq!(origin.distance(&p1), 5.0);
+    assert_eq!(origin.distance(&p2), 10.0);
+    assert_eq!(p1.distance(&p2), 5.0);
+
+    // Points should be collinear (on same line)
+    // Distance from origin to p2 == distance from origin to p1 + distance from p1 to p2
+    let total_distance = origin.distance(&p1) + p1.distance(&p2);
+    assert!((origin.distance(&p2) - total_distance).abs() < 0.0001);
+}
+
+#[test]
+fun test_builder_pattern_workflow() {
+    // Test building complex objects with builder pattern
+    let person1 = PersonBuilder::new()
+        .name("Alice Smith")
+        .age(30)
+        .email("alice@example.com")
+        .build();
+
+    let person2 = PersonBuilder::new()
+        .name("Bob Jones")
+        .age(25)
+        .build();
+
+    // Verify both persons were built correctly
+    assert_eq!(person1.name(), "Alice Smith");
+    assert_eq!(person1.age(), 30);
+    assert_eq!(person2.name(), "Bob Jones");
+    assert_eq!(person2.age(), 25);
+}
+
+#[test]
+fun test_method_chaining_workflow() {
+    // Test fluent interface with method chaining
+    let mut rect = Rectangle { width: 10, height: 20 };
+
+    // Chain multiple operations
+    rect.set_width(20)
+        .set_height(30)
+        .scale(2);
+
+    assert_eq!(rect.width, 40);
+    assert_eq!(rect.height, 60);
+
+    // Verify area after chaining
+    assert_eq!(rect.area(), 2400);
+}
+
+#[test]
+fun test_counter_state_machine() {
+    // Test stateful object managing internal state
+    let mut counter = Counter::new();
+
+    // Simulate a series of operations
+    counter.increment();
+    counter.increment();
+    counter.increment();
+    assert_eq!(counter.value(), 3);
+
+    counter.decrement();
+    assert_eq!(counter.value(), 2);
+
+    counter.reset();
+    assert_eq!(counter.value(), 0);
+}
+
+#[test]
+fun test_rectangle_factory_methods() {
+    // Test various factory methods for creating rectangles
+    let square = Rectangle::square(20);
+    let rect = Rectangle::from_dimensions(30, 40);
+
+    assert!(square.is_square());
+    assert!(!rect.is_square());
+
+    assert_eq!(square.area(), 400);
+    assert_eq!(rect.area(), 1200);
+}
+
+#[test]
+fun test_encapsulation_workflow() {
+    // Test that encapsulation protects internal state
+    let mut point = Point::new(10, 20);
+
+    // Can only modify through setters
+    point.set_x(30);
+    point.set_y(40);
+
+    assert_eq!(point.x(), 30);
+    assert_eq!(point.y(), 40);
+
+    // Verify distance calculation works with modified state
+    let origin = Point::zero();
+    assert_eq!(origin.distance(&point), 50.0);
+}
+
+#[test]
+fun test_struct_composition() {
+    // Test composing structs to build complex objects
+    let top_left = Point::new(10, 10);
+    let bottom_right = Point::new(40, 30);
+
+    // Calculate rectangle dimensions from points
+    let width = (bottom_right.x() - top_left.x()).abs();
+    let height = (bottom_right.y() - top_left.y()).abs();
+
+    let rect = Rectangle { width, height };
+
+    assert_eq!(rect.area(), 600);
+    assert_eq!(rect.perimeter(), 100);
+}
+
+#[test]
+fun test_object_lifecycle() {
+    // Test complete lifecycle of an object
+    // Create
+    let mut counter = Counter::new();
+    assert_eq!(counter.value(), 0);
+
+    // Use
+    for _ in 0..5 {
+        counter.increment();
+    }
+    assert_eq!(counter.value(), 5);
+
+    // Modify
+    counter.decrement();
+    counter.decrement();
+    assert_eq!(counter.value(), 3);
+
+    // Reset
+    counter.reset();
+    assert_eq!(counter.value(), 0);
+}
+
+#[test]
+fun test_multiple_instances_independence() {
+    // Test that multiple instances maintain independent state
+    let mut counter1 = Counter::new();
+    let mut counter2 = Counter::new();
+
+    counter1.increment();
+    counter1.increment();
+
+    counter2.increment();
+
+    assert_eq!(counter1.value(), 2);
+    assert_eq!(counter2.value(), 1);
+
+    // Modifying one doesn't affect the other
+    counter1.reset();
+    assert_eq!(counter1.value(), 0);
+    assert_eq!(counter2.value(), 1);
+}

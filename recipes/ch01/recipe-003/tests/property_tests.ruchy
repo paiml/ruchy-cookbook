@@ -1,0 +1,76 @@
+// Property-based tests for Recipe 1.3: Variables and Mutability
+// Testing invariant properties
+
+use std::testing::proptest::*;
+
+#[proptest]
+fun test_immutable_never_changes(value: i32) {
+    // Property: Immutable variables never change
+    let x = create_immutable_var(value);
+    let original = x;
+
+    // After any operations, immutable variable retains original value
+    assert_eq!(x, original);
+    assert_eq!(x, value);
+}
+
+#[proptest]
+fun test_mutable_can_update(initial: i32, new_value: i32) {
+    // Property: Mutable variables can be updated
+    let mut x = create_mutable_var(initial);
+    assert_eq!(x, initial);
+
+    x = update_mutable_var(x, new_value);
+    assert_eq!(x, new_value);
+}
+
+#[proptest]
+fun test_shadowing_preserves_outer(outer_val: i32, inner_val: i32) {
+    // Property: Shadowing preserves outer scope value
+    let x = outer_val;
+    let shadowed = shadow_variable(x, inner_val);
+
+    assert_eq!(shadowed, inner_val);
+    assert_eq!(x, outer_val); // Original unchanged
+}
+
+#[proptest]
+fun test_type_inference_consistency(value: i32) {
+    // Property: Type inference is consistent
+    let inferred1 = infer_type_from_value(value);
+    let inferred2 = infer_type_from_value(value);
+
+    assert_eq!(inferred1, inferred2);
+    assert_eq!(inferred1, value);
+}
+
+#[proptest]
+fun test_copy_semantics_independence(value: i32) {
+    // Property: Copied values are independent
+    let x = value;
+    let y = copy_value(x);
+
+    assert_eq!(x, value);
+    assert_eq!(y, value);
+    // Both hold same value but are independent
+}
+
+#[proptest]
+fun test_boolean_toggle_invertible(flag: bool) {
+    // Property: Boolean toggle is invertible
+    let original = flag;
+    let toggled = toggle_boolean(original);
+    let restored = toggle_boolean(toggled);
+
+    assert_eq!(restored, original);
+    assert_eq!(toggled, !original);
+}
+
+#[proptest]
+fun test_numeric_conversion_preserves_value(value: i32) {
+    // Property: Numeric conversion preserves value (within range)
+    let float_value = convert_to_float(value);
+    let int_value = float_value as i32;
+
+    assert_eq!(int_value, value);
+}

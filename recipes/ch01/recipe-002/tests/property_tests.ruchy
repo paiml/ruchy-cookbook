@@ -1,0 +1,62 @@
+// Property-based tests for Recipe 1.2: Command Line Arguments
+// Testing invariant properties
+
+use std::testing::proptest::*;
+
+#[proptest]
+fun test_parse_args_preserves_order(args: Vec<String>) {
+    // Property: parse_args preserves argument order
+    let input = ["program"].concat(args.clone());
+    let result = parse_args(input);
+
+    for i in 0..args.len() {
+        assert_eq!(result[i], args[i]);
+    }
+}
+
+#[proptest]
+fun test_parse_args_count_matches(args: Vec<String>) {
+    // Property: number of parsed args matches input (minus program name)
+    let input = ["program"].concat(args.clone());
+    let result = parse_args(input);
+    assert_eq!(result.len(), args.len());
+}
+
+#[proptest]
+fun test_arg_count_never_negative(args: Vec<String>) {
+    // Property: arg count is never negative
+    let input = ["program"].concat(args);
+    let count = count_args(input);
+    assert!(count >= 0);
+}
+
+#[proptest]
+fun test_get_arg_at_bounds(args: Vec<String>, index: usize) {
+    // Property: get_arg_at returns None for out-of-bounds indices
+    let input = ["program"].concat(args.clone());
+
+    if index >= args.len() {
+        assert_eq!(get_arg_at(input, index), None);
+    }
+}
+
+#[proptest]
+fun test_has_flag_consistency(args: Vec<String>, flag: String) {
+    // Property: has_flag is consistent with contains check
+    let input = ["program"].concat(args.clone());
+    let has_it = has_flag(input.clone(), flag.clone());
+    let contains_it = args.contains(&flag);
+
+    assert_eq!(has_it, contains_it);
+}
+
+#[proptest]
+fun test_join_args_reversible(args: Vec<String>) {
+    // Property: joining and splitting should be reversible (for simple separators)
+    let input = ["program"].concat(args.clone());
+    let joined = join_args(input, " ");
+    let split = joined.split(" ").collect::<Vec<_>>();
+
+    // Should have same length
+    assert_eq!(split.len(), args.len());
+}

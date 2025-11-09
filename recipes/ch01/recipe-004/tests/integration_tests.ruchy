@@ -1,0 +1,83 @@
+// Integration tests for Recipe 1.4: Basic Data Types
+// Testing real-world usage scenarios
+
+use std::testing::*;
+
+#[test]
+fun test_temperature_conversion() {
+    // Test converting between Celsius and Fahrenheit (uses floats)
+    let celsius: f64 = 25.0;
+    let fahrenheit = celsius_to_fahrenheit(celsius);
+    assert!(fahrenheit > 76.0 && fahrenheit < 78.0);
+
+    let back_to_celsius = fahrenheit_to_celsius(fahrenheit);
+    assert!((back_to_celsius - celsius).abs() < 0.01);
+}
+
+#[test]
+fun test_age_validation() {
+    // Test age validation (uses unsigned int)
+    let age: u8 = 25;
+    assert!(is_valid_age(age));
+
+    let invalid_age: u8 = 0;
+    assert!(!is_valid_age(invalid_age));
+}
+
+#[test]
+fun test_rgb_color() {
+    // Test RGB color representation (uses u8 for 0-255 range)
+    let red: u8 = 255;
+    let green: u8 = 128;
+    let blue: u8 = 0;
+
+    let color = create_rgb(red, green, blue);
+    assert_eq!(get_red(color), red);
+    assert_eq!(get_green(color), green);
+    assert_eq!(get_blue(color), blue);
+}
+
+#[test]
+fun test_grade_calculator() {
+    // Test grade calculation (uses floats for percentages)
+    let scores = vec![85.5, 90.0, 88.5, 92.0];
+    let average = calculate_average(scores);
+    assert!(average > 88.0 && average < 90.0);
+
+    let letter_grade = get_letter_grade(average);
+    assert_eq!(letter_grade, 'B');
+}
+
+#[test]
+fun test_file_size_formatting() {
+    // Test file size formatting (uses different int types)
+    let bytes: u64 = 1_024_000;
+    let kilobytes = bytes_to_kilobytes(bytes);
+    assert_eq!(kilobytes, 1000);
+
+    let megabytes = bytes_to_megabytes(bytes);
+    assert_eq!(megabytes, 0); // Less than 1 MB
+}
+
+#[test]
+fun test_bit_flags() {
+    // Test bit flags pattern (uses u8 for flags)
+    let read_flag: u8 = 0b0001;
+    let write_flag: u8 = 0b0010;
+    let execute_flag: u8 = 0b0100;
+
+    let permissions = combine_flags(read_flag, write_flag);
+    assert!(has_flag(permissions, read_flag));
+    assert!(has_flag(permissions, write_flag));
+    assert!(!has_flag(permissions, execute_flag));
+}
+
+#[test]
+fun test_scientific_notation() {
+    // Test scientific notation (uses f64 for precision)
+    let avogadro: f64 = 6.022e23;
+    let planck: f64 = 6.626e-34;
+
+    assert!(avogadro > 1e23);
+    assert!(planck < 1e-33);
+}

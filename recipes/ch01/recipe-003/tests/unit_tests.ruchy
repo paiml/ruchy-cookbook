@@ -1,0 +1,133 @@
+// Unit tests for Recipe 1.3: Variables and Mutability
+// Written FIRST following EXTREME TDD methodology
+
+use std::testing::*;
+
+#[test]
+fun test_immutable_variable_declaration() {
+    // Test basic immutable variable declaration
+    let x = create_immutable_var(42);
+    assert_eq!(x, 42);
+}
+
+#[test]
+fun test_mutable_variable_declaration() {
+    // Test mutable variable declaration
+    let mut x = create_mutable_var(10);
+    assert_eq!(x, 10);
+}
+
+#[test]
+fun test_mutable_variable_reassignment() {
+    // Test that mutable variables can be reassigned
+    let mut x = 5;
+    x = update_mutable_var(x, 10);
+    assert_eq!(x, 10);
+}
+
+#[test]
+fun test_variable_shadowing() {
+    // Test variable shadowing
+    let x = 5;
+    let shadowed = shadow_variable(x, 10);
+    assert_eq!(shadowed, 10);
+    // Original x unchanged in outer scope
+    assert_eq!(x, 5);
+}
+
+#[test]
+fun test_type_inference() {
+    // Test that type is correctly inferred
+    let inferred = infer_type_from_value(42);
+    assert_eq!(inferred, 42);
+    assert!(inferred is i32);
+}
+
+#[test]
+fun test_explicit_type_annotation() {
+    // Test explicit type annotation
+    let annotated: i32 = create_with_type_annotation();
+    assert_eq!(annotated, 100);
+}
+
+#[test]
+fun test_multiple_variable_declarations() {
+    // Test declaring multiple variables
+    let (a, b, c) = create_multiple_variables();
+    assert_eq!(a, 1);
+    assert_eq!(b, 2);
+    assert_eq!(c, 3);
+}
+
+#[test]
+fun test_constant_declaration() {
+    // Test constant declaration
+    let constant = get_constant_value();
+    assert_eq!(constant, 42);
+}
+
+#[test]
+fun test_variable_scope() {
+    // Test variable scoping
+    let outer = 10;
+    let inner_value = test_inner_scope(outer);
+    assert_eq!(inner_value, 20);
+    assert_eq!(outer, 10); // Unchanged
+}
+
+#[test]
+fun test_string_immutability() {
+    // Test immutable string variable
+    let s = create_immutable_string("hello");
+    assert_eq!(s, "hello");
+}
+
+#[test]
+fun test_string_mutability() {
+    // Test mutable string variable
+    let mut s = String::from("hello");
+    s = append_to_string(s, " world");
+    assert_eq!(s, "hello world");
+}
+
+#[test]
+fun test_shadowing_with_type_change() {
+    // Test shadowing with different type
+    let spaces = "   ";
+    let spaces = count_spaces(spaces);
+    assert_eq!(spaces, 3);
+}
+
+#[test]
+fun test_numeric_type_conversion() {
+    // Test converting between numeric types
+    let x: i32 = 42;
+    let y: f64 = convert_to_float(x);
+    assert_eq!(y, 42.0);
+}
+
+#[test]
+fun test_boolean_variables() {
+    // Test boolean variable declaration and usage
+    let flag = create_boolean(true);
+    assert_eq!(flag, true);
+
+    let toggled = toggle_boolean(flag);
+    assert_eq!(toggled, false);
+}
+
+#[test]
+fun test_zero_initialization() {
+    // Test that variables can be initialized to zero
+    let zero = initialize_to_zero();
+    assert_eq!(zero, 0);
+}
+
+#[test]
+fun test_copy_semantics() {
+    // Test copy semantics for simple types
+    let x = 5;
+    let y = copy_value(x);
+    assert_eq!(x, 5);
+    assert_eq!(y, 5);
+}

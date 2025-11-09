@@ -1,0 +1,180 @@
+// Unit tests for Recipe 1.5: Functions and Return Values
+// Write tests FIRST following EXTREME TDD
+
+use std::testing::*;
+
+// Test functions with no parameters
+#[test]
+fun test_function_no_params() {
+    let result = get_constant();
+    assert_eq!(result, 42);
+}
+
+#[test]
+fun test_function_returns_string() {
+    let result = get_greeting();
+    assert_eq!(result, "Hello");
+}
+
+// Test functions with single parameter
+#[test]
+fun test_function_single_param_i32() {
+    let result = double(5);
+    assert_eq!(result, 10);
+}
+
+#[test]
+fun test_function_single_param_negative() {
+    let result = double(-3);
+    assert_eq!(result, -6);
+}
+
+#[test]
+fun test_function_single_param_zero() {
+    let result = double(0);
+    assert_eq!(result, 0);
+}
+
+// Test functions with multiple parameters
+#[test]
+fun test_function_two_params_add() {
+    let result = add(5, 3);
+    assert_eq!(result, 8);
+}
+
+#[test]
+fun test_function_two_params_multiply() {
+    let result = multiply(4, 7);
+    assert_eq!(result, 28);
+}
+
+#[test]
+fun test_function_three_params() {
+    let result = sum_three(1, 2, 3);
+    assert_eq!(result, 6);
+}
+
+// Test functions returning different types
+#[test]
+fun test_function_returns_bool() {
+    let result = is_positive(5);
+    assert_eq!(result, true);
+}
+
+#[test]
+fun test_function_returns_bool_negative() {
+    let result = is_positive(-1);
+    assert_eq!(result, false);
+}
+
+#[test]
+fun test_function_returns_f64() {
+    let result = divide(10.0, 2.0);
+    assert_eq!(result, 5.0);
+}
+
+#[test]
+fun test_function_returns_char() {
+    let result = get_first_char("Hello");
+    assert_eq!(result, 'H');
+}
+
+// Test functions returning tuples (multiple return values)
+#[test]
+fun test_function_returns_tuple() {
+    let (x, y) = swap(1, 2);
+    assert_eq!(x, 2);
+    assert_eq!(y, 1);
+}
+
+#[test]
+fun test_function_returns_triple() {
+    let (a, b, c) = get_coordinates();
+    assert_eq!(a, 10);
+    assert_eq!(b, 20);
+    assert_eq!(c, 30);
+}
+
+#[test]
+fun test_function_returns_mixed_tuple() {
+    let (num, text) = get_mixed_tuple();
+    assert_eq!(num, 42);
+    assert_eq!(text, "answer");
+}
+
+// Test functions returning unit type ()
+#[test]
+fun test_function_returns_unit() {
+    let result = do_nothing();
+    assert_eq!(result, ());
+}
+
+#[test]
+fun test_function_side_effect() {
+    // Function that returns () but has side effects
+    print_message("test");  // Should not panic
+}
+
+// Test early returns
+#[test]
+fun test_early_return_true_case() {
+    let result = check_and_return(10);
+    assert_eq!(result, 100);
+}
+
+#[test]
+fun test_early_return_false_case() {
+    let result = check_and_return(-5);
+    assert_eq!(result, 0);
+}
+
+// Test expression-based returns
+#[test]
+fun test_expression_return() {
+    let result = square(5);
+    assert_eq!(result, 25);
+}
+
+#[test]
+fun test_last_expression_is_return() {
+    let result = calculate(2, 3);
+    assert_eq!(result, 10);  // (2 + 3) * 2
+}
+
+// Test statement-based returns
+#[test]
+fun test_explicit_return() {
+    let result = abs(-10);
+    assert_eq!(result, 10);
+}
+
+#[test]
+fun test_explicit_return_positive() {
+    let result = abs(7);
+    assert_eq!(result, 7);
+}
+
+// Test complex function signatures
+#[test]
+fun test_function_with_string_param() {
+    let result = count_chars("hello");
+    assert_eq!(result, 5);
+}
+
+#[test]
+fun test_function_returns_string_owned() {
+    let result = make_greeting("Alice");
+    assert_eq!(result, "Hello, Alice!");
+}
+
+#[test]
+fun test_function_max() {
+    let result = max(5, 3);
+    assert_eq!(result, 5);
+}
+
+#[test]
+fun test_function_min() {
+    let result = min(5, 3);
+    assert_eq!(result, 3);
+}

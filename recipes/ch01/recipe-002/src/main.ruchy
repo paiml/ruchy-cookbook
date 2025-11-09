@@ -1,0 +1,160 @@
+// Recipe 1.2: Command Line Arguments
+// Implementation written AFTER tests following EXTREME TDD
+
+use std::env;
+
+/// Parse command line arguments, excluding the program name
+///
+/// # Arguments
+/// * `args` - Full argument vector including program name at index 0
+///
+/// # Returns
+/// Vector of arguments excluding the program name
+///
+/// # Examples
+/// ```
+/// let args = vec!["program", "arg1", "arg2"];
+/// let parsed = parse_args(args);
+/// assert_eq!(parsed, vec!["arg1", "arg2"]);
+/// ```
+pub fun parse_args(args: Vec<&str>) -> Vec<String> {
+    if args.is_empty() || (args.len() == 1 && args[0].is_empty()) {
+        return vec![];
+    }
+
+    args[1..].iter().map(|s| s.to_string()).collect()
+}
+
+/// Get argument at specific index (0-based, after program name)
+///
+/// # Arguments
+/// * `args` - Full argument vector
+/// * `index` - Index of argument to retrieve (0 = first arg after program name)
+///
+/// # Returns
+/// Some(argument) if index is valid, None otherwise
+pub fun get_arg_at(args: Vec<&str>, index: usize) -> Option<String> {
+    let parsed = parse_args(args);
+    parsed.get(index).map(|s| s.clone())
+}
+
+/// Count command line arguments (excluding program name)
+///
+/// # Arguments
+/// * `args` - Full argument vector
+///
+/// # Returns
+/// Number of arguments excluding program name
+pub fun count_args(args: Vec<&str>) -> usize {
+    parse_args(args).len()
+}
+
+/// Check if a specific flag is present in arguments
+///
+/// # Arguments
+/// * `args` - Full argument vector
+/// * `flag` - Flag to search for (e.g., "--verbose")
+///
+/// # Returns
+/// true if flag is present, false otherwise
+pub fun has_flag(args: Vec<&str>, flag: &str) -> bool {
+    let parsed = parse_args(args);
+    parsed.iter().any(|arg| arg == flag)
+}
+
+/// Get the value following a flag
+///
+/// # Arguments
+/// * `args` - Full argument vector
+/// * `flag` - Flag whose value to retrieve
+///
+/// # Returns
+/// Some(value) if flag exists and has a following value, None otherwise
+///
+/// # Examples
+/// ```
+/// let args = vec!["program", "--output", "file.txt"];
+/// assert_eq!(get_flag_value(args, "--output"), Some("file.txt"));
+/// ```
+pub fun get_flag_value(args: Vec<&str>, flag: &str) -> Option<String> {
+    let parsed = parse_args(args);
+
+    for i in 0..parsed.len() {
+        if parsed[i] == flag && i + 1 < parsed.len() {
+            return Some(parsed[i + 1].clone());
+        }
+    }
+
+    None
+}
+
+/// Join arguments into a single string with separator
+///
+/// # Arguments
+/// * `args` - Full argument vector
+/// * `separator` - String to join arguments with
+///
+/// # Returns
+/// Joined string of all arguments (excluding program name)
+pub fun join_args(args: Vec<&str>, separator: &str) -> String {
+    let parsed = parse_args(args);
+    parsed.join(separator)
+}
+
+/// Check if arguments contain a specific value
+///
+/// # Arguments
+/// * `args` - Full argument vector
+/// * `value` - Value to search for
+///
+/// # Returns
+/// true if value is present in arguments, false otherwise
+pub fun args_contain(args: Vec<&str>, value: &str) -> bool {
+    let parsed = parse_args(args);
+    parsed.iter().any(|arg| arg == value)
+}
+
+/// Main entry point demonstrating command line argument usage
+fun main() {
+    // Get actual command line arguments
+    let args: Vec<String> = env::args().collect();
+
+    println!("Command Line Arguments Demo");
+    println!("===========================");
+
+    if args.len() == 1 {
+        println!("No arguments provided.");
+        println!("\nUsage: {} [arguments...]", args[0]);
+        println!("\nExamples:");
+        println!("  {} hello world", args[0]);
+        println!("  {} --flag value", args[0]);
+        return;
+    }
+
+    // Convert Vec<String> to Vec<&str> for our functions
+    let arg_refs: Vec<&str> = args.iter().map(|s| s.as_str()).collect();
+
+    println!("Total arguments: {}", count_args(arg_refs.clone()));
+    println!("\nArguments:");
+
+    let parsed = parse_args(arg_refs.clone());
+    for (i, arg) in parsed.iter().enumerate() {
+        println!("  [{}]: {}", i, arg);
+    }
+
+    // Check for common flags
+    if has_flag(arg_refs.clone(), "--help") || has_flag(arg_refs.clone(), "-h") {
+        println!("\nHelp flag detected!");
+    }
+
+    if has_flag(arg_refs.clone(), "--verbose") || has_flag(arg_refs.clone(), "-v") {
+        println!("\nVerbose mode enabled!");
+    }
+
+    // Example of flag with value
+    if let Some(output) = get_flag_value(arg_refs.clone(), "--output") {
+        println!("\nOutput file: {}", output);
+    }
+
+    println!("\nAll arguments joined: {}", join_args(arg_refs, " "));
+}
