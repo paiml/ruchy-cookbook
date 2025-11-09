@@ -424,9 +424,218 @@ fun test_parse_args_preserves_order(args: Vec<String>) {
 ## Recipe 1.3: Variables and Mutability
 
 **Difficulty**: Beginner
-**Status**: 🚧 Coming Soon
+**Time**: 10-15 minutes
+**Test Coverage**: 19/19 tests passing (100%)
+**Status**: ✅ WORKING (verified with EXTREME TDD)
 
-This recipe will cover variable declaration, mutability, and shadowing.
+### Problem
+
+You need to store and modify data in your Ruchy programs. How do you declare variables? When should you use immutable vs mutable variables? How does shadowing work, and what are the scoping rules?
+
+### Solution
+
+```ruchy
+// Immutable variables (default)
+let x = 5
+let name = "Alice"
+
+// Mutable variables with 'mut'
+let mut counter = 0
+counter = counter + 1
+
+// Type annotations (optional)
+let age: i32 = 30
+let pi: f64 = 3.14
+
+// Shadowing (reuse variable name)
+let value = 42
+let value = value * 2
+let value = "changed type!"
+
+// Scopes
+let outer = 5
+let result = {
+    let inner = 10
+    inner + outer  // Returns 15
+}
+```
+
+### Discussion
+
+Ruchy provides flexible variable declaration with automatic type inference:
+
+**Immutable by Default**:
+```ruchy
+let x = 5
+// x = 10  // ERROR: Cannot assign to immutable variable
+```
+
+Variables are immutable by default, encouraging functional programming style.
+
+**Mutable Variables**:
+```ruchy
+let mut counter = 0
+counter = counter + 1  // OK!
+counter = 10           // OK!
+```
+
+Use `let mut` when you need to modify a variable.
+
+**Type Annotations**:
+```ruchy
+let x: i32 = 42
+let y: f64 = 3.14
+let name: &str = "Alice"
+```
+
+Type annotations are optional but can improve clarity.
+
+**Shadowing**:
+```ruchy
+let x = 5
+let x = 10      // New variable, shadows previous x
+let x = "five"  // Can even change type!
+```
+
+Shadowing allows reusing variable names and changing types.
+
+**Important Differences from Rust**:
+
+1. **Scope Mutation** ⚠️:
+```ruchy
+let x = 5
+
+let result = {
+    let x = 10  // In Ruchy, this MUTATES outer x!
+    x
+}
+
+// x is now 10 (not 5 like in Rust!)
+```
+
+In Ruchy, declaring `let x` inside a scope MUTATES the outer variable rather than shadowing it. This is different from Rust's behavior.
+
+2. **No Underscore Separators** ⚠️:
+```ruchy
+// This FAILS in Ruchy
+// let large = 1_000_000  // ERROR: Undefined variable: _000_000
+```
+
+Ruchy doesn't support underscore separators in numeric literals.
+
+**Performance Characteristics**:
+- Variable access: O(1) constant time
+- Immutable: Zero-cost abstraction (no runtime overhead)
+- Mutable: Still zero-cost, just allows reassignment
+- Shadowing: No runtime cost (compile-time only)
+
+**Safety Guarantees**:
+- Type safety: Variables can't change type (except via shadowing)
+- No uninitialized variables: Must assign at declaration
+- Scope-based lifetime: Variables cleaned up automatically
+
+### Variations
+
+**Variation 1: Multiple Variables**
+
+```ruchy
+let x = 5
+let y = 10
+let z = x + y
+
+let mut a = 1
+let mut b = 2
+a = a + b
+b = b * 2
+```
+
+**Variation 2: Transformation Pattern**
+
+```ruchy
+let data = "42"        // String input
+let data = 42          // Shadow to convert to number
+let data = data * 2    // Transform
+let data = data + 10   // Further transform
+// Final value: 94
+```
+
+**Variation 3: Configuration Pattern**
+
+```ruchy
+let debug_mode = true
+let verbose = false
+let log_level = if debug_mode { "debug" } else { "info" }
+```
+
+### See Also
+
+- Recipe 1.1: Hello World
+- Recipe 1.4: Basic Data Types
+- Recipe 1.5: Functions and Return Values
+- Recipe 1.6: Control Flow and Conditionals
+
+### Tests
+
+All 19 tests pass ✅:
+
+<details>
+<summary>Unit Tests (click to expand)</summary>
+
+**Full implementation**: [recipes/ch01/recipe-003/src/main.ruchy](../../recipes/ch01/recipe-003/src/main.ruchy)
+
+**Test suite**: [recipes/ch01/recipe-003/tests/unit_tests.ruchy](../../recipes/ch01/recipe-003/tests/unit_tests.ruchy)
+
+**Test Results**:
+```
+Test Results: 19/19 tests passed
+- Immutable variables: 5/5 tests ✅
+- Mutable variables: 4/4 tests ✅
+- Shadowing: 3/3 tests ✅
+- Scopes: 2/2 tests ✅
+- Type inference: 3/3 tests ✅
+- Multiple variables: 2/2 tests ✅
+```
+
+**Key Tests**:
+```ruchy
+// Immutable variables
+fun test_let_creates_immutable_variable() -> bool {
+    let x = 5
+    x == 5
+}
+
+// Mutable variables
+fun test_mut_allows_reassignment() -> bool {
+    let mut x = 5
+    x = 10
+    x == 10
+}
+
+// Shadowing
+fun test_shadowing_changes_type() -> bool {
+    let x = 5
+    let x = "five"
+    x == "five"
+}
+
+// Scope mutation (Ruchy-specific behavior!)
+fun test_scope_mutation() -> bool {
+    let x = 5
+    let result = {
+        let x = 10  // MUTATES outer x!
+        x
+    }
+    result == 10 && x == 10  // Both are 10!
+}
+```
+
+**How to run**:
+```bash
+cd recipes/ch01/recipe-003
+ruchy tests/unit_tests.ruchy
+```
+
+</details>
 
 ---
 
