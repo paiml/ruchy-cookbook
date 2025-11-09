@@ -1,0 +1,88 @@
+// Property-based tests for Recipe 1.5: Functions and Return Values
+// Testing invariant properties
+
+use std::testing::proptest::*;
+
+#[proptest]
+fun test_double_preserves_sign(value: i32) {
+    // Property: Doubling preserves sign (except zero)
+    let result = double(value);
+    if value > 0 {
+        assert!(result > 0);
+    } else if value < 0 {
+        assert!(result < 0);
+    } else {
+        assert_eq!(result, 0);
+    }
+}
+
+#[proptest]
+fun test_add_commutative(a: i32, b: i32) {
+    // Property: Addition is commutative
+    assume!(a.checked_add(b).is_some()); // Avoid overflow
+    assert_eq!(add(a, b), add(b, a));
+}
+
+#[proptest]
+fun test_multiply_commutative(a: i32, b: i32) {
+    // Property: Multiplication is commutative
+    assume!(a.checked_mul(b).is_some()); // Avoid overflow
+    assert_eq!(multiply(a, b), multiply(b, a));
+}
+
+#[proptest]
+fun test_abs_non_negative(value: i32) {
+    // Property: Absolute value is always non-negative
+    assume!(value != i32::MIN); // Avoid overflow
+    let result = abs(value);
+    assert!(result >= 0);
+}
+
+#[proptest]
+fun test_abs_idempotent(value: i32) {
+    // Property: abs(abs(x)) == abs(x)
+    assume!(value != i32::MIN); // Avoid overflow
+    let once = abs(value);
+    let twice = abs(once);
+    assert_eq!(once, twice);
+}
+
+#[proptest]
+fun test_swap_invertible(a: i32, b: i32) {
+    // Property: Swapping twice returns original values
+    let (x, y) = swap(a, b);
+    let (a2, b2) = swap(x, y);
+    assert_eq!(a2, a);
+    assert_eq!(b2, b);
+}
+
+#[proptest]
+fun test_max_greater_or_equal(a: i32, b: i32) {
+    // Property: max(a, b) >= a and max(a, b) >= b
+    let result = max(a, b);
+    assert!(result >= a);
+    assert!(result >= b);
+}
+
+#[proptest]
+fun test_min_less_or_equal(a: i32, b: i32) {
+    // Property: min(a, b) <= a and min(a, b) <= b
+    let result = min(a, b);
+    assert!(result <= a);
+    assert!(result <= b);
+}
+
+#[proptest]
+fun test_count_chars_non_negative(s: String) {
+    // Property: Character count is always non-negative
+    let result = count_chars(&s);
+    assert!(result >= 0);
+}
+
+#[proptest]
+fun test_square_non_negative(value: i32) {
+    // Property: Square of any number is non-negative
+    assume!(value.checked_mul(value).is_some()); // Avoid overflow
+    let result = square(value);
+    assert!(result >= 0);
+}

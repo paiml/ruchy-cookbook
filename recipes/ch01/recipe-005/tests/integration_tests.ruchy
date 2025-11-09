@@ -1,0 +1,102 @@
+// Integration tests for Recipe 1.5: Functions and Return Values
+// Testing real-world usage scenarios
+
+use std::testing::*;
+
+#[test]
+fun test_math_pipeline() {
+    // Test chaining mathematical operations
+    let value = 5;
+    let doubled = double(value);
+    let squared = square(doubled);
+    let added = add(squared, 10);
+
+    assert_eq!(doubled, 10);
+    assert_eq!(squared, 100);
+    assert_eq!(added, 110);
+}
+
+#[test]
+fun test_calculator_workflow() {
+    // Test realistic calculator workflow
+    let a = 15;
+    let b = 5;
+
+    let sum = add(a, b);
+    let product = multiply(a, b);
+    let result = divide(sum as f64, product as f64);
+
+    assert_eq!(sum, 20);
+    assert_eq!(product, 75);
+    assert_eq!(result, 20.0 / 75.0);
+}
+
+#[test]
+fun test_tuple_destructuring_workflow() {
+    // Test working with tuple returns
+    let (x, y) = swap(10, 20);
+    let sum = add(x, y);
+    let product = multiply(x, y);
+
+    assert_eq!(x, 20);
+    assert_eq!(y, 10);
+    assert_eq!(sum, 30);
+    assert_eq!(product, 200);
+}
+
+#[test]
+fun test_coordinate_processing() {
+    // Test processing 3D coordinates
+    let (x, y, z) = get_coordinates();
+    let sum = sum_three(x, y, z);
+
+    assert_eq!(sum, 60);  // 10 + 20 + 30
+}
+
+#[test]
+fun test_string_processing_pipeline() {
+    // Test string-related functions in pipeline
+    let name = "Alice";
+    let greeting = make_greeting(name);
+    let length = count_chars(&greeting);
+
+    assert_eq!(greeting, "Hello, Alice!");
+    assert!(length > 0);
+}
+
+#[test]
+fun test_comparison_chain() {
+    // Test using min/max in sequence
+    let a = 5;
+    let b = 10;
+    let c = 3;
+
+    let max_ab = max(a, b);
+    let min_abc = min(max_ab, c);
+
+    assert_eq!(max_ab, 10);
+    assert_eq!(min_abc, 3);
+}
+
+#[test]
+fun test_conditional_logic_pattern() {
+    // Test early return pattern with multiple values
+    let positive_result = check_and_return(15);
+    let negative_result = check_and_return(-10);
+
+    assert_eq!(positive_result, 225);  // 15 * 15
+    assert_eq!(negative_result, 0);
+}
+
+#[test]
+fun test_mixed_return_types() {
+    // Test functions returning different types together
+    let (num, text) = get_mixed_tuple();
+    let is_pos = is_positive(num);
+    let char_val = get_first_char(&text);
+
+    assert_eq!(num, 42);
+    assert_eq!(text, "answer");
+    assert_eq!(is_pos, true);
+    assert_eq!(char_val, 'a');
+}
