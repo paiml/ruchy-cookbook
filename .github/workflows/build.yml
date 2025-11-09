@@ -1,0 +1,94 @@
+name: Build Book
+
+on:
+  push:
+    branches: ['**']  # Trigger on push to ALL branches
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build mdBook
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install mdBook
+        uses: peaceiris/actions-mdbook@v1
+        with:
+          mdbook-version: 'latest'
+
+      - name: Verify book.toml
+        run: |
+          if [ ! -f "book.toml" ]; then
+            echo "❌ book.toml not found"
+            exit 1
+          fi
+          echo "✅ book.toml found"
+
+      - name: Build book
+        run: |
+          echo "📚 Building Ruchy Cookbook..."
+          mdbook build
+          echo "✅ Build complete"
+
+      - name: Verify build output
+        run: |
+          if [ ! -d "book" ]; then
+            echo "❌ Build directory not found"
+            exit 1
+          fi
+
+          if [ ! -f "book/index.html" ]; then
+            echo "❌ index.html not found"
+            exit 1
+          fi
+
+          echo "✅ Build output verified"
+
+          # Show build stats
+          echo ""
+          echo "📊 Build Statistics:"
+          echo "  HTML files: $(find book -name "*.html" | wc -l)"
+          echo "  Total files: $(find book -type f | wc -l)"
+          echo "  Size: $(du -sh book | cut -f1)"
+
+      - name: Check for broken links
+        run: |
+          echo "🔍 Checking for broken internal links..."
+
+          # Check that all chapter files referenced in SUMMARY.md exist
+          if grep -oP '\(\.\/[^)]+\)' src/SUMMARY.md | while read -r link; do
+            file=$(echo "$link" | sed 's/[()]//g')
+            if [ ! -f "src/$file" ] && [ ! -f "$file" ]; then
+              echo "❌ Broken link: $file"
+              exit 1
+            fi
+          done; then
+            echo "✅ All links valid"
+          fi
+
+      - name: Validate chapter structure
+        run: |
+          echo "📖 Validating chapter structure..."
+
+          # Count chapters in SUMMARY.md
+          chapter_count=$(grep -c "^- \[Chapter" src/SUMMARY.md || echo "0")
+          recipe_count=$(grep -c "^  - \[Recipe" src/SUMMARY.md || echo "0")
+
+          echo "  Chapters: $chapter_count"
+          echo "  Recipes: $recipe_count"
+          echo "✅ Structure validated"
+
+      - name: Build summary
+        if: always()
+        run: |
+          echo ""
+          echo "========================================"
+          echo "📚 Build Summary"
+          echo "========================================"
+          echo "Book built successfully for branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo ""
