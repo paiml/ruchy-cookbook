@@ -1355,6 +1355,170 @@ fun test_shared_counter_increments_accumulate(count: u8) {
 
 ---
 
+## Recipe 1.8: Data Structures
+
+**Difficulty**: Beginner
+**Time**: 15-20 minutes
+**Test Coverage**: 19/19 tests passing (100%)
+**Status**: ✅ WORKING (verified with EXTREME TDD)
+
+### Problem
+
+You need to work with collections of data in Ruchy using object literals, arrays, functions, and closures. Unlike traditional OO languages, Ruchy uses JavaScript/Ruby-style object literals rather than class-based structures.
+
+### Solution
+
+```ruchy
+// Object literals
+let person = {
+    name: "Alice",
+    age: 30,
+    city: "NYC"
+}
+
+// Arrays
+let numbers = [1, 2, 3, 4, 5]
+
+// Functions
+fun add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+// Closures
+let double = |x| x * 2
+
+// Array methods
+let squared = numbers.map(|x| x * x)
+let evens = numbers.filter(|x| x % 2 == 0)
+let sum = numbers.reduce(|acc, x| acc + x, 0)
+```
+
+### Discussion
+
+#### What Works in Ruchy
+
+Ruchy supports dynamic, functional-style data structures:
+
+**Object Literals** (like JavaScript):
+```ruchy
+let user = {
+    id: 123,
+    profile: {
+        name: "Bob",
+        email: "bob@example.com"
+    },
+    settings: {
+        theme: "dark"
+    }
+}
+```
+
+**Arrays**:
+```ruchy
+let colors = ["red", "green", "blue"]
+let people = [
+    {name: "Alice", age: 30},
+    {name: "Bob", age: 25}
+]
+```
+
+**Array Methods**:
+- `map(|x| ...)` - Transform elements
+- `filter(|x| ...)` - Keep matching elements
+- `reduce(|acc, x| ..., initial)` - Combine to single value
+
+**Important**: Note the `reduce` syntax: `reduce(closure, initial_value)`
+
+#### What Doesn't Work
+
+⚠️ **Ruchy does NOT support**:
+- Rust-style `struct` with methods
+- `class` with methods defined inside
+- `impl` blocks
+- `#[derive(...)]` attributes
+- `pub` keyword
+
+See [Recipe 1.7 BLOCKED status](../../recipes/ch01/recipe-007/BLOCKED.md) for details.
+
+### Variations
+
+**Variation 1: Nested Data Processing**
+
+```ruchy
+let products = [
+    {name: "Widget", price: 10.0, category: "Tools"},
+    {name: "Gadget", price: 25.0, category: "Electronics"},
+    {name: "Gizmo", price: 15.0, category: "Tools"}
+]
+
+// Filter by category
+let tools = products.filter(|p| p.category == "Tools")
+
+// Calculate total
+let total = products.reduce(|acc, p| acc + p.price, 0.0)
+
+// Extract names
+let names = products.map(|p| p.name)
+```
+
+**Variation 2: Function Composition**
+
+```ruchy
+let add_ten = |x| x + 10
+let double = |x| x * 2
+let transform = |x| double(add_ten(x))
+
+let result = transform(5)  // (5 + 10) * 2 = 30
+```
+
+**Variation 3: Closure Capture**
+
+```ruchy
+let factor = 3
+let multiply_by_factor = |x| x * factor
+
+let result = multiply_by_factor(7)  // 21
+```
+
+### See Also
+
+- Recipe 1.5: Functions and Return Values
+- Recipe 1.6: Control Flow and Conditionals
+- Recipe 1.7: BLOCKED (OO features not available)
+- Chapter 2: String & Text Processing
+
+### Tests
+
+All 19 tests pass ✅:
+
+<details>
+<summary>Unit Tests (click to expand)</summary>
+
+**Full implementation**: [recipes/ch01/recipe-008/src/main.ruchy](../../recipes/ch01/recipe-008/src/main.ruchy)
+
+**Test suite**: [recipes/ch01/recipe-008/tests/unit_tests.ruchy](../../recipes/ch01/recipe-008/tests/unit_tests.ruchy)
+
+**Test Results**:
+```
+Test Results: 19/19 tests passed
+- Object literals: 4/4 tests ✅
+- Arrays: 4/4 tests ✅
+- Functions: 3/3 tests ✅
+- Closures: 3/3 tests ✅
+- Array methods: 3/3 tests ✅
+- Integration: 2/2 tests ✅
+```
+
+**How to run**:
+```bash
+cd recipes/ch01/recipe-008
+ruchy tests/unit_tests.ruchy
+```
+
+</details>
+
+---
+
 ## Chapter Exercises
 
 ### Exercise 1.1: Personalized Greeting
