@@ -1,0 +1,175 @@
+// Property-based tests for Recipe 1.7: Structs, Classes, and Methods
+// Testing OO invariant properties
+
+use std::testing::proptest::*;
+
+#[proptest]
+fun test_rectangle_area_positive(width: u32, height: u32) {
+    // Property: Area is always non-negative
+    assume!(width > 0 && height > 0);
+    assume!(width <= 1000 && height <= 1000); // Avoid overflow
+
+    let rect = Rectangle { width: width as i32, height: height as i32 };
+    let area = rect.area();
+    assert!(area >= 0);
+}
+
+#[proptest]
+fun test_rectangle_perimeter_positive(width: u32, height: u32) {
+    // Property: Perimeter is always non-negative
+    assume!(width > 0 && height > 0);
+    assume!(width <= 500 && height <= 500); // Avoid overflow
+
+    let rect = Rectangle { width: width as i32, height: height as i32 };
+    let perimeter = rect.perimeter();
+    assert!(perimeter >= 0);
+}
+
+#[proptest]
+fun test_square_is_always_square(size: u32) {
+    // Property: Squares created with square() are always squares
+    assume!(size > 0 && size <= 1000);
+
+    let square = Rectangle::square(size as i32);
+    assert!(square.is_square());
+    assert_eq!(square.width, square.height);
+}
+
+#[proptest]
+fun test_scaling_preserves_ratio(width: u32, height: u32, factor: u32) {
+    // Property: Scaling preserves aspect ratio
+    assume!(width > 0 && height > 0 && factor > 0);
+    assume!(width <= 100 && height <= 100 && factor <= 10);
+
+    let mut rect = Rectangle { width: width as i32, height: height as i32 };
+    let original_ratio = if height != 0 { width as f64 / height as f64 } else { 0.0 };
+
+    rect.scale(factor as i32);
+
+    let new_ratio = if rect.height != 0 {
+        rect.width as f64 / rect.height as f64
+    } else {
+        0.0
+    };
+
+    // Ratios should be equal (with floating point tolerance)
+    assert!((original_ratio - new_ratio).abs() < 0.0001);
+}
+
+#[proptest]
+fun test_point_distance_symmetry(x1: i32, y1: i32, x2: i32, y2: i32) {
+    // Property: Distance is symmetric: d(p1, p2) == d(p2, p1)
+    assume!(x1.abs() <= 1000 && y1.abs() <= 1000);
+    assume!(x2.abs() <= 1000 && y2.abs() <= 1000);
+
+    let p1 = Point::new(x1, y1);
+    let p2 = Point::new(x2, y2);
+
+    let d1 = p1.distance(&p2);
+    let d2 = p2.distance(&p1);
+
+    assert!((d1 - d2).abs() < 0.0001);
+}
+
+#[proptest]
+fun test_point_distance_non_negative(x1: i32, y1: i32, x2: i32, y2: i32) {
+    // Property: Distance is always non-negative
+    assume!(x1.abs() <= 1000 && y1.abs() <= 1000);
+    assume!(x2.abs() <= 1000 && y2.abs() <= 1000);
+
+    let p1 = Point::new(x1, y1);
+    let p2 = Point::new(x2, y2);
+
+    assert!(p1.distance(&p2) >= 0.0);
+}
+
+#[proptest]
+fun test_point_distance_triangle_inequality(x1: i32, y1: i32, x2: i32, y2: i32, x3: i32, y3: i32) {
+    // Property: Triangle inequality: d(p1,p3) <= d(p1,p2) + d(p2,p3)
+    assume!(x1.abs() <= 100 && y1.abs() <= 100);
+    assume!(x2.abs() <= 100 && y2.abs() <= 100);
+    assume!(x3.abs() <= 100 && y3.abs() <= 100);
+
+    let p1 = Point::new(x1, y1);
+    let p2 = Point::new(x2, y2);
+    let p3 = Point::new(x3, y3);
+
+    let d13 = p1.distance(&p3);
+    let d12 = p1.distance(&p2);
+    let d23 = p2.distance(&p3);
+
+    assert!(d13 <= d12 + d23 + 0.0001); // Small tolerance for floating point
+}
+
+#[proptest]
+fun test_counter_increment_increases(count: u8) {
+    // Property: Incrementing always increases the value
+    assume!(count < 250); // Leave room for increments
+
+    let mut counter = Counter::new();
+
+    // Set initial value by incrementing
+    for _ in 0..count {
+        counter.increment();
+    }
+
+    let before = counter.value();
+    counter.increment();
+    let after = counter.value();
+
+    assert_eq!(after, before + 1);
+}
+
+#[proptest]
+fun test_counter_decrement_decreases(count: u8) {
+    // Property: Decrementing always decreases the value (when > 0)
+    assume!(count > 0 && count < 250);
+
+    let mut counter = Counter::new();
+
+    // Set initial value by incrementing
+    for _ in 0..count {
+        counter.increment();
+    }
+
+    let before = counter.value();
+    counter.decrement();
+    let after = counter.value();
+
+    assert_eq!(after, before - 1);
+}
+
+#[proptest]
+fun test_rectangle_doubled_scales_by_two(width: u32, height: u32) {
+    // Property: doubled() always scales both dimensions by 2
+    assume!(width > 0 && height > 0 && width <= 500 && height <= 500);
+
+    let rect = Rectangle { width: width as i32, height: height as i32 };
+    let doubled = rect.doubled();
+
+    assert_eq!(doubled.width, rect.width * 2);
+    assert_eq!(doubled.height, rect.height * 2);
+}
+
+#[proptest]
+fun test_point_setters_preserve_independence(x: i32, y: i32, new_x: i32) {
+    // Property: Setting x doesn't affect y (encapsulation)
+    assume!(x.abs() <= 1000 && y.abs() <= 1000 && new_x.abs() <= 1000);
+
+    let mut point = Point::new(x, y);
+    let original_y = point.y();
+
+    point.set_x(new_x);
+
+    assert_eq!(point.y(), original_y);
+    assert_eq!(point.x(), new_x);
+}
+
+#[proptest]
+fun test_rectangle_can_hold_reflexive(width: u32, height: u32) {
+    // Property: A rectangle can always hold itself
+    assume!(width > 0 && height > 0 && width <= 1000 && height <= 1000);
+
+    let rect = Rectangle { width: width as i32, height: height as i32 };
+    assert!(rect.can_hold(&rect));
+}
