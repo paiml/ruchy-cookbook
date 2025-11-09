@@ -1,0 +1,22 @@
+// Integration tests for Recipe 1.1: Hello World
+// Testing real-world usage scenarios
+
+use std::testing::*;
+
+#[test]
+fun test_main_function_executes() {
+    // Test that main function can execute without panic
+    main();
+    // If we get here without panic, test passes
+    assert!(true);
+}
+
+#[test]
+fun test_main_output_to_stdout() {
+    // Test that main prints to stdout
+    let output = capture_stdout(|| {
+        main();
+    });
+
+    assert_eq!(output.trim(), "Hello, World!");
+}

@@ -1,0 +1,26 @@
+// Property-based tests for Recipe 1.1: Hello World
+// Testing invariant properties
+
+use std::testing::proptest::*;
+
+#[proptest]
+fun test_hello_world_always_same(n: u32) {
+    // Property: hello_world() always returns the same value regardless of when called
+    let result = hello_world();
+    assert_eq!(result, "Hello, World!");
+}
+
+#[proptest]
+fun test_hello_world_never_null(i: i64) {
+    // Property: hello_world() never returns null or empty string
+    let result = hello_world();
+    assert!(result.len() > 0);
+}
+
+#[proptest]
+fun test_hello_world_consistent_format(iteration: usize) {
+    // Property: Output always has consistent format
+    let result = hello_world();
+    assert!(result.contains(", "));
+    assert!(result.ends_with("!"));
+}

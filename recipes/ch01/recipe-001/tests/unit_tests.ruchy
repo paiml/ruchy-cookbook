@@ -1,0 +1,76 @@
+// Unit tests for Recipe 1.1: Hello World
+// Written FIRST following EXTREME TDD methodology
+
+use std::testing::*;
+
+#[test]
+fun test_hello_world_output() {
+    // Test that hello_world returns the expected string
+    let result = hello_world();
+    assert_eq!(result, "Hello, World!");
+}
+
+#[test]
+fun test_hello_world_not_empty() {
+    // Test that output is not empty
+    let result = hello_world();
+    assert!(!result.is_empty());
+}
+
+#[test]
+fun test_hello_world_contains_hello() {
+    // Test that output contains "Hello"
+    let result = hello_world();
+    assert!(result.contains("Hello"));
+}
+
+#[test]
+fun test_hello_world_contains_world() {
+    // Test that output contains "World"
+    let result = hello_world();
+    assert!(result.contains("World"));
+}
+
+#[test]
+fun test_hello_world_proper_punctuation() {
+    // Test that output ends with proper punctuation
+    let result = hello_world();
+    assert!(result.ends_with("!"));
+}
+
+#[test]
+fun test_hello_world_length() {
+    // Test that output has expected length
+    let result = hello_world();
+    assert_eq!(result.len(), 13); // "Hello, World!" is 13 characters
+}
+
+#[test]
+fun test_hello_world_case_sensitive() {
+    // Test proper capitalization
+    let result = hello_world();
+    assert!(result.starts_with("Hello"));
+    assert!(!result.starts_with("hello"));
+}
+
+#[test]
+fun test_hello_world_no_newlines() {
+    // Test that there are no trailing newlines
+    let result = hello_world();
+    assert!(!result.contains("\n"));
+}
+
+#[test]
+fun test_hello_world_idempotent() {
+    // Test that multiple calls return same result
+    let result1 = hello_world();
+    let result2 = hello_world();
+    assert_eq!(result1, result2);
+}
+
+#[test]
+fun test_hello_world_string_type() {
+    // Test that result is valid String type
+    let result = hello_world();
+    assert!(result is String);
+}
