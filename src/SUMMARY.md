@@ -1,7 +1,7 @@
 # Summary
 
-[Introduction](./introduction.md)
-[How to Use This Cookbook](./how-to-use.md)
+- [Introduction](./introduction.md)
+- [How to Use This Cookbook](./how-to-use.md)
 
 ---
 
