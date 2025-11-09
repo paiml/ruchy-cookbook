@@ -1,0 +1,317 @@
+// Recipe 1.9: Loops and Iteration
+//
+// Demonstrates Ruchy's loop constructs:
+// - while loops
+// - for loops with ranges
+// - for loops with arrays
+// - break statements
+// - continue statements
+// - Nested loops
+// - Common loop patterns
+//
+// Written using EXTREME TDD - all features tested and verified to work
+
+// ============================================
+// WHILE LOOPS
+// ============================================
+
+fun demonstrate_while_loops() {
+    println("=== While Loops ===")
+
+    // Basic while loop
+    let mut count = 1
+    println("Counting to 5:")
+    while count <= 5 {
+        println("  {}", count)
+        count = count + 1
+    }
+
+    // Countdown
+    let mut countdown = 5
+    println("Countdown:")
+    while countdown > 0 {
+        println("  {}...", countdown)
+        countdown = countdown - 1
+    }
+    println("  Liftoff!")
+
+    // Sum with while loop
+    let mut i = 1
+    let mut sum = 0
+    while i <= 10 {
+        sum = sum + i
+        i = i + 1
+    }
+    println("Sum of 1-10: {}", sum)
+
+    println("")
+}
+
+// ============================================
+// FOR LOOPS
+// ============================================
+
+fun demonstrate_for_loops() {
+    println("=== For Loops ===")
+
+    // For loop with exclusive range
+    println("Range 0..5 (exclusive):")
+    for i in 0..5 {
+        println("  {}", i)
+    }
+
+    // For loop with inclusive range
+    println("Range 0..=5 (inclusive):")
+    for i in 0..=5 {
+        println("  {}", i)
+    }
+
+    // For loop with array
+    let numbers = [10, 20, 30, 40, 50]
+    println("Array iteration:")
+    for num in numbers {
+        println("  {}", num)
+    }
+
+    // Sum with for loop
+    let mut sum = 0
+    for i in 1..=10 {
+        sum = sum + i
+    }
+    println("Sum with for loop: {}", sum)
+
+    println("")
+}
+
+// ============================================
+// BREAK STATEMENTS
+// ============================================
+
+fun demonstrate_break() {
+    println("=== Break Statements ===")
+
+    // Break out of infinite loop
+    let mut count = 0
+    while true {
+        count = count + 1
+        println("  Count: {}", count)
+        if count >= 3 {
+            println("  Breaking!")
+            break
+        }
+    }
+
+    // Early exit when condition met
+    let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    let mut i = 0
+    println("Find first number > 5:")
+    while i < 10 {
+        if numbers[i] > 5 {
+            println("  Found: {}", numbers[i])
+            break
+        }
+        i = i + 1
+    }
+
+    println("")
+}
+
+// ============================================
+// CONTINUE STATEMENTS
+// ============================================
+
+fun demonstrate_continue() {
+    println("=== Continue Statements ===")
+
+    // Skip even numbers
+    println("Odd numbers 1-10:")
+    let mut i = 0
+    while i < 10 {
+        i = i + 1
+        if i % 2 == 0 {
+            continue
+        }
+        println("  {}", i)
+    }
+
+    // Skip specific value
+    println("Numbers 1-5, skip 3:")
+    for num in 1..=5 {
+        if num == 3 {
+            continue
+        }
+        println("  {}", num)
+    }
+
+    println("")
+}
+
+// ============================================
+// NESTED LOOPS
+// ============================================
+
+fun demonstrate_nested_loops() {
+    println("=== Nested Loops ===")
+
+    // Multiplication table
+    println("3x3 Multiplication table:")
+    for i in 1..=3 {
+        for j in 1..=3 {
+            let product = i * j
+            println("  {} x {} = {}", i, j, product)
+        }
+    }
+
+    // Nested grid pattern
+    println("Grid pattern:")
+    let mut row = 0
+    while row < 3 {
+        let mut col = 0
+        while col < 3 {
+            println("  ({}, {})", row, col)
+            col = col + 1
+        }
+        row = row + 1
+    }
+
+    println("")
+}
+
+// ============================================
+// COMMON LOOP PATTERNS
+// ============================================
+
+fun demonstrate_loop_patterns() {
+    println("=== Common Loop Patterns ===")
+
+    // Sum accumulation
+    let numbers = [10, 20, 30, 40, 50]
+    let mut sum = 0
+    for num in numbers {
+        sum = sum + num
+    }
+    println("Sum: {}", sum)
+
+    // Product accumulation (factorial)
+    let mut factorial = 1
+    for i in 1..=5 {
+        factorial = factorial * i
+    }
+    println("5! = {}", factorial)
+
+    // Count matching elements
+    let values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    let mut count = 0
+    for val in values {
+        if val > 5 {
+            count = count + 1
+        }
+    }
+    println("Count > 5: {}", count)
+
+    // Find maximum
+    let data = [45, 23, 67, 12, 89, 34]
+    let mut max = data[0]
+    for val in data {
+        if val > max {
+            max = val
+        }
+    }
+    println("Maximum: {}", max)
+
+    // Filter even numbers
+    println("Even numbers from [1,2,3,4,5,6]:")
+    for num in [1, 2, 3, 4, 5, 6] {
+        if num % 2 == 0 {
+            println("  {}", num)
+        }
+    }
+
+    println("")
+}
+
+// ============================================
+// PRACTICAL EXAMPLES
+// ============================================
+
+fun demonstrate_practical_examples() {
+    println("=== Practical Examples ===")
+
+    // Example 1: Fibonacci sequence
+    println("Fibonacci (first 10):")
+    let mut a = 0
+    let mut b = 1
+    let mut count = 0
+    while count < 10 {
+        println("  {}", a)
+        let temp = a
+        a = b
+        b = temp + b
+        count = count + 1
+    }
+
+    // Example 2: FizzBuzz
+    println("FizzBuzz (1-15):")
+    for i in 1..=15 {
+        if i % 15 == 0 {
+            println("  FizzBuzz")
+        } else {
+            if i % 3 == 0 {
+                println("  Fizz")
+            } else {
+                if i % 5 == 0 {
+                    println("  Buzz")
+                } else {
+                    println("  {}", i)
+                }
+            }
+        }
+    }
+
+    // Example 3: Prime check
+    let number = 17
+    let mut is_prime = true
+    let mut i = 2
+    while i * i <= number {
+        if number % i == 0 {
+            is_prime = false
+            break
+        }
+        i = i + 1
+    }
+    println("{} is prime? {}", number, is_prime)
+
+    println("")
+}
+
+// ============================================
+// MAIN
+// ============================================
+
+fun main() {
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Recipe 1.9: Loops and Iteration                 ║")
+    println("║  (Based on EXTREME TDD - all features tested!)    ║")
+    println("╚═══════════════════════════════════════════════════╝")
+    println("")
+
+    demonstrate_while_loops()
+    demonstrate_for_loops()
+    demonstrate_break()
+    demonstrate_continue()
+    demonstrate_nested_loops()
+    demonstrate_loop_patterns()
+    demonstrate_practical_examples()
+
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Key Takeaways                                    ║")
+    println("╠═══════════════════════════════════════════════════╣")
+    println("║  ✅ while loops: basic iteration                  ║")
+    println("║  ✅ for loops: ranges (0..5, 0..=5)               ║")
+    println("║  ✅ for loops: array iteration                    ║")
+    println("║  ✅ break: exit loop early                        ║")
+    println("║  ✅ continue: skip to next iteration              ║")
+    println("║  ✅ Nested loops work perfectly                   ║")
+    println("║  ✅ Array indexing in loops                       ║")
+    println("╚═══════════════════════════════════════════════════╝")
+}
