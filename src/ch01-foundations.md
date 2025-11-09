@@ -642,9 +642,262 @@ ruchy tests/unit_tests.ruchy
 ## Recipe 1.4: Basic Data Types
 
 **Difficulty**: Beginner
-**Status**: 🚧 Coming Soon
+**Time**: 15-20 minutes
+**Test Coverage**: 26/26 tests passing (100%)
+**Status**: ✅ WORKING (verified with EXTREME TDD)
 
-This recipe will cover integers, floats, booleans, and characters.
+### Problem
+
+You need to work with different kinds of data in your programs: whole numbers, decimal numbers, yes/no values, and text. What basic data types does Ruchy support? How do you perform operations on them? How do you convert between types?
+
+### Solution
+
+```ruchy
+// Integers
+let x: i32 = 42
+let y = -100  // Type inferred
+
+// Floats
+let pi: f64 = 3.14159
+let temp = 20.5  // Type inferred
+
+// Booleans
+let is_ready: bool = true
+let has_data = false  // Type inferred
+
+// Strings
+let name = "Alice"
+let message = "Hello, World!"
+
+// Arithmetic
+let sum = 10 + 5
+let product = 3.14 * 2.0
+let quotient = 20 / 3  // Integer division: 6
+let remainder = 20 % 3  // Modulo: 2
+
+// Comparisons
+let is_equal = (5 == 5)  // true
+let is_greater = (10 > 5)  // true
+
+// Type conversion
+let num = 42
+let num_float = num as f64  // 42.0
+```
+
+### Discussion
+
+Ruchy provides a rich set of basic data types for different kinds of data:
+
+**Integers**:
+```ruchy
+let x: i32 = 42         // 32-bit signed integer
+let y = -100            // Type inferred as i32
+let large = 2147483647  // Max i32 value
+```
+
+Integers support arithmetic: `+`, `-`, `*`, `/`, `%`
+
+**Floats**:
+```ruchy
+let pi: f64 = 3.14159   // 64-bit float
+let e = 2.71828         // Type inferred as f64
+let neg = -1.5          // Negative float
+```
+
+Float division gives decimal results: `10.0 / 3.0 = 3.333...`
+
+**Booleans**:
+```ruchy
+let x: bool = true
+let y = false
+
+// Boolean operators
+let and_result = true && false   // false
+let or_result = true || false    // true
+let not_result = !true           // false
+```
+
+**Strings**:
+```ruchy
+let name = "Alice"
+let greeting = "Hello, World!"
+let empty = ""
+
+// Multiline strings work
+let poem = "Line 1
+Line 2"
+```
+
+**Comparisons**:
+```ruchy
+let x = 10
+let y = 20
+
+// All comparison operators
+x == y   // false (equality)
+x != y   // true (inequality)
+x < y    // true (less than)
+x > y    // false (greater than)
+x <= y   // true (less or equal)
+x >= y   // false (greater or equal)
+```
+
+**Type Conversion**:
+```ruchy
+// Convert integer to float
+let num = 42
+let num_float = num as f64  // 42.0
+
+// Integer vs Float division
+10 / 3     // 3 (integer division, truncates)
+10.0 / 3.0 // 3.333... (float division)
+```
+
+**Important Differences from Other Languages**:
+
+1. **Integer Division Truncates**:
+```ruchy
+let result = 10 / 3  // 3 (not 3.33...)
+```
+
+Use float types for decimal results.
+
+2. **No Outer Parentheses on Boolean Returns** ⚠️:
+```ruchy
+// This FAILS
+fun test() -> bool {
+    (x && y)  // ERROR!
+}
+
+// This WORKS
+fun test() -> bool {
+    x && y  // OK
+}
+```
+
+Ruchy's parser doesn't handle outer parentheses around compound boolean expressions as return values.
+
+**Performance Characteristics**:
+- Integer arithmetic: O(1) - extremely fast
+- Float arithmetic: O(1) - fast (hardware-accelerated)
+- Comparisons: O(1) - single CPU instruction
+- Type conversions: O(1) - compile-time or single instruction
+
+**Safety Guarantees**:
+- Type-safe: Can't mix types without explicit conversion
+- No silent truncation: Integer division behavior is well-defined
+- No null values: Use `Option<T>` for optional values
+- Overflow behavior: Can use checked arithmetic (checked_add, etc.)
+
+### Variations
+
+**Variation 1: Temperature Conversion**
+
+```ruchy
+let celsius = 20.0
+let fahrenheit = celsius * 9.0 / 5.0 + 32.0
+println("{}°C = {}°F", celsius, fahrenheit)  // 20°C = 68°F
+```
+
+**Variation 2: Even/Odd Check**
+
+```ruchy
+let number = 42
+let is_even = number % 2 == 0
+println("{} is even? {}", number, is_even)  // 42 is even? true
+```
+
+**Variation 3: Simple Calculator**
+
+```ruchy
+let a = 15
+let b = 7
+
+println("a + b = {}", a + b)  // 22
+println("a - b = {}", a - b)  // 8
+println("a * b = {}", a * b)  // 105
+println("a / b = {}", a / b)  // 2 (integer division)
+println("a % b = {}", a % b)  // 1 (remainder)
+```
+
+### See Also
+
+- Recipe 1.3: Variables and Mutability
+- Recipe 1.5: Functions and Return Values
+- Recipe 1.6: Control Flow and Conditionals
+- Chapter 2: String & Text Processing
+
+### Tests
+
+All 26 tests pass ✅:
+
+<details>
+<summary>Unit Tests (click to expand)</summary>
+
+**Full implementation**: [recipes/ch01/recipe-004/src/main.ruchy](../../recipes/ch01/recipe-004/src/main.ruchy)
+
+**Test suite**: [recipes/ch01/recipe-004/tests/unit_tests.ruchy](../../recipes/ch01/recipe-004/tests/unit_tests.ruchy)
+
+**Test Results**:
+```
+Test Results: 26/26 tests passed
+- Integers: 4/4 tests ✅
+- Floats: 3/3 tests ✅
+- Booleans: 3/3 tests ✅
+- Strings: 3/3 tests ✅
+- Comparisons: 6/6 tests ✅
+- Type mixing: 3/3 tests ✅
+- Special values: 2/2 tests ✅
+- Modulo: 2/2 tests ✅
+```
+
+**Key Tests**:
+```ruchy
+// Integer arithmetic
+fun test_i32_arithmetic() -> bool {
+    let x = 10
+    let y = 5
+    let sum = x + y
+    let diff = x - y
+    let prod = x * y
+    let quot = x / y
+    sum == 15 && diff == 5 && prod == 50 && quot == 2
+}
+
+// Float division
+fun test_float_division() -> bool {
+    let x = 10.0
+    let y = 3.0
+    let result = x / y
+    result > 3.3 && result < 3.4
+}
+
+// Boolean operators
+fun test_bool_operators() -> bool {
+    let a = true
+    let b = false
+    let and_result = a && b
+    let or_result = a || b
+    let not_a = !a
+    and_result == false && or_result == true && not_a == false
+}
+
+// Type conversion
+fun test_mixed_arithmetic_int_float() -> bool {
+    let x = 10
+    let y = 3.0
+    let result = x as f64 / y
+    result > 3.0 && result < 4.0
+}
+```
+
+**How to run**:
+```bash
+cd recipes/ch01/recipe-004
+ruchy tests/unit_tests.ruchy
+```
+
+</details>
 
 ---
 
