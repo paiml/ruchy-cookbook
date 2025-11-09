@@ -1,0 +1,236 @@
+// Recipe 1.11: Pattern Matching
+// Demonstrates Ruchy's match expressions and pattern matching capabilities
+
+// ============================================
+// BASIC PATTERN MATCHING
+// ============================================
+
+fun match_number(n: i32) -> String {
+    match n {
+        1 => "one",
+        2 => "two",
+        3 => "three",
+        _ => "other"
+    }
+}
+
+fun example_basic_match() {
+    println("=== Basic Pattern Matching ===")
+
+    println("1 -> {}", match_number(1))
+    println("2 -> {}", match_number(2))
+    println("99 -> {}", match_number(99))
+}
+
+// ============================================
+// RANGE MATCHING
+// ============================================
+
+fun match_range(n: i32) -> String {
+    match n {
+        0..=10 => "small",
+        11..=100 => "medium",
+        _ => "large"
+    }
+}
+
+fun example_range_matching() {
+    println("\n=== Range Matching ===")
+
+    println("5 -> {}", match_range(5))
+    println("50 -> {}", match_range(50))
+    println("500 -> {}", match_range(500))
+}
+
+// ============================================
+// CONDITIONAL MATCHING (GUARDS)
+// ============================================
+
+fun classify_number(n: i32) -> String {
+    match n {
+        0 => "zero",
+        n if n > 0 => "positive",
+        _ => "negative"
+    }
+}
+
+fun example_conditional_matching() {
+    println("\n=== Conditional Matching (Guards) ===")
+
+    println("0 -> {}", classify_number(0))
+    println("42 -> {}", classify_number(42))
+    println("-10 -> {}", classify_number(-10))
+}
+
+// ============================================
+// BOOLEAN MATCHING
+// ============================================
+
+fun bool_to_string(b: bool) -> String {
+    match b {
+        true => "yes",
+        false => "no"
+    }
+}
+
+fun example_boolean_matching() {
+    println("\n=== Boolean Matching ===")
+
+    println("true -> {}", bool_to_string(true))
+    println("false -> {}", bool_to_string(false))
+}
+
+// ============================================
+// PRACTICAL EXAMPLES
+// ============================================
+
+// HTTP status code classifier
+fun classify_http_status(code: i32) -> String {
+    match code {
+        200..=299 => "Success",
+        300..=399 => "Redirect",
+        400..=499 => "Client Error",
+        500..=599 => "Server Error",
+        _ => "Unknown"
+    }
+}
+
+// Grade calculator
+fun letter_grade(score: i32) -> String {
+    match score {
+        90..=100 => "A",
+        80..=89 => "B",
+        70..=79 => "C",
+        60..=69 => "D",
+        _ => "F"
+    }
+}
+
+// Day of week classifier
+fun classify_day(day: i32) -> String {
+    match day {
+        1 => "Monday",
+        2 => "Tuesday",
+        3 => "Wednesday",
+        4 => "Thursday",
+        5 => "Friday",
+        6 => "Saturday",
+        7 => "Sunday",
+        _ => "Invalid day"
+    }
+}
+
+// Temperature classifier
+fun classify_temperature(temp: i32) -> String {
+    match temp {
+        t if t < 0 => "freezing",
+        0..=15 => "cold",
+        16..=25 => "comfortable",
+        26..=35 => "warm",
+        _ => "hot"
+    }
+}
+
+fun example_practical_patterns() {
+    println("\n=== Practical Examples ===")
+
+    println("HTTP 200 -> {}", classify_http_status(200))
+    println("HTTP 404 -> {}", classify_http_status(404))
+    println("HTTP 500 -> {}", classify_http_status(500))
+
+    println("")
+    println("Score 95 -> {}", letter_grade(95))
+    println("Score 75 -> {}", letter_grade(75))
+    println("Score 55 -> {}", letter_grade(55))
+
+    println("")
+    println("Day 1 -> {}", classify_day(1))
+    println("Day 5 -> {}", classify_day(5))
+
+    println("")
+    println("Temp -5°C -> {}", classify_temperature(-5))
+    println("Temp 20°C -> {}", classify_temperature(20))
+    println("Temp 30°C -> {}", classify_temperature(30))
+}
+
+// ============================================
+// IF-ELSE CHAIN ALTERNATIVE
+// ============================================
+
+// For comparison: same logic using if-else
+fun classify_with_if(n: i32) -> String {
+    if n == 0 {
+        return "zero"
+    } else if n > 0 {
+        return "positive"
+    } else {
+        return "negative"
+    }
+}
+
+fun example_if_vs_match() {
+    println("\n=== Match vs If-Else ===")
+
+    let n = 42
+
+    // Using match
+    let result1 = classify_number(n)
+    println("Match: {} -> {}", n, result1)
+
+    // Using if-else
+    let result2 = classify_with_if(n)
+    println("If-else: {} -> {}", n, result2)
+
+    println("\nMatch expressions are more concise and expressive!")
+}
+
+// ============================================
+// COMPLEX MATCHING
+// ============================================
+
+// Classify numbers by multiple properties
+fun classify_complex(n: i32) -> String {
+    match n {
+        0 => "zero",
+        1 => "one (unit)",
+        n if n > 0 && n % 2 == 0 => "positive even",
+        n if n > 0 && n % 2 == 1 => "positive odd",
+        n if n < 0 && n % 2 == 0 => "negative even",
+        _ => "negative odd"
+    }
+}
+
+fun example_complex_matching() {
+    println("\n=== Complex Matching ===")
+
+    println("0 -> {}", classify_complex(0))
+    println("1 -> {}", classify_complex(1))
+    println("4 -> {}", classify_complex(4))
+    println("7 -> {}", classify_complex(7))
+    println("-4 -> {}", classify_complex(-4))
+    println("-7 -> {}", classify_complex(-7))
+}
+
+// ============================================
+// MAIN
+// ============================================
+
+fun main() {
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║       Recipe 1.11: Pattern Matching             ║")
+    println("╚═══════════════════════════════════════════════════╝")
+    println("")
+
+    example_basic_match()
+    example_range_matching()
+    example_conditional_matching()
+    example_boolean_matching()
+    example_practical_patterns()
+    example_if_vs_match()
+    example_complex_matching()
+
+    println("")
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  All examples completed successfully!           ║")
+    println("╚═══════════════════════════════════════════════════╝")
+}

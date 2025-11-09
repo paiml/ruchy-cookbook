@@ -1,0 +1,363 @@
+// Recipe 1.11: Pattern Matching - Unit Tests
+// EXTREME TDD: Write tests FIRST, then implementation
+
+// ============================================
+// FUNCTION IMPLEMENTATIONS (TO BE TESTED)
+// ============================================
+
+// Test if Ruchy supports match expressions
+fun match_number(n: i32) -> String {
+    match n {
+        1 => "one",
+        2 => "two",
+        3 => "three",
+        _ => "other"
+    }
+}
+
+// Test match with ranges (if supported)
+fun match_range(n: i32) -> String {
+    match n {
+        0..=10 => "small",
+        11..=100 => "medium",
+        _ => "large"
+    }
+}
+
+// Test match with multiple conditions
+fun classify_number(n: i32) -> String {
+    match n {
+        0 => "zero",
+        n if n > 0 => "positive",
+        _ => "negative"
+    }
+}
+
+// Test match with boolean
+fun bool_to_string(b: bool) -> String {
+    match b {
+        true => "yes",
+        false => "no"
+    }
+}
+
+// Fallback: if-else chain (if match doesn't work)
+fun classify_with_if(n: i32) -> String {
+    if n == 1 {
+        return "one"
+    } else if n == 2 {
+        return "two"
+    } else if n == 3 {
+        return "three"
+    } else {
+        return "other"
+    }
+}
+
+fun range_with_if(n: i32) -> String {
+    if n >= 0 && n <= 10 {
+        return "small"
+    } else if n >= 11 && n <= 100 {
+        return "medium"
+    } else {
+        return "large"
+    }
+}
+
+fun classify_sign_with_if(n: i32) -> String {
+    if n == 0 {
+        return "zero"
+    } else if n > 0 {
+        return "positive"
+    } else {
+        return "negative"
+    }
+}
+
+// ============================================
+// BASIC PATTERN MATCHING TESTS
+// ============================================
+
+fun test_match_number_one() -> bool {
+    let result = match_number(1)
+    result == "one"
+}
+
+fun test_match_number_two() -> bool {
+    let result = match_number(2)
+    result == "two"
+}
+
+fun test_match_number_other() -> bool {
+    let result = match_number(99)
+    result == "other"
+}
+
+// ============================================
+// RANGE MATCHING TESTS
+// ============================================
+
+fun test_match_range_small() -> bool {
+    let result = match_range(5)
+    result == "small"
+}
+
+fun test_match_range_medium() -> bool {
+    let result = match_range(50)
+    result == "medium"
+}
+
+fun test_match_range_large() -> bool {
+    let result = match_range(500)
+    result == "large"
+}
+
+// ============================================
+// CONDITIONAL MATCHING TESTS
+// ============================================
+
+fun test_classify_zero() -> bool {
+    let result = classify_number(0)
+    result == "zero"
+}
+
+fun test_classify_positive() -> bool {
+    let result = classify_number(42)
+    result == "positive"
+}
+
+fun test_classify_negative() -> bool {
+    let result = classify_number(-10)
+    result == "negative"
+}
+
+// ============================================
+// BOOLEAN MATCHING TESTS
+// ============================================
+
+fun test_bool_true() -> bool {
+    let result = bool_to_string(true)
+    result == "yes"
+}
+
+fun test_bool_false() -> bool {
+    let result = bool_to_string(false)
+    result == "no"
+}
+
+// ============================================
+// IF-ELSE CHAIN TESTS (FALLBACK)
+// ============================================
+
+fun test_if_classify_one() -> bool {
+    let result = classify_with_if(1)
+    result == "one"
+}
+
+fun test_if_classify_other() -> bool {
+    let result = classify_with_if(99)
+    result == "other"
+}
+
+fun test_if_range_small() -> bool {
+    let result = range_with_if(5)
+    result == "small"
+}
+
+fun test_if_range_large() -> bool {
+    let result = range_with_if(500)
+    result == "large"
+}
+
+fun test_if_sign_zero() -> bool {
+    let result = classify_sign_with_if(0)
+    result == "zero"
+}
+
+fun test_if_sign_positive() -> bool {
+    let result = classify_sign_with_if(42)
+    result == "positive"
+}
+
+fun test_if_sign_negative() -> bool {
+    let result = classify_sign_with_if(-10)
+    result == "negative"
+}
+
+// ============================================
+// TEST RUNNER
+// ============================================
+
+fun main() {
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║    Recipe 1.11: Pattern Matching - Tests        ║")
+    println("╚═══════════════════════════════════════════════════╝")
+    println("")
+
+    let mut passed = 0
+    let mut total = 0
+
+    println("=== Basic Pattern Matching Tests ===")
+    total = total + 1
+    if test_match_number_one() {
+        println("✅ Test 1: Match number one")
+        passed = passed + 1
+    } else {
+        println("❌ Test 1: FAILED")
+    }
+
+    total = total + 1
+    if test_match_number_two() {
+        println("✅ Test 2: Match number two")
+        passed = passed + 1
+    } else {
+        println("❌ Test 2: FAILED")
+    }
+
+    total = total + 1
+    if test_match_number_other() {
+        println("✅ Test 3: Match number other")
+        passed = passed + 1
+    } else {
+        println("❌ Test 3: FAILED")
+    }
+
+    println("")
+    println("=== Range Matching Tests ===")
+    total = total + 1
+    if test_match_range_small() {
+        println("✅ Test 4: Match range small")
+        passed = passed + 1
+    } else {
+        println("❌ Test 4: FAILED")
+    }
+
+    total = total + 1
+    if test_match_range_medium() {
+        println("✅ Test 5: Match range medium")
+        passed = passed + 1
+    } else {
+        println("❌ Test 5: FAILED")
+    }
+
+    total = total + 1
+    if test_match_range_large() {
+        println("✅ Test 6: Match range large")
+        passed = passed + 1
+    } else {
+        println("❌ Test 6: FAILED")
+    }
+
+    println("")
+    println("=== Conditional Matching Tests ===")
+    total = total + 1
+    if test_classify_zero() {
+        println("✅ Test 7: Classify zero")
+        passed = passed + 1
+    } else {
+        println("❌ Test 7: FAILED")
+    }
+
+    total = total + 1
+    if test_classify_positive() {
+        println("✅ Test 8: Classify positive")
+        passed = passed + 1
+    } else {
+        println("❌ Test 8: FAILED")
+    }
+
+    total = total + 1
+    if test_classify_negative() {
+        println("✅ Test 9: Classify negative")
+        passed = passed + 1
+    } else {
+        println("❌ Test 9: FAILED")
+    }
+
+    println("")
+    println("=== Boolean Matching Tests ===")
+    total = total + 1
+    if test_bool_true() {
+        println("✅ Test 10: Boolean true")
+        passed = passed + 1
+    } else {
+        println("❌ Test 10: FAILED")
+    }
+
+    total = total + 1
+    if test_bool_false() {
+        println("✅ Test 11: Boolean false")
+        passed = passed + 1
+    } else {
+        println("❌ Test 11: FAILED")
+    }
+
+    println("")
+    println("=== If-Else Chain Tests (Fallback) ===")
+    total = total + 1
+    if test_if_classify_one() {
+        println("✅ Test 12: If-else classify one")
+        passed = passed + 1
+    } else {
+        println("❌ Test 12: FAILED")
+    }
+
+    total = total + 1
+    if test_if_classify_other() {
+        println("✅ Test 13: If-else classify other")
+        passed = passed + 1
+    } else {
+        println("❌ Test 13: FAILED")
+    }
+
+    total = total + 1
+    if test_if_range_small() {
+        println("✅ Test 14: If-else range small")
+        passed = passed + 1
+    } else {
+        println("❌ Test 14: FAILED")
+    }
+
+    total = total + 1
+    if test_if_range_large() {
+        println("✅ Test 15: If-else range large")
+        passed = passed + 1
+    } else {
+        println("❌ Test 15: FAILED")
+    }
+
+    total = total + 1
+    if test_if_sign_zero() {
+        println("✅ Test 16: If-else sign zero")
+        passed = passed + 1
+    } else {
+        println("❌ Test 16: FAILED")
+    }
+
+    total = total + 1
+    if test_if_sign_positive() {
+        println("✅ Test 17: If-else sign positive")
+        passed = passed + 1
+    } else {
+        println("❌ Test 17: FAILED")
+    }
+
+    total = total + 1
+    if test_if_sign_negative() {
+        println("✅ Test 18: If-else sign negative")
+        passed = passed + 1
+    } else {
+        println("❌ Test 18: FAILED")
+    }
+
+    println("")
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Test Results: {}/{} tests passed                  ║", passed, total)
+    println("╚═══════════════════════════════════════════════════╝")
+
+    if passed == total {
+        println("✅ All tests PASSED!")
+    } else {
+        println("❌ Some tests FAILED")
+    }
+}

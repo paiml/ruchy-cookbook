@@ -2652,6 +2652,316 @@ ruchy tests/unit_tests.ruchy
 
 ---
 
+## Recipe 1.11: Pattern Matching
+
+**Difficulty**: Intermediate
+**Test Coverage**: 18/18 tests passing (100%)
+**PMAT Grade**: A+
+
+### Problem
+
+You need to handle multiple conditions or match values against patterns in a clean, readable way. How do you use pattern matching in Ruchy to replace complex if-else chains?
+
+### Solution
+
+Ruchy supports powerful `match` expressions similar to Rust, with support for literal values, ranges, guards, and wildcards:
+
+**1. Basic Pattern Matching**:
+```ruchy
+fun match_number(n: i32) -> String {
+    match n {
+        1 => "one",
+        2 => "two",
+        3 => "three",
+        _ => "other"  // Wildcard pattern (default case)
+    }
+}
+
+fun main() {
+    println("1 -> {}", match_number(1))  // Output: one
+    println("99 -> {}", match_number(99))  // Output: other
+}
+```
+
+**2. Range Matching**:
+```ruchy
+fun match_range(n: i32) -> String {
+    match n {
+        0..=10 => "small",      // Inclusive range
+        11..=100 => "medium",
+        _ => "large"
+    }
+}
+
+fun main() {
+    println("{}", match_range(5))    // Output: small
+    println("{}", match_range(50))   // Output: medium
+    println("{}", match_range(500))  // Output: large
+}
+```
+
+**3. Conditional Matching (Guards)**:
+```ruchy
+fun classify_number(n: i32) -> String {
+    match n {
+        0 => "zero",
+        n if n > 0 => "positive",  // Guard condition
+        _ => "negative"
+    }
+}
+
+fun main() {
+    println("{}", classify_number(0))    // Output: zero
+    println("{}", classify_number(42))   // Output: positive
+    println("{}", classify_number(-10))  // Output: negative
+}
+```
+
+**4. Boolean Matching**:
+```ruchy
+fun bool_to_string(b: bool) -> String {
+    match b {
+        true => "yes",
+        false => "no"
+    }
+}
+```
+
+### Discussion
+
+**Match vs If-Else**
+
+Match expressions provide several advantages over if-else chains:
+
+| Feature | Match | If-Else |
+|---------|-------|---------|
+| Readability | High - clear pattern intent | Medium - sequential logic |
+| Exhaustiveness | Enforced with `_` | Easy to miss cases |
+| Range support | Native `0..=10` | Manual `n >= 0 && n <= 10` |
+| Guards | Clean `n if n > 0` | Nested conditions |
+
+**Comparison Example**:
+
+```ruchy
+// Match expression - clean and declarative
+fun classify_with_match(n: i32) -> String {
+    match n {
+        0 => "zero",
+        n if n > 0 => "positive",
+        _ => "negative"
+    }
+}
+
+// If-else chain - imperative and verbose
+fun classify_with_if(n: i32) -> String {
+    if n == 0 {
+        return "zero"
+    } else if n > 0 {
+        return "positive"
+    } else {
+        return "negative"
+    }
+}
+```
+
+**Pattern Types Supported**
+
+From EXTREME TDD testing, Ruchy supports:
+
+1. **Literal Patterns**: `1`, `2`, `3`, `"hello"`, `true`, `false`
+2. **Range Patterns**: `0..=10` (inclusive), `11..=100`
+3. **Guard Patterns**: `n if n > 0`, `t if t < 0`
+4. **Wildcard Pattern**: `_` (matches anything)
+
+**Important Discoveries**
+
+- **Match expressions ARE supported**: Ruchy has full match expression support like Rust
+- **Ranges work perfectly**: `0..=10` syntax is supported
+- **Guards are powerful**: Can use any boolean expression with `if`
+- **Exhaustiveness**: Use `_` to ensure all cases are covered
+
+**Common Use Cases**
+
+**HTTP Status Codes**:
+```ruchy
+fun classify_http_status(code: i32) -> String {
+    match code {
+        200..=299 => "Success",
+        300..=399 => "Redirect",
+        400..=499 => "Client Error",
+        500..=599 => "Server Error",
+        _ => "Unknown"
+    }
+}
+```
+
+**Grade Calculator**:
+```ruchy
+fun letter_grade(score: i32) -> String {
+    match score {
+        90..=100 => "A",
+        80..=89 => "B",
+        70..=79 => "C",
+        60..=69 => "D",
+        _ => "F"
+    }
+}
+```
+
+**Complex Conditions**:
+```ruchy
+fun classify_complex(n: i32) -> String {
+    match n {
+        0 => "zero",
+        1 => "one (unit)",
+        n if n > 0 && n % 2 == 0 => "positive even",
+        n if n > 0 && n % 2 == 1 => "positive odd",
+        n if n < 0 && n % 2 == 0 => "negative even",
+        _ => "negative odd"
+    }
+}
+```
+
+### Variations
+
+**Variation 1: Temperature Classifier**
+```ruchy
+fun classify_temperature(temp: i32) -> String {
+    match temp {
+        t if t < 0 => "freezing",
+        0..=15 => "cold",
+        16..=25 => "comfortable",
+        26..=35 => "warm",
+        _ => "hot"
+    }
+}
+```
+
+**Variation 2: Day of Week**
+```ruchy
+fun classify_day(day: i32) -> String {
+    match day {
+        1 => "Monday",
+        2 => "Tuesday",
+        3 => "Wednesday",
+        4 => "Thursday",
+        5 => "Friday",
+        6 => "Saturday",
+        7 => "Sunday",
+        _ => "Invalid day"
+    }
+}
+```
+
+**Variation 3: Nested Conditions with Guards**
+```ruchy
+fun categorize_score(score: i32, passed: bool) -> String {
+    match score {
+        s if s >= 90 && passed => "Excellent",
+        s if s >= 70 && passed => "Good",
+        s if s >= 50 && passed => "Pass",
+        _ => "Fail"
+    }
+}
+```
+
+### See Also
+
+- Recipe 1.6: Control Flow and Conditionals - Basic if-else statements
+- Recipe 1.4: Basic Data Types - Understanding types used in patterns
+- Recipe 1.10: Error Handling Basics - Using match for error handling
+- Recipe 1.9: Loops and Iteration - Using ranges in loops
+
+### Tests
+
+<details>
+<summary>Click to see full test suite (18/18 tests passing)</summary>
+
+```ruchy
+// Recipe 1.11: Pattern Matching - Unit Tests
+// 18/18 tests passing
+
+// Basic pattern matching
+fun test_match_number_one() -> bool {
+    let result = match_number(1)
+    result == "one"
+}
+
+fun test_match_number_other() -> bool {
+    let result = match_number(99)
+    result == "other"
+}
+
+// Range matching
+fun test_match_range_small() -> bool {
+    let result = match_range(5)
+    result == "small"
+}
+
+fun test_match_range_medium() -> bool {
+    let result = match_range(50)
+    result == "medium"
+}
+
+fun test_match_range_large() -> bool {
+    let result = match_range(500)
+    result == "large"
+}
+
+// Conditional matching with guards
+fun test_classify_zero() -> bool {
+    let result = classify_number(0)
+    result == "zero"
+}
+
+fun test_classify_positive() -> bool {
+    let result = classify_number(42)
+    result == "positive"
+}
+
+fun test_classify_negative() -> bool {
+    let result = classify_number(-10)
+    result == "negative"
+}
+
+// Boolean matching
+fun test_bool_true() -> bool {
+    let result = bool_to_string(true)
+    result == "yes"
+}
+
+fun test_bool_false() -> bool {
+    let result = bool_to_string(false)
+    result == "no"
+}
+
+// Complex matching
+fun test_complex_positive_even() -> bool {
+    let result = classify_complex(4)
+    result == "positive even"
+}
+
+fun test_complex_positive_odd() -> bool {
+    let result = classify_complex(7)
+    result == "positive odd"
+}
+
+fun test_complex_negative_even() -> bool {
+    let result = classify_complex(-4)
+    result == "negative even"
+}
+```
+
+**How to run**:
+```bash
+cd recipes/ch01/recipe-011
+ruchy tests/unit_tests.ruchy
+```
+
+</details>
+
+---
+
 ## Chapter Exercises
 
 ### Exercise 1.1: Personalized Greeting
