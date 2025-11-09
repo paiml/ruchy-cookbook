@@ -1,252 +1,225 @@
 // Recipe 1.3: Variables and Mutability
-// Implementation written AFTER tests following EXTREME TDD
+//
+// Demonstrates Ruchy's variable features:
+// - Immutable variables with 'let'
+// - Mutable variables with 'let mut'
+// - Type annotations
+// - Shadowing
+// - Type inference
+// - Scopes
+//
+// Written using EXTREME TDD - all features tested and verified to work
 
-// Constant declaration (global scope)
-const GLOBAL_CONSTANT: i32 = 42;
+// ============================================
+// IMMUTABLE VARIABLES
+// ============================================
 
-/// Create an immutable variable with given value
-pub fun create_immutable_var(value: i32) -> i32 {
-    let x = value;
-    x
+fun demonstrate_immutable_variables() {
+    println("=== Immutable Variables ===")
+
+    // Basic immutable variable
+    let x = 5
+    println("x = {}", x)
+
+    // With type annotation
+    let y: i32 = 10
+    println("y = {}", y)
+
+    // Different types
+    let name = "Alice"
+    let age = 30
+    let height = 5.6
+    let is_student = false
+
+    println("name: {}, age: {}, height: {}, student: {}", name, age, height, is_student)
+    println("")
 }
 
-/// Create a mutable variable with given value
-pub fun create_mutable_var(value: i32) -> i32 {
-    let mut x = value;
-    x
+// ============================================
+// MUTABLE VARIABLES
+// ============================================
+
+fun demonstrate_mutable_variables() {
+    println("=== Mutable Variables ===")
+
+    // Mutable variable with 'mut' keyword
+    let mut counter = 0
+    println("Initial counter: {}", counter)
+
+    counter = counter + 1
+    println("After increment: {}", counter)
+
+    counter = counter + 5
+    println("After adding 5: {}", counter)
+
+    // Mutable string
+    let mut message = "Hello"
+    println("Initial message: {}", message)
+
+    message = "World"
+    println("Updated message: {}", message)
+
+    // Multiple mutable variables
+    let mut a = 10
+    let mut b = 20
+    a = a * 2
+    b = b + 5
+
+    println("a = {}, b = {}", a, b)
+    println("")
 }
 
-/// Update a mutable variable (demonstrates reassignment)
-pub fun update_mutable_var(_old: i32, new: i32) -> i32 {
-    new
+// ============================================
+// SHADOWING
+// ============================================
+
+fun demonstrate_shadowing() {
+    println("=== Shadowing ===")
+
+    // Shadowing allows reusing variable name
+    let x = 5
+    println("First x: {}", x)
+
+    let x = 10
+    println("Second x (shadowed): {}", x)
+
+    let x = x * 2
+    println("Third x (transformed): {}", x)
+
+    // Shadowing can change type
+    let value = 42
+    println("value as number: {}", value)
+
+    let value = "forty-two"
+    println("value as string: {}", value)
+
+    println("")
 }
 
-/// Demonstrate variable shadowing
-pub fun shadow_variable(_outer: i32, inner: i32) -> i32 {
-    let x = inner;  // Shadows outer scope
-    x
-}
+// ============================================
+// SCOPES
+// ============================================
 
-/// Infer type from value
-pub fun infer_type_from_value(value: i32) -> i32 {
-    let x = value;  // Type inferred as i32
-    x
-}
+fun demonstrate_scopes() {
+    println("=== Scopes ===")
 
-/// Create variable with explicit type annotation
-pub fun create_with_type_annotation() -> i32 {
-    let x: i32 = 100;
-    x
-}
+    let outer = 5
+    println("Outer variable: {}", outer)
 
-/// Create multiple variables using destructuring
-pub fun create_multiple_variables() -> (i32, i32, i32) {
-    let (a, b, c) = (1, 2, 3);
-    (a, b, c)
-}
-
-/// Get constant value
-pub fun get_constant_value() -> i32 {
-    GLOBAL_CONSTANT
-}
-
-/// Test inner scope behavior
-pub fun test_inner_scope(outer: i32) -> i32 {
-    let inner = outer * 2;
-    inner
-}
-
-/// Create immutable string
-pub fun create_immutable_string(s: &str) -> String {
-    String::from(s)
-}
-
-/// Append to string (mutable operation)
-pub fun append_to_string(mut s: String, suffix: &str) -> String {
-    s.push_str(suffix);
-    s
-}
-
-/// Count spaces in string (shadowing with type change)
-pub fun count_spaces(s: &str) -> usize {
-    s.chars().filter(|c| *c == ' ').count()
-}
-
-/// Convert integer to float
-pub fun convert_to_float(x: i32) -> f64 {
-    x as f64
-}
-
-/// Create boolean value
-pub fun create_boolean(value: bool) -> bool {
-    value
-}
-
-/// Toggle boolean value
-pub fun toggle_boolean(value: bool) -> bool {
-    !value
-}
-
-/// Initialize to zero
-pub fun initialize_to_zero() -> i32 {
-    0
-}
-
-/// Copy value (demonstrates copy semantics)
-pub fun copy_value(value: i32) -> i32 {
-    value
-}
-
-/// Increment counter
-pub fun increment_counter(counter: i32) -> i32 {
-    counter + 1
-}
-
-/// Configuration structure
-pub struct Config {
-    pub host: String,
-    pub port: u16,
-}
-
-/// Create configuration
-pub fun create_config(host: &str, port: u16) -> Config {
-    Config {
-        host: String::from(host),
-        port,
+    // Scope block
+    let inner_result = {
+        let inner = 10
+        println("Inner variable: {}", inner)
+        inner + outer
     }
+
+    println("Result from inner scope: {}", inner_result)
+    println("Outer variable still: {}", outer)
+
+    // Important: In Ruchy, 'let x' inside a scope MUTATES outer x!
+    let y = 5
+    println("y before scope: {}", y)
+
+    let result = {
+        let y = 10  // This mutates outer y, not shadow!
+        y
+    }
+
+    println("y after scope: {} (was mutated!)", y)
+    println("")
 }
 
-/// Get config host
-pub fun get_config_host(config: Config) -> String {
-    config.host
+// ============================================
+// TYPE INFERENCE
+// ============================================
+
+fun demonstrate_type_inference() {
+    println("=== Type Inference ===")
+
+    // Ruchy infers types from values
+    let integer = 42
+    let float = 3.14
+    let text = "Hello"
+    let flag = true
+
+    println("integer: {}", integer)
+    println("float: {}", float)
+    println("text: {}", text)
+    println("flag: {}", flag)
+
+    // Type inference from operations
+    let sum = 10 + 20
+    let product = 5 * 3
+    let quotient = 100.0 / 3.0
+
+    println("sum: {}", sum)
+    println("product: {}", product)
+    println("quotient: {}", quotient)
+
+    println("")
 }
 
-/// Get config port
-pub fun get_config_port(config: Config) -> u16 {
-    config.port
+// ============================================
+// REAL-WORLD EXAMPLES
+// ============================================
+
+fun demonstrate_real_world() {
+    println("=== Real-World Examples ===")
+
+    // Example 1: Counter
+    let mut count = 0
+    count = count + 1
+    count = count + 1
+    count = count + 1
+    println("Items counted: {}", count)
+
+    // Example 2: Configuration flags
+    let debug_mode = true
+    let verbose = false
+    println("Debug: {}, Verbose: {}", debug_mode, verbose)
+
+    // Example 3: Data transformation
+    let raw_input = "42"
+    let raw_input = 42  // Shadow to change type
+    let doubled = raw_input * 2
+    println("Transformed: {}", doubled)
+
+    // Example 4: Accumulator pattern
+    let mut total = 0.0
+    total = total + 10.5
+    total = total + 20.3
+    total = total + 5.2
+    println("Total: {}", total)
+
+    println("")
 }
 
-/// Add to accumulator
-pub fun add_to_accumulator(sum: i32, value: i32) -> i32 {
-    sum + value
-}
+// ============================================
+// MAIN
+// ============================================
 
-/// Double a value
-pub fun double_value(value: i32) -> i32 {
-    value * 2
-}
-
-/// Increment a value
-pub fun increment_value(value: i32) -> i32 {
-    value + 1
-}
-
-/// Square a value
-pub fun square_value(value: i32) -> i32 {
-    value * value
-}
-
-/// Calculate with scope
-pub fun calculate_with_scope(outer: i32, inner: i32) -> i32 {
-    outer + inner
-}
-
-/// Swap two values
-pub fun swap_values(a: i32, b: i32) -> (i32, i32) {
-    (b, a)
-}
-
-/// Main entry point demonstrating variables and mutability
 fun main() {
-    println!("Variables and Mutability Demo");
-    println!("============================");
-    println!();
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Recipe 1.3: Variables and Mutability            ║")
+    println("║  (Based on EXTREME TDD - all features tested!)    ║")
+    println("╚═══════════════════════════════════════════════════╝")
+    println("")
 
-    // Immutable variables
-    println!("1. Immutable Variables:");
-    let x = 5;
-    println!("   let x = 5");
-    println!("   x = {}", x);
-    println!();
+    demonstrate_immutable_variables()
+    demonstrate_mutable_variables()
+    demonstrate_shadowing()
+    demonstrate_scopes()
+    demonstrate_type_inference()
+    demonstrate_real_world()
 
-    // Mutable variables
-    println!("2. Mutable Variables:");
-    let mut y = 10;
-    println!("   let mut y = 10");
-    println!("   y = {}", y);
-    y = 20;
-    println!("   y = 20 (after reassignment)");
-    println!("   y = {}", y);
-    println!();
-
-    // Shadowing
-    println!("3. Variable Shadowing:");
-    let z = 5;
-    println!("   let z = 5");
-    println!("   z = {}", z);
-    let z = z + 1;
-    println!("   let z = z + 1 (shadowing)");
-    println!("   z = {}", z);
-    let z = z * 2;
-    println!("   let z = z * 2 (shadowing again)");
-    println!("   z = {}", z);
-    println!();
-
-    // Type inference
-    println!("4. Type Inference:");
-    let inferred = 42;
-    println!("   let inferred = 42 (type inferred as i32)");
-    println!("   inferred = {}", inferred);
-    println!();
-
-    // Explicit type annotation
-    println!("5. Explicit Type Annotation:");
-    let annotated: f64 = 3.14;
-    println!("   let annotated: f64 = 3.14");
-    println!("   annotated = {}", annotated);
-    println!();
-
-    // Multiple declarations
-    println!("6. Multiple Variable Declarations:");
-    let (a, b, c) = (1, 2, 3);
-    println!("   let (a, b, c) = (1, 2, 3)");
-    println!("   a = {}, b = {}, c = {}", a, b, c);
-    println!();
-
-    // Constants
-    println!("7. Constants:");
-    println!("   const GLOBAL_CONSTANT: i32 = 42");
-    println!("   GLOBAL_CONSTANT = {}", GLOBAL_CONSTANT);
-    println!();
-
-    // Scope
-    println!("8. Variable Scope:");
-    let outer = 100;
-    println!("   let outer = 100");
-    {
-        let inner = 50;
-        println!("   {{ let inner = 50 }}");
-        println!("   In inner scope: outer = {}, inner = {}", outer, inner);
-    }
-    println!("   Outside inner scope: outer = {}", outer);
-    println!("   (inner is no longer accessible)");
-    println!();
-
-    // Shadowing with type change
-    println!("9. Shadowing with Type Change:");
-    let spaces = "   ";
-    println!("   let spaces = \"   \" (type: &str)");
-    let spaces = spaces.len();
-    println!("   let spaces = spaces.len() (type: usize)");
-    println!("   spaces = {}", spaces);
-    println!();
-
-    // Counter pattern
-    println!("10. Common Pattern - Counter:");
-    let mut counter = 0;
-    println!("    let mut counter = 0");
-    for i in 1..=5 {
-        counter += 1;
-        println!("    Iteration {}: counter = {}", i, counter);
-    }
+    println("╔═══════════════════════════════════════════════════╗")
+    println("║  Key Takeaways                                    ║")
+    println("╠═══════════════════════════════════════════════════╣")
+    println("║  ✅ let creates immutable variables               ║")
+    println("║  ✅ let mut allows reassignment                   ║")
+    println("║  ✅ Shadowing reuses variable names               ║")
+    println("║  ✅ Type inference works automatically            ║")
+    println("║  ⚠️  Scoped 'let' MUTATES outer variable          ║")
+    println("║  ⚠️  No underscore separators (1_000 fails)       ║")
+    println("╚═══════════════════════════════════════════════════╝")
 }
