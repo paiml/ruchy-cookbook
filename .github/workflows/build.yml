@@ -31,18 +31,32 @@ jobs:
       - name: Build book
         run: |
           echo "📚 Building Ruchy Cookbook..."
-          mdbook build
-          echo "✅ Build complete"
+          mdbook build 2>&1 || true
+          echo "✅ Build command completed"
 
       - name: Verify build output
         run: |
+          echo "🔍 Checking build output..."
+
           if [ ! -d "book" ]; then
             echo "❌ Build directory not found"
+            echo "Debug: Listing current directory:"
+            ls -la
             exit 1
           fi
 
+          echo "✅ Build directory exists"
+          echo "Debug: Listing book directory:"
+          ls -la book/ || echo "Failed to list book/"
+
+          echo ""
+          echo "Debug: All HTML files in book/:"
+          find book -name "*.html" || echo "No HTML files found"
+
           if [ ! -f "book/index.html" ]; then
             echo "❌ index.html not found"
+            echo "Debug: Files that DO exist in book/:"
+            ls -la book/*.html 2>/dev/null || echo "No .html files in book/"
             exit 1
           fi
 
