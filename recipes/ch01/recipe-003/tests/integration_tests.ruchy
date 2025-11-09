@@ -1,0 +1,96 @@
+// Integration tests for Recipe 1.3: Variables and Mutability
+// Testing real-world usage scenarios
+
+use std::testing::*;
+
+#[test]
+fun test_counter_pattern() {
+    // Test mutable counter pattern (common use case)
+    let mut counter = 0;
+
+    counter = increment_counter(counter);
+    assert_eq!(counter, 1);
+
+    counter = increment_counter(counter);
+    assert_eq!(counter, 2);
+
+    counter = increment_counter(counter);
+    assert_eq!(counter, 3);
+}
+
+#[test]
+fun test_configuration_pattern() {
+    // Test immutable configuration pattern
+    let config = create_config("localhost", 8080);
+
+    // Config values remain constant throughout usage
+    assert_eq!(get_config_host(config), "localhost");
+    assert_eq!(get_config_port(config), 8080);
+}
+
+#[test]
+fun test_accumulator_pattern() {
+    // Test accumulator pattern with mutable state
+    let mut sum = 0;
+
+    sum = add_to_accumulator(sum, 10);
+    sum = add_to_accumulator(sum, 20);
+    sum = add_to_accumulator(sum, 30);
+
+    assert_eq!(sum, 60);
+}
+
+#[test]
+fun test_transformation_pipeline() {
+    // Test immutable transformation pipeline (functional style)
+    let value = 10;
+    let doubled = double_value(value);
+    let incremented = increment_value(doubled);
+    let result = square_value(incremented);
+
+    assert_eq!(value, 10);       // Original unchanged
+    assert_eq!(doubled, 20);     // Transformed
+    assert_eq!(incremented, 21); // Transformed
+    assert_eq!(result, 441);     // Final result
+}
+
+#[test]
+fun test_scope_isolation() {
+    // Test that inner scope variables don't leak
+    let outer = 100;
+
+    let result = {
+        let inner = 50;
+        calculate_with_scope(outer, inner)
+    };
+
+    // inner is not accessible here
+    assert_eq!(outer, 100);
+    assert_eq!(result, 150);
+}
+
+#[test]
+fun test_string_builder_pattern() {
+    // Test string building with mutable strings
+    let mut builder = String::new();
+
+    builder = append_to_string(builder, "Hello");
+    builder = append_to_string(builder, " ");
+    builder = append_to_string(builder, "World");
+
+    assert_eq!(builder, "Hello World");
+}
+
+#[test]
+fun test_swap_pattern() {
+    // Test swapping values
+    let mut a = 5;
+    let mut b = 10;
+
+    let (new_a, new_b) = swap_values(a, b);
+    a = new_a;
+    b = new_b;
+
+    assert_eq!(a, 10);
+    assert_eq!(b, 5);
+}
