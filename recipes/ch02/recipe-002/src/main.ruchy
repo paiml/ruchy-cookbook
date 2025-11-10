@@ -1,0 +1,193 @@
+// Recipe 2.2: String Slicing and Concatenation
+// Implementation written AFTER tests following EXTREME TDD
+//
+// This recipe demonstrates string slicing, substring extraction,
+// and various concatenation techniques in Ruchy.
+
+/// Get the first n characters from a string
+///
+/// # Arguments
+/// * `s` - The input string
+/// * `n` - Number of characters to extract
+///
+/// # Returns
+/// String containing the first n characters, or entire string if n > length
+///
+/// # Examples
+/// ```
+/// let result = get_first_n_chars("Hello, World!", 5);
+/// assert_eq!(result, "Hello");
+/// ```
+pub fun get_first_n_chars(s: &str, n: usize) -> String {
+    s.chars().take(n).collect()
+}
+
+/// Get the last n characters from a string
+///
+/// # Arguments
+/// * `s` - The input string
+/// * `n` - Number of characters to extract from the end
+///
+/// # Returns
+/// String containing the last n characters
+pub fun get_last_n_chars(s: &str, n: usize) -> String {
+    let char_count = s.chars().count();
+    if n >= char_count {
+        return s.to_string();
+    }
+    s.chars().skip(char_count - n).collect()
+}
+
+/// Skip the first n characters and return the rest
+///
+/// # Arguments
+/// * `s` - The input string
+/// * `n` - Number of characters to skip
+///
+/// # Returns
+/// String with first n characters removed
+pub fun skip_first_n_chars(s: &str, n: usize) -> String {
+    s.chars().skip(n).collect()
+}
+
+/// Get a substring by character positions
+///
+/// # Arguments
+/// * `s` - The input string
+/// * `start` - Starting character index (inclusive)
+/// * `end` - Ending character index (exclusive)
+///
+/// # Returns
+/// Substring from start to end
+pub fun get_substring(s: &str, start: usize, end: usize) -> String {
+    s.chars().skip(start).take(end - start).collect()
+}
+
+/// Concatenate two strings
+///
+/// # Arguments
+/// * `a` - First string
+/// * `b` - Second string
+///
+/// # Returns
+/// Concatenated string "ab"
+pub fun concat_two(a: &str, b: &str) -> String {
+    format!("{}{}", a, b)
+}
+
+/// Concatenate two strings with a space
+///
+/// # Arguments
+/// * `a` - First string
+/// * `b` - Second string
+///
+/// # Returns
+/// Concatenated string "a b"
+pub fun concat_with_space(a: &str, b: &str) -> String {
+    format!("{} {}", a, b)
+}
+
+/// Concatenate all strings in a vector
+///
+/// # Arguments
+/// * `parts` - Vector of string slices
+///
+/// # Returns
+/// All parts concatenated together
+pub fun concat_all(parts: Vec<&str>) -> String {
+    parts.join("")
+}
+
+/// Get character at specific index
+///
+/// # Arguments
+/// * `s` - The input string
+/// * `index` - Character index
+///
+/// # Returns
+/// Some(char) if index is valid, None otherwise
+pub fun get_char_at(s: &str, index: usize) -> Option<char> {
+    s.chars().nth(index)
+}
+
+/// Check if string starts with a prefix
+///
+/// # Arguments
+/// * `s` - The string to check
+/// * `prefix` - The prefix to look for
+///
+/// # Returns
+/// true if s starts with prefix, false otherwise
+pub fun check_starts_with(s: &str, prefix: &str) -> bool {
+    s.starts_with(prefix)
+}
+
+/// Check if string ends with a suffix
+///
+/// # Arguments
+/// * `s` - The string to check
+/// * `suffix` - The suffix to look for
+///
+/// # Returns
+/// true if s ends with suffix, false otherwise
+pub fun check_ends_with(s: &str, suffix: &str) -> bool {
+    s.ends_with(suffix)
+}
+
+/// Repeat a string n times
+///
+/// # Arguments
+/// * `s` - The string to repeat
+/// * `count` - Number of times to repeat
+///
+/// # Returns
+/// String repeated count times
+pub fun repeat_string(s: &str, count: usize) -> String {
+    s.repeat(count)
+}
+
+/// Main entry point demonstrating string slicing and concatenation
+fun main() {
+    println!("String Slicing and Concatenation Examples");
+    println!("=========================================\n");
+
+    // Slicing operations
+    println!("Slicing operations:");
+    let text = "Hello, World!";
+    println!("  Original: '{}'", text);
+    println!("  First 5: '{}'", get_first_n_chars(text, 5));
+    println!("  Last 6: '{}'", get_last_n_chars(text, 6));
+    println!("  Skip 7: '{}'", skip_first_n_chars(text, 7));
+    println!("  Substring [7..12]: '{}'", get_substring(text, 7, 12));
+    println!();
+
+    // Character access
+    println!("Character access:");
+    println!("  Char at 0: {:?}", get_char_at(text, 0));
+    println!("  Char at 1: {:?}", get_char_at(text, 1));
+    println!("  Char at 100: {:?}", get_char_at(text, 100));
+    println!();
+
+    // Concatenation
+    println!("Concatenation:");
+    println!("  concat_two: '{}'", concat_two("Hello", "World"));
+    println!("  concat_with_space: '{}'", concat_with_space("Hello", "World"));
+    let parts = vec!["Hello", " ", "beautiful", " ", "World"];
+    println!("  concat_all: '{}'", concat_all(parts));
+    println!();
+
+    // Prefix/Suffix checks
+    println!("Prefix/Suffix checks:");
+    println!("  Starts with 'Hello': {}", check_starts_with(text, "Hello"));
+    println!("  Starts with 'World': {}", check_starts_with(text, "World"));
+    println!("  Ends with 'World!': {}", check_ends_with(text, "World!"));
+    println!("  Ends with 'Hello': {}", check_ends_with(text, "Hello"));
+    println!();
+
+    // String repetition
+    println!("String repetition:");
+    println!("  'Ha' * 3: '{}'", repeat_string("Ha", 3));
+    println!("  '=' * 20: '{}'", repeat_string("=", 20));
+    println!("  'Hello' * 1: '{}'", repeat_string("Hello", 1));
+    println!("  'Test' * 0: '{}'", repeat_string("Test", 0));
+}

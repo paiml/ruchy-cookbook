@@ -1,0 +1,199 @@
+// Unit tests for Recipe 2.1: String Formatting
+// Write tests FIRST following EXTREME TDD
+//
+// Test coverage areas:
+// 1. Basic string interpolation with format!()
+// 2. Multiple placeholder formatting
+// 3. Number formatting (integers, floats)
+// 4. Boolean formatting
+// 5. String concatenation patterns
+// 6. Format string edge cases
+
+use std::testing::*;
+
+// Basic string interpolation tests
+
+#[test]
+fun test_format_single_string() {
+    let result = format_greeting("Alice");
+    assert_eq!(result, "Hello, Alice!");
+}
+
+#[test]
+fun test_format_empty_string() {
+    let result = format_greeting("");
+    assert_eq!(result, "Hello, !");
+}
+
+#[test]
+fun test_format_with_special_chars() {
+    let result = format_greeting("Al!ce@123");
+    assert_eq!(result, "Hello, Al!ce@123!");
+}
+
+// Multiple placeholder tests
+
+#[test]
+fun test_format_full_name() {
+    let result = format_full_name("Alice", "Smith");
+    assert_eq!(result, "Alice Smith");
+}
+
+#[test]
+fun test_format_full_greeting() {
+    let result = format_full_greeting("Alice", "Smith");
+    assert_eq!(result, "Hello, Alice Smith!");
+}
+
+#[test]
+fun test_format_three_parts() {
+    let result = format_three_values("one", "two", "three");
+    assert_eq!(result, "one-two-three");
+}
+
+// Number formatting tests
+
+#[test]
+fun test_format_integer() {
+    let result = format_number(42);
+    assert_eq!(result, "The number is 42");
+}
+
+#[test]
+fun test_format_negative_integer() {
+    let result = format_number(-10);
+    assert_eq!(result, "The number is -10");
+}
+
+#[test]
+fun test_format_zero() {
+    let result = format_number(0);
+    assert_eq!(result, "The number is 0");
+}
+
+#[test]
+fun test_format_float() {
+    let result = format_decimal(3.14);
+    assert_eq!(result, "Pi is approximately 3.14");
+}
+
+#[test]
+fun test_format_mixed_types() {
+    let result = format_message("Alice", 30);
+    assert_eq!(result, "Alice is 30 years old");
+}
+
+// Boolean formatting tests
+
+#[test]
+fun test_format_boolean_true() {
+    let result = format_status(true);
+    assert_eq!(result, "Status: true");
+}
+
+#[test]
+fun test_format_boolean_false() {
+    let result = format_status(false);
+    assert_eq!(result, "Status: false");
+}
+
+// String concatenation patterns
+
+#[test]
+fun test_concat_two_strings() {
+    let result = concat_strings("Hello", "World");
+    assert_eq!(result, "HelloWorld");
+}
+
+#[test]
+fun test_concat_with_space() {
+    let result = concat_with_separator("Hello", "World", " ");
+    assert_eq!(result, "Hello World");
+}
+
+#[test]
+fun test_concat_empty_strings() {
+    let result = concat_strings("", "");
+    assert_eq!(result, "");
+}
+
+// String building tests
+
+#[test]
+fun test_build_csv_line() {
+    let values = vec!["Alice", "30", "Engineer"];
+    let result = build_csv(values);
+    assert_eq!(result, "Alice,30,Engineer");
+}
+
+#[test]
+fun test_build_csv_empty() {
+    let values: Vec<&str> = vec![];
+    let result = build_csv(values);
+    assert_eq!(result, "");
+}
+
+#[test]
+fun test_build_csv_single() {
+    let values = vec!["Alice"];
+    let result = build_csv(values);
+    assert_eq!(result, "Alice");
+}
+
+// Template string tests
+
+#[test]
+fun test_template_basic() {
+    let result = format_template("Alice", 42);
+    assert_eq!(result, "Name: Alice, Value: 42");
+}
+
+// Functions to implement (following TDD - tests written first)
+
+pub fun format_greeting(name: &str) -> String {
+    panic!("TODO: Implement format_greeting")
+}
+
+pub fun format_full_name(first: &str, last: &str) -> String {
+    panic!("TODO: Implement format_full_name")
+}
+
+pub fun format_full_greeting(first: &str, last: &str) -> String {
+    panic!("TODO: Implement format_full_greeting")
+}
+
+pub fun format_three_values(a: &str, b: &str, c: &str) -> String {
+    panic!("TODO: Implement format_three_values")
+}
+
+pub fun format_number(n: i32) -> String {
+    panic!("TODO: Implement format_number")
+}
+
+pub fun format_decimal(n: f64) -> String {
+    panic!("TODO: Implement format_decimal")
+}
+
+pub fun format_message(name: &str, age: i32) -> String {
+    panic!("TODO: Implement format_message")
+}
+
+pub fun format_status(active: bool) -> String {
+    panic!("TODO: Implement format_status")
+}
+
+pub fun concat_strings(a: &str, b: &str) -> String {
+    panic!("TODO: Implement concat_strings")
+}
+
+pub fun concat_with_separator(a: &str, b: &str, sep: &str) -> String {
+    panic!("TODO: Implement concat_with_separator")
+}
+
+pub fun build_csv(values: Vec<&str>) -> String {
+    panic!("TODO: Implement build_csv")
+}
+
+pub fun format_template(name: &str, value: i32) -> String {
+    panic!("TODO: Implement format_template")
+}

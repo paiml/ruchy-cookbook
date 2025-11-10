@@ -1,0 +1,12 @@
+// Property-based tests for Recipe ch02.001: String Formatting
+
+use std::testing::proptest::*;
+
+#[proptest]
+fun test_solution_properties(input: String) {
+    // TODO: Define invariant properties
+    let result = solution();
+    // Property tests verify invariants across random inputs
+}
+
+// TODO: Add 3-5 property tests
