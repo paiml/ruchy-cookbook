@@ -151,48 +151,52 @@ fun test_repeat_string_zero() {
     assert_eq!(result, "");
 }
 
-// Functions to implement (following TDD - tests written first)
+// Functions under test: the same definitions as src/main.ruchy
 
 pub fun get_first_n_chars(s: &str, n: usize) -> String {
-    panic!("TODO: Implement get_first_n_chars")
+    s.chars().take(n).collect()
 }
 
 pub fun get_last_n_chars(s: &str, n: usize) -> String {
-    panic!("TODO: Implement get_last_n_chars")
+    let char_count = s.chars().count();
+    if n >= char_count {
+        return s.to_string();
+    }
+    s.chars().skip(char_count - n).collect()
 }
 
 pub fun skip_first_n_chars(s: &str, n: usize) -> String {
-    panic!("TODO: Implement skip_first_n_chars")
+    s.chars().skip(n).collect()
 }
 
 pub fun get_substring(s: &str, start: usize, end: usize) -> String {
-    panic!("TODO: Implement get_substring")
+    s.chars().skip(start).take(end - start).collect()
 }
 
 pub fun concat_two(a: &str, b: &str) -> String {
-    panic!("TODO: Implement concat_two")
+    format!("{}{}", a, b)
 }
 
 pub fun concat_with_space(a: &str, b: &str) -> String {
-    panic!("TODO: Implement concat_with_space")
+    format!("{} {}", a, b)
 }
 
 pub fun concat_all(parts: Vec<&str>) -> String {
-    panic!("TODO: Implement concat_all")
+    parts.join("")
 }
 
 pub fun get_char_at(s: &str, index: usize) -> Option<char> {
-    panic!("TODO: Implement get_char_at")
+    s.chars().nth(index)
 }
 
 pub fun check_starts_with(s: &str, prefix: &str) -> bool {
-    panic!("TODO: Implement check_starts_with")
+    s.starts_with(prefix)
 }
 
 pub fun check_ends_with(s: &str, suffix: &str) -> bool {
-    panic!("TODO: Implement check_ends_with")
+    s.ends_with(suffix)
 }
 
 pub fun repeat_string(s: &str, count: usize) -> String {
-    panic!("TODO: Implement repeat_string")
+    s.repeat(count)
 }

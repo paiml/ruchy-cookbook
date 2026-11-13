@@ -148,52 +148,56 @@ fun test_template_basic() {
     assert_eq!(result, "Name: Alice, Value: 42");
 }
 
-// Functions to implement (following TDD - tests written first)
+// Functions under test: the same definitions as src/main.ruchy
 
 pub fun format_greeting(name: &str) -> String {
-    panic!("TODO: Implement format_greeting")
+    format!("Hello, {}!", name)
 }
 
 pub fun format_full_name(first: &str, last: &str) -> String {
-    panic!("TODO: Implement format_full_name")
+    format!("{} {}", first, last)
 }
 
 pub fun format_full_greeting(first: &str, last: &str) -> String {
-    panic!("TODO: Implement format_full_greeting")
+    format!("Hello, {} {}!", first, last)
 }
 
 pub fun format_three_values(a: &str, b: &str, c: &str) -> String {
-    panic!("TODO: Implement format_three_values")
+    format!("{}-{}-{}", a, b, c)
 }
 
 pub fun format_number(n: i32) -> String {
-    panic!("TODO: Implement format_number")
+    format!("The number is {}", n)
 }
 
 pub fun format_decimal(n: f64) -> String {
-    panic!("TODO: Implement format_decimal")
+    format!("Pi is approximately {}", n)
 }
 
 pub fun format_message(name: &str, age: i32) -> String {
-    panic!("TODO: Implement format_message")
+    format!("{} is {} years old", name, age)
 }
 
 pub fun format_status(active: bool) -> String {
-    panic!("TODO: Implement format_status")
+    format!("Status: {}", active)
 }
 
 pub fun concat_strings(a: &str, b: &str) -> String {
-    panic!("TODO: Implement concat_strings")
+    format!("{}{}", a, b)
 }
 
 pub fun concat_with_separator(a: &str, b: &str, sep: &str) -> String {
-    panic!("TODO: Implement concat_with_separator")
+    format!("{}{}{}", a, sep, b)
 }
 
 pub fun build_csv(values: Vec<&str>) -> String {
-    panic!("TODO: Implement build_csv")
+    if values.is_empty() {
+        return String::new();
+    }
+
+    values.join(",")
 }
 
 pub fun format_template(name: &str, value: i32) -> String {
-    panic!("TODO: Implement format_template")
+    format!("Name: {}, Value: {}", name, value)
 }

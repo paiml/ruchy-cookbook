@@ -1,8 +1,23 @@
-// Integration tests for Recipe ch02.002: String Slicing and Concatenation
+// Integration tests for Recipe 2.2: String Slicing and Concatenation
+// The functions of src/main.ruchy used together
 
 use std::testing::*;
 
 #[test]
-fun test_integration() {
-    // TODO: Test real-world usage scenarios
+fun test_split_a_greeting_and_rejoin_it() {
+    // Slice a sentence into words and build a new one
+    let text = "Hello, World!";
+    let hello = get_first_n_chars(text, 5);
+    let world = get_substring(text, 7, 12);
+    assert_eq!(concat_with_space(&world, &hello), "World Hello");
+}
+
+#[test]
+fun test_build_a_ruler_from_repeats() {
+    // Repeat and concatenate to build a fixed-width line
+    let line = concat_all(vec!["[", &repeat_string("-", 6), "]"]);
+    assert_eq!(line, "[------]");
+    assert!(check_starts_with(&line, "["));
+    assert!(check_ends_with(&line, "]"));
+    assert_eq!(get_char_at(&line, 1), Some('-'));
 }

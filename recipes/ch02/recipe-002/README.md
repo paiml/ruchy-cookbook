@@ -1,17 +1,17 @@
 # Recipe ch02.002: String Slicing and Concatenation
 
-**Difficulty**: TODO
-**Test Coverage**: TODO%
-**Mutation Score**: TODO%
-**PMAT Grade**: TODO
+**Difficulty**: Beginner
+**Test Coverage**: not measured
+**Mutation Score**: not measured
+**PMAT Grade**: not measured
 
 ## TDD Workflow
 
 Follow EXTREME TDD:
 
 1. ✅ Write failing tests FIRST
-2. ⬜ Implement minimal solution
-3. ⬜ Add property tests
+2. ✅ Implement minimal solution
+3. ✅ Add property tests
 4. ⬜ Run mutation tests
 5. ⬜ Document recipe
 6. ⬜ Run PMAT quality gates
