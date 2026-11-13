@@ -1,12 +1,42 @@
-// Property-based tests for Recipe ch02.001: String Formatting
+// Property-based tests for Recipe 2.1: String Formatting
+// Invariants of the functions defined in src/main.ruchy
 
 use std::testing::proptest::*;
 
 #[proptest]
-fun test_solution_properties(input: String) {
-    // TODO: Define invariant properties
-    let result = solution();
-    // Property tests verify invariants across random inputs
+fun test_greeting_wraps_the_name(name: String) {
+    // Property: the greeting is the name between a fixed prefix and suffix
+    let result = format_greeting(&name);
+    assert!(result.starts_with("Hello, "));
+    assert!(result.ends_with("!"));
+    assert_eq!(result.len(), name.len() + 8);
 }
 
-// TODO: Add 3-5 property tests
+#[proptest]
+fun test_concat_length_is_the_sum(a: String, b: String) {
+    // Property: concatenation loses and adds nothing
+    let result = concat_strings(&a, &b);
+    assert_eq!(result.len(), a.len() + b.len());
+    assert!(result.starts_with(&a));
+    assert!(result.ends_with(&b));
+}
+
+#[proptest]
+fun test_separator_sits_between_the_parts(a: String, b: String) {
+    // Property: with an empty separator the result equals plain concatenation
+    assert_eq!(concat_with_separator(&a, &b, ""), concat_strings(&a, &b));
+}
+
+#[proptest]
+fun test_number_round_trips_through_its_sentence(n: i32) {
+    // Property: the formatted sentence ends with the number's own text
+    let result = format_number(n);
+    assert!(result.ends_with(&n.to_string()));
+}
+
+#[proptest]
+fun test_full_greeting_is_greeting_of_full_name(first: String, last: String) {
+    // Property: the two-argument greeting equals greeting the joined name
+    let full = format_full_name(&first, &last);
+    assert_eq!(format_full_greeting(&first, &last), format_greeting(&full));
+}

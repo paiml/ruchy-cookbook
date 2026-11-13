@@ -87,6 +87,16 @@ milestones:
     recipes_target: 75
     blocked_by: ["Advanced (26-35)"]
 
+  - name: "Repository health"
+    status: in_progress
+    tickets:
+      - id: COOKBOOK-006
+        title: "Main green again: book.toml for mdBook 0.5, recipe structure, SATD stubs"
+        status: in_progress
+        assignee: claude
+        priority: high
+        github_issues: [14, 15, 16, 17]
+
 rules:
   - "NO task allowed without ticket assignment"
   - "ALL code must pass pre-commit hooks"

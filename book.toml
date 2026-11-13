@@ -3,7 +3,6 @@ title = "Ruchy Cookbook"
 authors = ["Noah Gift", "Claude (AI Assistant)"]
 description = "A comprehensive, test-driven cookbook for the Ruchy programming language. 500+ recipes with 85%+ test coverage and 80%+ mutation scores."
 language = "en"
-multilingual = false
 src = "src"
 
 [build]
@@ -18,7 +17,6 @@ use-default-preprocessors = true
 default-theme = "rust"
 preferred-dark-theme = "navy"
 git-repository-url = "https://github.com/paiml/ruchy-cookbook"
-git-repository-icon = "fa-github"
 edit-url-template = "https://github.com/paiml/ruchy-cookbook/edit/main/{path}"
 site-url = "https://interactive.paiml.com/cookbook/"
 cname = "interactive.paiml.com"
@@ -52,8 +50,6 @@ line-numbers = true
 runnable = true
 
 [output.html.code]
-# Syntax highlighting theme
-theme = "base16-ocean.dark"
 hidelines = {}
 
 # PDF output for print edition (optional - requires mdbook-pdf)

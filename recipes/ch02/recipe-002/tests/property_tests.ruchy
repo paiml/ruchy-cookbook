@@ -1,12 +1,40 @@
-// Property-based tests for Recipe ch02.002: String Slicing and Concatenation
+// Property-based tests for Recipe 2.2: String Slicing and Concatenation
+// Invariants of the functions defined in src/main.ruchy
 
 use std::testing::proptest::*;
 
 #[proptest]
-fun test_solution_properties(input: String) {
-    // TODO: Define invariant properties
-    let result = solution();
-    // Property tests verify invariants across random inputs
+fun test_first_and_rest_rebuild_the_string(s: String, n: usize) {
+    // Property: the first n characters plus the remainder is the original
+    let head = get_first_n_chars(&s, n);
+    let tail = skip_first_n_chars(&s, n);
+    assert_eq!(concat_two(&head, &tail), s);
 }
 
-// TODO: Add 3-5 property tests
+#[proptest]
+fun test_first_n_never_exceeds_n(s: String, n: usize) {
+    // Property: slicing returns at most n characters
+    assert!(get_first_n_chars(&s, n).chars().count() <= n);
+}
+
+#[proptest]
+fun test_last_n_is_a_suffix(s: String, n: usize) {
+    // Property: the last n characters always end the original
+    let tail = get_last_n_chars(&s, n);
+    assert!(check_ends_with(&s, &tail));
+}
+
+#[proptest]
+fun test_concat_keeps_prefix_and_suffix(a: String, b: String) {
+    // Property: a concatenation starts with its left part and ends with its right
+    let joined = concat_two(&a, &b);
+    assert!(check_starts_with(&joined, &a));
+    assert!(check_ends_with(&joined, &b));
+}
+
+#[proptest]
+fun test_repeat_multiplies_the_length(s: String, count: u8) {
+    // Property: repeating count times multiplies the byte length by count
+    let n = count as usize;
+    assert_eq!(repeat_string(&s, n).len(), s.len() * n);
+}

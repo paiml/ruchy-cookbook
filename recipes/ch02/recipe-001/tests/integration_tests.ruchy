@@ -1,8 +1,22 @@
-// Integration tests for Recipe ch02.001: String Formatting
+// Integration tests for Recipe 2.1: String Formatting
+// The functions of src/main.ruchy used together
 
 use std::testing::*;
 
 #[test]
-fun test_integration() {
-    // TODO: Test real-world usage scenarios
+fun test_report_line_from_parts() {
+    // A greeting, a fact and a status joined into one report line
+    let greeting = format_full_greeting("Alice", "Smith");
+    let fact = format_message("Alice", 30);
+    let status = format_status(true);
+    let line = concat_with_separator(&greeting, &concat_with_separator(&fact, &status, "; "), " ");
+    assert_eq!(line, "Hello, Alice Smith! Alice is 30 years old; Status: true");
+}
+
+#[test]
+fun test_csv_row_built_from_formatted_fields() {
+    // Formatted fields become one CSV row
+    let name = format_full_name("Bob", "Jones");
+    let row = build_csv(vec![&name, "42", "Engineer"]);
+    assert_eq!(row, "Bob Jones,42,Engineer");
 }
